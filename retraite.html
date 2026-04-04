@@ -1,495 +1,657 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Calculateur Retraite</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #F0F4F8; font-family: Arial, sans-serif; font-size: 14px; color: #1A1A1A; height: 100vh; overflow: hidden; }
-    .wrap { display: flex; flex-direction: column; height: 100vh; }
-
-    header { background: rgb(9,87,151); padding: 18px 24px; flex-shrink: 0; }
-    header h1 { color: #fff; font-size: 20px; font-weight: 700; margin-bottom: 3px; }
-    header p { color: rgba(255,255,255,0.75); font-size: 12px; }
-    .or-bar { height: 3px; background: rgb(240,150,134); border-radius: 2px; margin-top: 12px; width: 60px; }
-
-    main { display: flex; flex: 1; overflow: hidden; }
-    .sidebar { width: 340px; background: #F0F4F8; border-right: 1px solid #CCC; overflow-y: auto; padding: 14px 14px 20px; flex-shrink: 0; }
-    .content { flex: 1; overflow-y: auto; padding: 14px 18px 20px; }
-
-    .sec-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; margin-top: 14px; }
-    .sec-head:first-of-type { margin-top: 0; }
-    .sec-num { background: rgb(9,87,151); color: #fff; border-radius: 50%; width: 22px; height: 22px; min-width: 22px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
-    .sec-title { color: rgb(9,87,151); font-size: 14px; font-weight: 700; white-space: nowrap; }
-    .sec-line { flex: 1; height: 1px; background: rgba(9,87,151,0.25); }
-
-    .card { background: #fff; border: 1px solid #CCC; border-radius: 4px; padding: 12px; margin-bottom: 8px; }
-    .group { margin-bottom: 11px; }
-    .group:last-child { margin-bottom: 0; }
-    .group label { display: block; font-size: 11px; color: #555; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 5px; }
-    .val { color: #1A1A1A; font-weight: 700; font-size: 13px; }
-    input[type="range"] { width: 100%; margin-top: 3px; cursor: pointer; }
-    input[type="number"] { width: 100%; padding: 5px 7px; border: 1px solid #CCC; border-radius: 3px; font-family: Arial; font-size: 12px; color: #1A1A1A; }
-    select { padding: 5px 4px; border: 1px solid #CCC; border-radius: 3px; font-family: Arial; font-size: 12px; background: #fff; }
-    .range-labels { display: flex; justify-content: space-between; font-size: 10px; color: #888; margin-top: 1px; }
-
-    .entry { background: #fff; border: 1px solid #CCC; border-radius: 4px; padding: 9px; margin-bottom: 6px; }
-    .erow { display: flex; gap: 5px; margin-bottom: 5px; align-items: center; }
-    .erow input[type="number"] { flex: 1; min-width: 0; }
-    .erow .w-age { max-width: 48px; }
-    .erow .w-rate { max-width: 52px; }
-    .erow select { flex: 0 0 88px; }
-    .erow .del { flex-shrink: 0; padding: 5px 7px; background: #fecaca; color: #991b1b; border: none; border-radius: 3px; cursor: pointer; font-size: 11px; }
-    .erow .sep { font-size: 11px; color: #888; flex-shrink: 0; }
-    .entry-info { font-size: 10px; color: #777; padding-top: 2px; }
-
-    .btn-add { padding: 5px 12px; background: rgb(9,87,151); color: #fff; border: none; border-radius: 3px; font-family: Arial; font-size: 12px; font-weight: 600; cursor: pointer; margin-bottom: 4px; }
-
-    .badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 10px; }
-    .badge-green  { background: #D1FAE5; color: #065F46; }
-    .badge-orange { background: #FEF3C7; color: #92400E; }
-
-    .sum-row { display: flex; justify-content: space-between; font-size: 12px; padding: 5px 0; border-bottom: 1px solid #E0E0E0; }
-    .sum-row.final { border-bottom: none; border-top: 2px solid rgb(9,87,151); margin-top: 4px; padding-top: 8px; font-weight: 700; color: rgb(9,87,151); font-size: 13px; }
-
-    /* Chart cards */
-    .ccard { background: #fff; border: 1px solid #CCC; border-radius: 4px; margin-bottom: 14px; }
-    .ccard-head { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: #555; padding: 9px 14px 7px; border-bottom: 1px solid #E0E0E0; display: flex; justify-content: space-between; align-items: center; }
-    .ccard-body { padding: 6px 4px 4px; }
-    canvas { width: 100%; display: block; cursor: crosshair; }
-    .cgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 14px; }
-
-    /* Legend */
-    .legend { display: flex; gap: 18px; padding: 6px 14px 10px; font-size: 11px; color: #555; flex-wrap: wrap; }
-    .legend-item { display: flex; align-items: center; gap: 6px; }
-    .legend-line { width: 22px; height: 2.5px; border-radius: 2px; display: inline-block; flex-shrink: 0; }
-    .legend-line.dashed { background: repeating-linear-gradient(90deg,currentColor 0,currentColor 5px,transparent 5px,transparent 8px); }
-
-    /* Tooltip */
-    #chartTip { position:fixed; display:none; background:#fff; border:1px solid #CCC; border-radius:4px; padding:10px 14px; font-size:12px; pointer-events:none; box-shadow:0 2px 10px rgba(0,0,0,0.15); z-index:999; min-width:160px; }
-    #chartTip .tip-head { color:rgb(9,87,151); font-weight:700; font-size:13px; margin-bottom:7px; border-bottom:1px solid #E0E0E0; padding-bottom:5px; }
-    #chartTip .tip-row { display:flex; justify-content:space-between; gap:18px; margin-bottom:3px; }
-    #chartTip .tip-label { color:#555; }
-    #chartTip .tip-val { font-weight:700; }
-    #chartTip .tip-div { border-top:1px solid #E0E0E0; margin:5px 0; }
-
-    /* Table */
-    table { width: 100%; border-collapse: collapse; font-size: 11px; }
-    thead tr { background: rgb(9,87,151); color: #fff; }
-    th { padding: 8px 9px; text-align: right; font-size: 11px; white-space: nowrap; }
-    th:first-child { text-align: left; }
-    td { padding: 7px 9px; border-bottom: 1px solid #E0E0E0; text-align: right; }
-    td:first-child { text-align: left; font-weight: 700; color: rgb(9,87,151); }
-    tr:nth-child(even) td { background: #F7F9FB; }
-    .note { font-size: 10px; color: #888; }
-  </style>
+<meta charset="UTF-8">
+<title>Calculateur Retraite</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#F0F4F8;font-family:Arial,sans-serif;font-size:14px;color:#1A1A1A;height:100vh;overflow:hidden}
+.wrap{display:flex;flex-direction:column;height:100vh}
+header{background:rgb(9,87,151);padding:16px 24px;flex-shrink:0}
+header h1{color:#fff;font-size:19px;font-weight:700;margin-bottom:2px}
+header p{color:rgba(255,255,255,.75);font-size:12px}
+.or-bar{height:3px;background:rgb(240,150,134);border-radius:2px;margin-top:10px;width:60px}
+main{display:flex;flex:1;overflow:hidden}
+.sidebar{width:336px;background:#F0F4F8;border-right:1px solid #CCC;overflow-y:auto;padding:12px 13px 20px;flex-shrink:0}
+.content{flex:1;overflow-y:auto;padding:13px 16px 20px}
+.sec-head{display:flex;align-items:center;gap:8px;margin-bottom:9px;margin-top:13px}
+.sec-head:first-of-type{margin-top:0}
+.sec-num{background:rgb(9,87,151);color:#fff;border-radius:50%;width:21px;height:21px;min-width:21px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.sec-title{color:rgb(9,87,151);font-size:13px;font-weight:700;white-space:nowrap}
+.sec-line{flex:1;height:1px;background:rgba(9,87,151,.25)}
+.card{background:#fff;border:1px solid #CCC;border-radius:4px;padding:11px;margin-bottom:7px}
+.group{margin-bottom:10px}.group:last-child{margin-bottom:0}
+.group label{display:block;font-size:10px;color:#555;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.val{color:#1A1A1A;font-weight:700;font-size:13px}
+input[type=range]{width:100%;margin-top:3px;cursor:pointer}
+input[type=number]{width:100%;padding:5px 6px;border:1px solid #CCC;border-radius:3px;font-family:Arial;font-size:12px;color:#1A1A1A}
+select{padding:5px 4px;border:1px solid #CCC;border-radius:3px;font-family:Arial;font-size:12px;background:#fff}
+.rl{display:flex;justify-content:space-between;font-size:10px;color:#888;margin-top:1px}
+.hz{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.hz .sub{font-size:10px;color:#888;margin-bottom:2px}
+.entry{background:#fff;border:1px solid #CCC;border-radius:4px;padding:8px;margin-bottom:5px}
+.erow{display:flex;gap:4px;margin-bottom:4px;align-items:center}
+.erow input[type=number]{flex:1;min-width:0}
+.w-age{max-width:46px!important}.w-rt{max-width:50px!important}
+.erow select{flex:0 0 86px}
+.erow .del{flex-shrink:0;padding:4px 6px;background:#fecaca;color:#991b1b;border:none;border-radius:3px;cursor:pointer;font-size:11px}
+.erow .sep{font-size:11px;color:#888;flex-shrink:0}
+.ei{font-size:10px;color:#777;padding-top:1px}
+.btn-add{padding:4px 11px;background:rgb(9,87,151);color:#fff;border:none;border-radius:3px;font-family:Arial;font-size:12px;font-weight:600;cursor:pointer;margin-bottom:4px}
+.badge{display:inline-block;font-size:10px;font-weight:700;padding:1px 5px;border-radius:10px}
+.bg{background:#D1FAE5;color:#065F46}.bo{background:#FEF3C7;color:#92400E}
+.sr{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid #E0E0E0}
+.sr.f{border-bottom:none;border-top:2px solid rgb(9,87,151);margin-top:4px;padding-top:7px;font-weight:700;color:rgb(9,87,151);font-size:13px}
+/* Content */
+.cc{background:#fff;border:1px solid #CCC;border-radius:4px;margin-bottom:13px}
+.ch{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#555;padding:8px 13px 6px;border-bottom:1px solid #E0E0E0;display:flex;justify-content:space-between;align-items:center}
+.cb{padding:5px 3px 3px}
+canvas{width:100%;display:block}
+.cg{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-bottom:13px}
+.legend{display:flex;gap:14px;padding:5px 13px 9px;font-size:11px;color:#555;flex-wrap:wrap;border-top:1px solid #F0F0F0}
+.li{display:flex;align-items:center;gap:5px}
+.ll{width:20px;height:3px;border-radius:1px;flex-shrink:0}
+.lb{width:11px;height:9px;border-radius:2px;flex-shrink:0}
+.zb{display:flex;align-items:center;gap:8px;padding:5px 13px;font-size:10px;color:#999;border-top:1px solid #F0F0F0}
+.zbtn{padding:2px 7px;border:1px solid #CCC;border-radius:3px;background:#fff;font-size:11px;cursor:pointer;color:#555}
+.zbtn:hover{background:#F0F4F8}
+table{width:100%;border-collapse:collapse;font-size:11px}
+thead tr{background:rgb(9,87,151);color:#fff}
+th{padding:7px 8px;text-align:right;font-size:11px;white-space:nowrap}
+th:first-child{text-align:left}
+td{padding:6px 8px;border-bottom:1px solid #E0E0E0;text-align:right}
+td:first-child{text-align:left;font-weight:700;color:rgb(9,87,151)}
+tr:nth-child(even) td{background:#F7F9FB}
+.note{font-size:10px;color:#888}
+/* Tooltip */
+#tip{position:fixed;display:none;background:#fff;border:1px solid #CCC;border-radius:4px;padding:10px 13px;font-size:12px;pointer-events:none;box-shadow:0 4px 18px rgba(0,0,0,.13);z-index:999;min-width:168px}
+.th{color:rgb(9,87,151);font-weight:700;font-size:13px;margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid #E0E0E0}
+.tr{display:flex;justify-content:space-between;gap:14px;margin-bottom:3px;font-size:11px}
+.td{border-top:1px solid #F0F0F0;margin:5px 0}
+.ts{font-size:10px;color:#888;margin-top:4px}
+</style>
 </head>
 <body>
-<div id="chartTip">
-  <div class="tip-head" id="tipHead"></div>
-  <div id="tipBody"></div>
+<div id="tip"></div>
+<div class="wrap">
+<header>
+  <h1>Calculateur Retraite</h1>
+  <p>Québec et Canada · Contributions récurrentes · Graphique interactif</p>
+  <div class="or-bar"></div>
+</header>
+<main>
+<!-- ─── SIDEBAR ─── -->
+<div class="sidebar">
+
+  <div class="sec-head"><div class="sec-num">1</div><div class="sec-title">Paramètres</div><div class="sec-line"></div></div>
+  <div class="card">
+    <div class="group">
+      <label>Solde initial · <span class="val" id="d1">50 000 $</span></label>
+      <input type="range" id="initBal" min="0" max="500000" step="5000" value="50000" style="accent-color:rgb(9,87,151)">
+      <div class="rl"><span>0 $</span><span>500 k$</span></div>
+    </div>
+    <div class="group">
+      <label>Horizon · <span class="val" id="dHz">18 à 100 ans</span></label>
+      <div class="hz">
+        <div>
+          <div class="sub">De</div>
+          <input type="range" id="ageFrom" min="18" max="99" value="18" style="accent-color:rgb(9,87,151)">
+          <div class="rl"><span>18</span><span>99</span></div>
+        </div>
+        <div>
+          <div class="sub">À</div>
+          <input type="range" id="ageTo" min="19" max="100" value="100" style="accent-color:rgb(9,87,151)">
+          <div class="rl"><span>19</span><span>100</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="group" style="margin-bottom:0">
+      <label>Salaire moyen</label>
+      <input type="number" id="avgSalary" value="80000">
+    </div>
+  </div>
+
+  <div class="sec-head"><div class="sec-num">2</div><div class="sec-title">Prestations gouvernementales</div><div class="sec-line"></div></div>
+  <div class="card">
+    <div class="group">
+      <label>Âge RRQ · <span class="val" id="dRRQ">65</span> ans · <span id="bRRQ" class="badge bg">Référence</span></label>
+      <input type="range" id="ageRRQ" min="60" max="72" step="1" value="65" style="accent-color:#1E7E34">
+      <div class="rl"><span>60 (−36 %)</span><span>65</span><span>72 (+58,8 %)</span></div>
+    </div>
+    <div class="group">
+      <label>Âge SV/SRG · <span class="val" id="dSV">65</span> ans · <span id="bSV" class="badge bg">Référence</span></label>
+      <input type="range" id="ageSV" min="65" max="70" step="1" value="65" style="accent-color:#1E7E34">
+      <div class="rl"><span>65</span><span>70 (+36 %)</span></div>
+    </div>
+    <div class="group" style="margin-bottom:0">
+      <label>Âge SRG · <span class="val" id="dSRG">60</span> ans</label>
+      <input type="range" id="ageSRG" min="60" max="65" step="1" value="60" style="accent-color:#6F42C1">
+      <div class="rl"><span>60</span><span>65</span></div>
+    </div>
+  </div>
+
+  <div class="sec-head"><div class="sec-num">3</div><div class="sec-title">Contributions récurrentes</div><div class="sec-line"></div></div>
+  <div id="contribList"></div>
+  <button class="btn-add" onclick="addContrib()">+ Ajouter</button>
+
+  <div class="sec-head"><div class="sec-num">4</div><div class="sec-title">Retraits (one-shot)</div><div class="sec-line"></div></div>
+  <div id="withdrawList"></div>
+  <button class="btn-add" onclick="addWithdraw()">+ Ajouter</button>
+
+  <div class="sec-head"><div class="sec-num">5</div><div class="sec-title">Résumé (cumul)</div><div class="sec-line"></div></div>
+  <div class="card">
+    <div class="sr"><span>Contributions versées</span><span id="s1">—</span></div>
+    <div class="sr"><span>Retraits bruts</span><span id="s2">—</span></div>
+    <div class="sr"><span>Impôts estimés</span><span id="s3">—</span></div>
+    <div class="sr"><span>Prestations (RRQ+SV+SRG)</span><span id="s4">—</span></div>
+    <div class="sr f"><span>Solde final</span><span id="s5">—</span></div>
+  </div>
+  <div class="note" style="margin-top:4px;padding:0 2px">Simulation à titre indicatif. Consultez un planificateur financier.</div>
 </div>
 
-<div class="wrap">
-  <header>
-    <h1>Calculateur Retraite</h1>
-    <p>Québec et Canada · Contributions récurrentes · Simulation jusqu'à 100 ans</p>
-    <div class="or-bar"></div>
-  </header>
-  <main>
-    <!-- ── Sidebar ── -->
-    <div class="sidebar">
-      <div class="sec-head"><div class="sec-num">1</div><div class="sec-title">Paramètres</div><div class="sec-line"></div></div>
-      <div class="card">
-        <div class="group">
-          <label>Solde initial · <span class="val" id="d1">50 000 $</span></label>
-          <input type="range" id="initBal" min="0" max="500000" step="5000" value="50000" style="accent-color:rgb(9,87,151)">
-          <div class="range-labels"><span>0 $</span><span>500 k$</span></div>
-        </div>
-        <div class="group">
-          <label>Âge de début · <span class="val" id="d2">25</span> ans</label>
-          <input type="range" id="startAge" min="18" max="65" value="25" style="accent-color:rgb(9,87,151)">
-          <div class="range-labels"><span>18</span><span>65</span></div>
-        </div>
-        <div class="group" style="margin-bottom:0">
-          <label>Salaire moyen</label>
-          <input type="number" id="avgSalary" value="80000">
-        </div>
-      </div>
+<!-- ─── CONTENT ─── -->
+<div class="content">
 
-      <div class="sec-head"><div class="sec-num">2</div><div class="sec-title">Prestations gouvernementales</div><div class="sec-line"></div></div>
-      <div class="card">
-        <div class="group">
-          <label>Âge RRQ · <span class="val" id="dRRQ">65</span> ans · <span id="badgeRRQ" class="badge badge-green">Référence</span></label>
-          <input type="range" id="ageRRQ" min="60" max="72" step="1" value="65" style="accent-color:#1E7E34">
-          <div class="range-labels"><span>60 (−36 %)</span><span>65</span><span>72 (+58,8 %)</span></div>
-        </div>
-        <div class="group">
-          <label>Âge SV / SRG · <span class="val" id="dSV">65</span> ans · <span id="badgeSV" class="badge badge-green">Référence</span></label>
-          <input type="range" id="ageSV" min="65" max="70" step="1" value="65" style="accent-color:#1E7E34">
-          <div class="range-labels"><span>65 (référence)</span><span>70 (+36 %)</span></div>
-        </div>
-        <div class="group" style="margin-bottom:0">
-          <label>Âge SRG · <span class="val" id="dSRG">60</span> ans</label>
-          <input type="range" id="ageSRG" min="60" max="65" step="1" value="60" style="accent-color:#6F42C1">
-          <div class="range-labels"><span>60</span><span>65</span></div>
-        </div>
-      </div>
-
-      <div class="sec-head"><div class="sec-num">3</div><div class="sec-title">Contributions récurrentes</div><div class="sec-line"></div></div>
-      <div id="contribList"></div>
-      <button class="btn-add" onclick="addContrib()">+ Ajouter</button>
-
-      <div class="sec-head"><div class="sec-num">4</div><div class="sec-title">Retraits (one-shot)</div><div class="sec-line"></div></div>
-      <div id="withdrawList"></div>
-      <button class="btn-add" onclick="addWithdraw()">+ Ajouter</button>
-
-      <div class="sec-head"><div class="sec-num">5</div><div class="sec-title">Résumé (cumul)</div><div class="sec-line"></div></div>
-      <div class="card">
-        <div class="sum-row"><span>Contributions versées</span><span id="s1">—</span></div>
-        <div class="sum-row"><span>Retraits bruts</span><span id="s2">—</span></div>
-        <div class="sum-row"><span>Impôts estimés</span><span id="s3">—</span></div>
-        <div class="sum-row"><span>Prestations (RRQ+SV+SRG)</span><span id="s4">—</span></div>
-        <div class="sum-row final"><span>Solde à 100 ans</span><span id="s5">—</span></div>
-      </div>
-      <div class="note" style="margin-top:4px;padding:0 2px">Simulation à titre indicatif. Consultez un planificateur financier.</div>
-    </div>
-
-    <!-- ── Content ── -->
-    <div class="content">
-      <!-- Main chart -->
-      <div class="ccard">
-        <div class="ccard-head">
-          <span>Portefeuille &amp; Revenus annuels</span>
-          <span id="rateInfo" class="note"></span>
-        </div>
-        <div class="ccard-body" style="height:230px"><canvas id="chart1"></canvas></div>
-        <div class="legend">
-          <div class="legend-item"><span class="legend-line" style="background:rgb(9,87,151)"></span>Solde portef.</div>
-          <div class="legend-item"><span class="legend-line" style="background:#1E7E34"></span>Revenu net/an</div>
-          <div class="legend-item"><span class="legend-line" style="background:#C45600;opacity:.7"></span>Retrait brut/an</div>
-        </div>
-      </div>
-
-      <!-- Small charts -->
-      <div class="cgrid">
-        <div class="ccard">
-          <div class="ccard-head"><span>RRQ</span><span id="lblRRQ" class="note"></span></div>
-          <div class="ccard-body" style="height:120px"><canvas id="chart2"></canvas></div>
-        </div>
-        <div class="ccard">
-          <div class="ccard-head"><span>SV + SRG</span><span id="lblSV" class="note"></span></div>
-          <div class="ccard-body" style="height:120px"><canvas id="chart3"></canvas></div>
-        </div>
-        <div class="ccard">
-          <div class="ccard-head"><span>Impôts</span></div>
-          <div class="ccard-body" style="height:120px"><canvas id="chart4"></canvas></div>
-        </div>
-      </div>
-
-      <!-- Table -->
-      <div class="ccard">
-        <div class="ccard-head"><span>Détails (1 rangée / 2 ans)</span></div>
-        <table>
-          <thead><tr>
-            <th>Âge</th><th>Taux eff.</th><th>Portef.</th>
-            <th>RRQ/an</th><th>SV/an</th><th>SRG/an</th>
-            <th>Impôt</th><th>Net</th>
-          </tr></thead>
-          <tbody id="tbody"></tbody>
-        </table>
+  <!-- Main chart -->
+  <div class="cc">
+    <div class="ch">
+      <span>Vue d'ensemble</span>
+      <div style="display:flex;gap:6px;align-items:center">
+        <span id="viewInfo" class="note"></span>
+        <button class="zbtn" onclick="resetZoom()">↺ Zoom</button>
       </div>
     </div>
-  </main>
+    <div class="cb" style="height:290px"><canvas id="chart1" style="cursor:crosshair"></canvas></div>
+    <div class="legend">
+      <div class="li"><span class="ll" style="background:rgb(9,87,151)"></span>Portefeuille</div>
+      <div class="li"><span class="lb" style="background:rgba(30,126,52,.8)"></span>Contributions/an</div>
+      <div class="li"><span class="lb" style="background:rgba(196,86,0,.8)"></span>Retraits/an</div>
+      <div class="li"><span class="ll" style="background:#6F42C1"></span>Revenus passifs/an</div>
+    </div>
+    <div class="zb">
+      <span>🔍 Molette pour zoomer · Cliquer-glisser pour déplacer</span>
+      <span id="viewInfo2" style="margin-left:auto"></span>
+    </div>
+  </div>
+
+  <!-- Small charts -->
+  <div class="cg">
+    <div class="cc">
+      <div class="ch"><span>RRQ /an</span><span id="lblRRQ" class="note"></span></div>
+      <div class="cb" style="height:115px"><canvas id="chart2"></canvas></div>
+    </div>
+    <div class="cc">
+      <div class="ch"><span>SV + SRG /an</span><span id="lblSV" class="note"></span></div>
+      <div class="cb" style="height:115px"><canvas id="chart3"></canvas></div>
+    </div>
+    <div class="cc">
+      <div class="ch"><span>Impôts /an</span></div>
+      <div class="cb" style="height:115px"><canvas id="chart4"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="cc">
+    <div class="ch"><span>Détails (1 rangée / 2 ans)</span></div>
+    <table>
+      <thead><tr><th>Âge</th><th>Taux</th><th>Portef.</th><th>RRQ/an</th><th>SV/an</th><th>SRG/an</th><th>Impôt</th><th>Net</th></tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</div>
+</main>
 </div>
 
 <script>
-// ── Data ──────────────────────────────────────────────────
-var contrib  = [{id:1, startAge:25, endAge:65, amount:10000, vehicle:'REER', rate:5}];
-var withdraw = [{id:1, age:65, amount:40000}];
+// ── DATA ─────────────────────────────────────────────────
+var contrib  = [{id:1,startAge:25,endAge:65,amount:10000,vehicle:'REER',rate:5}];
+var withdraw = [{id:1,age:65,amount:40000}];
 var nextC=2, nextW=2;
-var SIM = []; // current results, used by chart hovers
+var SIM = [];
+var VIEW = {s:18, e:100};
+var HOVER = null;
+var DRAG  = {on:false,x0:0,v0:null};
+var ANIM  = {raf:null,prog:1};
 
-// ── Format helpers ────────────────────────────────────────
-function fmtCAD(v){ return Math.round(v).toLocaleString('fr-CA')+'\u202f$'; }
+// ── FORMAT ────────────────────────────────────────────────
+function fmtCAD(v){return Math.round(v).toLocaleString('fr-CA')+'\u202f$';}
 function fmtK(v){
-  if(v>=1e6) return (v/1e6).toFixed(2)+'\u202fM$';
-  if(v>=1e3) return (v/1e3).toFixed(0)+'\u202fk$';
-  return Math.round(v)+'\u202f$';
+  if(v>=1e6)return (v/1e6).toFixed(1)+'M$';
+  if(v>=1000)return (v/1000).toFixed(0)+'k$';
+  return Math.round(v)+'$';
 }
+function niceMax(v){
+  if(!v||v<=0)return 1;
+  var m=Math.pow(10,Math.floor(Math.log10(v)));
+  return Math.ceil(v/m)*m;
+}
+function ease(t){return t<.5?2*t*t:-1+(4-2*t)*t;}
 
-// ── Finance helpers ───────────────────────────────────────
+// ── SIMULATION ────────────────────────────────────────────
 function yearRate(age){
   var act=contrib.filter(function(c){return age>=c.startAge&&age<=c.endAge;});
-  if(!act.length){ return contrib.length?contrib.reduce(function(s,c){return s+c.rate/100;},0)/contrib.length:0.05; }
+  if(!act.length)return contrib.length?contrib.reduce(function(s,c){return s+c.rate/100;},0)/contrib.length:.05;
   var tot=act.reduce(function(s,c){return s+c.amount;},0);
-  if(!tot) return act.reduce(function(s,c){return s+c.rate/100;},0)/act.length;
-  return act.reduce(function(s,c){return s+c.amount*(c.rate/100);},0)/tot;
+  return tot?act.reduce(function(s,c){return s+c.amount*(c.rate/100);},0)/tot:.05;
 }
-function calcRRQ(age,ageRRQ,salary){
-  if(age<ageRRQ)return 0;
-  var b=Math.min(salary*0.25,15888),d=ageRRQ-65;
-  if(d<0)b*=(1+d*0.054); else if(d>0)b*=(1+Math.min(d,7)*0.042);
+function calcRRQ(age,aR,sal){
+  if(age<aR)return 0;
+  var b=Math.min(sal*.25,15888),d=aR-65;
+  if(d<0)b*=(1+d*.054);else if(d>0)b*=(1+Math.min(d,7)*.042);
   return b;
 }
-function calcSV(age,ageSV,income){
-  if(age<ageSV)return 0;
-  return Math.max(0,8000*(1+0.072*Math.max(0,ageSV-65))-Math.max(0,income-90997)*0.15);
+function calcSV(age,aS,inc){
+  if(age<aS)return 0;
+  return Math.max(0,8000*(1+.072*Math.max(0,aS-65))-Math.max(0,inc-90997)*.15);
 }
-function calcSRG(age,ageSV,ageSRG,income,sv){
-  if(age<ageSV||age<ageSRG)return 0;
-  return Math.max(0,12000-Math.max(0,income-sv)*0.5);
+function calcSRG(age,aS,aSG,inc,sv){
+  if(age<aS||age<aSG)return 0;
+  return Math.max(0,12000-Math.max(0,inc-sv)*.5);
 }
-function calcTax(income){
-  if(income<=0)return 0;
-  var fed=[55867,111733,173205],fr=[0.15,0.205,0.26,0.33];
-  var qc=[49275,98540,119910],qr=[0.15,0.20,0.2575,0.2975];
+function calcTax(inc){
+  if(inc<=0)return 0;
+  var f=[55867,111733,173205],fr=[.15,.205,.26,.33];
+  var q=[49275,98540,119910],qr=[.15,.20,.2575,.2975];
   var t=0,p=0,i;
-  for(i=0;i<4;i++){var l=i<fed.length?fed[i]:income+1,x=Math.min(income,l)-p;t+=Math.max(0,x)*fr[i];p=l;if(income<=l)break;}
+  for(i=0;i<4;i++){var l=i<f.length?f[i]:inc+1,x=Math.min(inc,l)-p;t+=Math.max(0,x)*fr[i];p=l;if(inc<=l)break;}
   p=0;
-  for(i=0;i<4;i++){var l=i<qc.length?qc[i]:income+1,x=Math.min(income,l)-p;t+=Math.max(0,x)*qr[i];p=l;if(income<=l)break;}
-  return Math.max(0,t-(0.15+0.15)*15705);
+  for(i=0;i<4;i++){var l=i<q.length?q[i]:inc+1,x=Math.min(inc,l)-p;t+=Math.max(0,x)*qr[i];p=l;if(inc<=l)break;}
+  return Math.max(0,t-.3*15705);
 }
 function simulate(){
   var ib=+document.getElementById('initBal').value,
-      sa=+document.getElementById('startAge').value,
+      sa=+document.getElementById('ageFrom').value,
+      ea=+document.getElementById('ageTo').value,
       sal=+document.getElementById('avgSalary').value,
-      aRRQ=+document.getElementById('ageRRQ').value,
-      aSV=+document.getElementById('ageSV').value,
-      aSRG=+document.getElementById('ageSRG').value;
+      aR=+document.getElementById('ageRRQ').value,
+      aS=+document.getElementById('ageSV').value,
+      aSG=+document.getElementById('ageSRG').value;
   var res=[],bal=ib;
-  for(var age=sa;age<=100;age++){
-    var r=yearRate(age);
-    var c=0; contrib.forEach(function(ct){if(age>=ct.startAge&&age<=ct.endAge)c+=ct.amount;});
-    var w=0; withdraw.forEach(function(wt){if(wt.age===age)w+=wt.amount;});
+  for(var age=sa;age<=ea;age++){
+    var r=yearRate(age),c=0,w=0;
+    contrib.forEach(function(ct){if(age>=ct.startAge&&age<=ct.endAge)c+=ct.amount;});
+    withdraw.forEach(function(wt){if(wt.age===age)w+=wt.amount;});
     bal=Math.max(0,bal*(1+r)+c-w);
-    var t=w?calcTax(w):0,
-        rrq=calcRRQ(age,aRRQ,sal),
-        sv=calcSV(age,aSV,w),
-        srg=calcSRG(age,aSV,aSRG,w,sv);
+    var t=w?calcTax(w):0,rrq=calcRRQ(age,aR,sal),sv=calcSV(age,aS,w),srg=calcSRG(age,aS,aSG,w,sv);
     res.push({age:age,bal:bal,c:c,w:w,t:t,rrq:rrq,sv:sv,srg:srg,ben:rrq+sv+srg,net:(w+rrq+sv+srg)-t,rate:r});
   }
   return res;
 }
 
-// ── Chart engine ──────────────────────────────────────────
-var TIP = document.getElementById('chartTip');
+// ── CHART ENGINE ──────────────────────────────────────────
+var PAD={t:14,r:18,b:26,l:58,gap:6};
+var SPLIT=.63;
 
-function niceMax(v){
-  if(v===0)return 1;
-  var mag=Math.pow(10,Math.floor(Math.log10(v)));
-  return Math.ceil(v/mag)*mag;
+function getVis(){return SIM.filter(function(r){return r.age>=VIEW.s&&r.age<=VIEW.e;});}
+
+function setupCanvas(id){
+  var cv=document.getElementById(id);if(!cv)return null;
+  var dpr=window.devicePixelRatio||1;
+  var W=cv.offsetWidth||600,H=cv.offsetHeight||300;
+  cv.width=W*dpr;cv.height=H*dpr;
+  cv.style.width=W+'px';cv.style.height=H+'px';
+  var ctx=cv.getContext('2d');ctx.scale(dpr,dpr);
+  return {cv:cv,ctx:ctx,W:W,H:H};
 }
 
-/* series: [{label, color, data:[numbers], fill, dash, width}]
-   ages: [numbers]
-   highlight: index or null
-   returns geometry object */
-function drawChart(id, series, ages, highlight){
-  var cv=document.getElementById(id); if(!cv)return null;
-  var dpr=window.devicePixelRatio||1;
-  var W=cv.offsetWidth||400, H=cv.offsetHeight||200;
-  cv.width=W*dpr; cv.height=H*dpr;
-  cv.style.width=W+'px'; cv.style.height=H+'px';
-  var ctx=cv.getContext('2d'); ctx.scale(dpr,dpr);
-  var pad={t:12,r:16,b:26,l:54};
-  var iW=W-pad.l-pad.r, iH=H-pad.t-pad.b;
-
-  var allV=[]; series.forEach(function(s){allV=allV.concat(s.data);});
-  var max=niceMax(Math.max.apply(null,allV)||1);
-
+// Draw a simple line+area small chart
+function drawSmall(id,vals,color){
+  var s=setupCanvas(id);if(!s||!vals.length)return;
+  var ctx=s.ctx,W=s.W,H=s.H;
+  var pad={t:8,r:10,b:18,l:44};
+  var iW=W-pad.l-pad.r,iH=H-pad.t-pad.b;
+  var max=niceMax(Math.max.apply(null,vals)||1);
   ctx.clearRect(0,0,W,H);
 
-  // Y grid + labels
-  var nY=4;
-  for(var ti=0;ti<=nY;ti++){
-    var val=(max/nY)*ti, yy=pad.t+iH-(ti/nY)*iH;
-    ctx.strokeStyle='#E0E0E0'; ctx.lineWidth=1; ctx.setLineDash([3,3]);
-    ctx.beginPath(); ctx.moveTo(pad.l,yy); ctx.lineTo(pad.l+iW,yy); ctx.stroke();
+  // Grid
+  [0,.5,1].forEach(function(f){
+    var y=pad.t+iH*(1-f);
+    ctx.strokeStyle='#E0E0E0';ctx.lineWidth=1;ctx.setLineDash([3,3]);
+    ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+iW,y);ctx.stroke();
     ctx.setLineDash([]);
-    ctx.fillStyle='#999'; ctx.font='10px Arial'; ctx.textAlign='right';
-    ctx.fillText(fmtK(val),pad.l-5,yy+3);
-  }
-
-  // X ticks (every 5 yrs)
-  var xStep=ages.length>40?10:5;
-  ctx.textAlign='center'; ctx.fillStyle='#999'; ctx.font='10px Arial';
-  ages.forEach(function(age,i){
-    if(age%xStep===0){
-      var xx=pad.l+(i/(ages.length-1||1))*iW;
-      ctx.fillText(age,xx,H-5);
-      ctx.strokeStyle='#DDD'; ctx.lineWidth=1;
-      ctx.beginPath(); ctx.moveTo(xx,pad.t+iH); ctx.lineTo(xx,pad.t+iH+3); ctx.stroke();
-    }
+    if(f>0){ctx.fillStyle='#999';ctx.font='9px Arial';ctx.textAlign='right';ctx.fillText(fmtK(max*f),pad.l-4,y+3);}
   });
 
   // Axes
-  ctx.strokeStyle='#CCC'; ctx.lineWidth=1; ctx.setLineDash([]);
-  ctx.beginPath(); ctx.moveTo(pad.l,pad.t); ctx.lineTo(pad.l,pad.t+iH); ctx.lineTo(pad.l+iW,pad.t+iH); ctx.stroke();
+  ctx.strokeStyle='#CCC';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,pad.t+iH);ctx.lineTo(pad.l+iW,pad.t+iH);ctx.stroke();
 
-  // Highlight crosshair
-  if(highlight!=null){
-    var hx=pad.l+(highlight/(ages.length-1||1))*iW;
-    ctx.strokeStyle='rgba(0,0,0,0.12)'; ctx.lineWidth=1; ctx.setLineDash([4,3]);
-    ctx.beginPath(); ctx.moveTo(hx,pad.t); ctx.lineTo(hx,pad.t+iH); ctx.stroke();
-    ctx.setLineDash([]);
+  // Area gradient
+  var grad=ctx.createLinearGradient(0,pad.t,0,pad.t+iH);
+  grad.addColorStop(0,color+'44');grad.addColorStop(1,color+'08');
+  ctx.beginPath();
+  vals.forEach(function(v,i){
+    var x=pad.l+(i/(vals.length-1||1))*iW,y=pad.t+iH-(v/max)*iH;
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.lineTo(pad.l+iW,pad.t+iH);ctx.lineTo(pad.l,pad.t+iH);ctx.closePath();
+  ctx.fillStyle=grad;ctx.fill();
+
+  // Line
+  ctx.beginPath();
+  vals.forEach(function(v,i){
+    var x=pad.l+(i/(vals.length-1||1))*iW,y=pad.t+iH-(v/max)*iH;
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.strokeStyle=color;ctx.lineWidth=2;ctx.stroke();
+
+  // X age labels (start / end)
+  var ages=SIM.map(function(r){return r.age;});
+  if(ages.length){
+    ctx.fillStyle='#999';ctx.font='9px Arial';
+    ctx.textAlign='left';ctx.fillText(ages[0],pad.l,H-2);
+    ctx.textAlign='right';ctx.fillText(ages[ages.length-1],pad.l+iW,H-2);
   }
+}
 
-  // Lines (fills first so lines sit on top)
-  series.forEach(function(s){
-    if(!s.data||!s.data.length||!s.fill)return;
-    ctx.beginPath();
-    s.data.forEach(function(v,i){
-      var xx=pad.l+(i/(s.data.length-1||1))*iW, yy=pad.t+iH-(v/max)*iH;
-      i===0?ctx.moveTo(xx,yy):ctx.lineTo(xx,yy);
-    });
-    ctx.lineTo(pad.l+(s.data.length-1)/(s.data.length-1||1)*iW,pad.t+iH);
-    ctx.lineTo(pad.l,pad.t+iH); ctx.closePath();
-    ctx.fillStyle=s.color+'1A'; ctx.fill();
+// Main interactive chart
+function renderChart(prog, hoverIdx){
+  var s=setupCanvas('chart1');if(!s||!SIM.length)return;
+  var ctx=s.ctx,W=s.W,H=s.H;
+  var iW=W-PAD.l-PAD.r;
+  var mainH=Math.floor((H-PAD.t-PAD.b-PAD.gap)*SPLIT);
+  var flowH=H-PAD.t-PAD.b-PAD.gap-mainH;
+  var mTop=PAD.t,fTop=PAD.t+mainH+PAD.gap;
+
+  var vis=getVis();if(!vis.length)return;
+  var p=prog==null?1:prog;
+  var n=Math.max(2,Math.round(vis.length*ease(p)));
+  var vd=vis.slice(0,n);
+  var ages=vd.map(function(r){return r.age;});
+  var nn=vd.length-1||1;
+
+  ctx.clearRect(0,0,W,H);
+
+  // ── PORTFOLIO area ───────────────────────────────────────
+  var balMax=niceMax(Math.max.apply(null,SIM.map(function(r){return r.bal;}))||1);
+
+  // Y grid main
+  [0,.25,.5,.75,1].forEach(function(f){
+    var y=mTop+mainH*(1-f);
+    ctx.strokeStyle='#EAEAEA';ctx.lineWidth=1;ctx.setLineDash([3,3]);
+    ctx.beginPath();ctx.moveTo(PAD.l,y);ctx.lineTo(PAD.l+iW,y);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='#AAA';ctx.font='9px Arial';ctx.textAlign='right';
+    ctx.fillText(fmtK(balMax*f),PAD.l-4,y+3);
   });
 
-  series.forEach(function(s){
-    if(!s.data||!s.data.length)return;
-    ctx.beginPath();
-    s.data.forEach(function(v,i){
-      var xx=pad.l+(i/(s.data.length-1||1))*iW, yy=pad.t+iH-(v/max)*iH;
-      i===0?ctx.moveTo(xx,yy):ctx.lineTo(xx,yy);
-    });
-    ctx.strokeStyle=s.color; ctx.lineWidth=s.width||2;
-    ctx.setLineDash(s.dash||[]); ctx.stroke(); ctx.setLineDash([]);
-
-    // Dot at highlight
-    if(highlight!=null&&highlight<s.data.length){
-      var hxd=pad.l+(highlight/(s.data.length-1||1))*iW;
-      var hyd=pad.t+iH-(s.data[highlight]/max)*iH;
-      ctx.beginPath(); ctx.arc(hxd,hyd,4,0,Math.PI*2);
-      ctx.fillStyle=s.color; ctx.fill();
-      ctx.strokeStyle='#fff'; ctx.lineWidth=2; ctx.stroke();
+  // Contribution zones (subtle bg)
+  var inC=false;
+  vd.forEach(function(r,i){
+    var x=PAD.l+(i/nn)*iW;
+    var wasC=inC;inC=r.c>0;
+    if(inC){
+      var x2=i<vd.length-1?PAD.l+((i+1)/nn)*iW:x+2;
+      ctx.fillStyle='rgba(30,126,52,.04)';
+      ctx.fillRect(x,mTop,x2-x,mainH);
     }
   });
 
-  return {pad:pad,iW:iW,iH:iH,max:max,n:ages.length};
-}
-
-// Returns series + ages from SIM for a given chart
-function getSeries1(){ // main chart: portfolio, net income, withdrawals
-  return [
-    {label:'Portef.',       color:'rgb(9,87,151)', fill:true,  width:2.5, data:SIM.map(function(r){return r.bal;})},
-    {label:'Revenu net/an', color:'#1E7E34',       fill:false, width:2,   data:SIM.map(function(r){return Math.max(0,r.net);})},
-    {label:'Retrait/an',    color:'#C45600',       fill:false, width:1.5, dash:[5,3], data:SIM.map(function(r){return r.w;})},
-  ];
-}
-function getSeries2(){ return [{label:'RRQ/an',    color:'#1E7E34',       fill:true, data:SIM.map(function(r){return r.rrq;})}]; }
-function getSeries3(){ return [{label:'SV+SRG/an', color:'#6F42C1',       fill:true, data:SIM.map(function(r){return r.sv+r.srg;})}]; }
-function getSeries4(){ return [{label:'Impôt/an',  color:'#C45600',       fill:true, data:SIM.map(function(r){return r.t;})}]; }
-function getAges(){    return SIM.map(function(r){return r.age;}); }
-
-// Tooltip builder
-function showTip(e, idx){
-  var r=SIM[idx]; if(!r)return;
-  document.getElementById('tipHead').textContent=r.age+' ans';
-  var rows=[
-    {l:'Portefeuille', v:fmtK(r.bal),   c:'rgb(9,87,151)'},
-    {l:'Contributions',v:r.c>0?fmtK(r.c):'—', c:'#555'},
-    {l:'Retrait brut', v:r.w>0?fmtK(r.w):'—', c:'#C45600'},
-    null,
-    {l:'RRQ/an',       v:r.rrq>0?fmtK(r.rrq):'—', c:'#1E7E34'},
-    {l:'SV/an',        v:r.sv>0?fmtK(r.sv):'—',  c:'#6F42C1'},
-    {l:'SRG/an',       v:r.srg>0?fmtK(r.srg):'—',c:'#6F42C1'},
-    null,
-    {l:'Impôt',        v:r.t>0?fmtK(r.t):'—', c:'#C45600'},
-    {l:'Net/an',       v:fmtK(Math.max(0,r.net)), c:'#1E7E34'},
-  ];
-  var h='';
-  rows.forEach(function(row){
-    if(!row){h+='<div class="tip-div"></div>';return;}
-    h+='<div class="tip-row"><span class="tip-label">'+row.l+'</span><span class="tip-val" style="color:'+row.c+'">'+row.v+'</span></div>';
+  // Gradient fill under balance curve
+  ctx.beginPath();
+  vd.forEach(function(r,i){
+    var x=PAD.l+(i/nn)*iW,y=mTop+mainH-(r.bal/balMax)*mainH;
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
   });
-  document.getElementById('tipBody').innerHTML=h;
-  TIP.style.display='block';
-  var tx=e.clientX+16, ty=e.clientY-10;
-  if(tx+190>window.innerWidth) tx=e.clientX-200;
-  TIP.style.left=tx+'px'; TIP.style.top=ty+'px';
+  var lastX=PAD.l+(nn/nn)*iW;
+  ctx.lineTo(lastX,mTop+mainH);ctx.lineTo(PAD.l,mTop+mainH);ctx.closePath();
+  var g1=ctx.createLinearGradient(0,mTop,0,mTop+mainH);
+  g1.addColorStop(0,'rgba(9,87,151,.28)');g1.addColorStop(.6,'rgba(9,87,151,.08)');g1.addColorStop(1,'rgba(9,87,151,.01)');
+  ctx.fillStyle=g1;ctx.fill();
+
+  // Balance line
+  ctx.beginPath();
+  vd.forEach(function(r,i){
+    var x=PAD.l+(i/nn)*iW,y=mTop+mainH-(r.bal/balMax)*mainH;
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.strokeStyle='rgb(9,87,151)';ctx.lineWidth=2.5;ctx.setLineDash([]);ctx.stroke();
+
+  // Y label
+  ctx.fillStyle='rgb(9,87,151)';ctx.font='bold 9px Arial';ctx.textAlign='left';
+  ctx.fillText('PORTEF.',PAD.l+4,mTop+11);
+
+  // ── FLOW bars + passive income ───────────────────────────
+  var flowMax=niceMax(Math.max.apply(null,SIM.map(function(r){return Math.max(r.c,r.w,r.ben);})||[1]));
+
+  // Y grid flow (2 ticks)
+  [0,.5,1].forEach(function(f){
+    var y=fTop+flowH*(1-f);
+    ctx.strokeStyle='#EAEAEA';ctx.lineWidth=1;ctx.setLineDash([3,3]);
+    ctx.beginPath();ctx.moveTo(PAD.l,y);ctx.lineTo(PAD.l+iW,y);ctx.stroke();ctx.setLineDash([]);
+    if(f>0){ctx.fillStyle='#AAA';ctx.font='9px Arial';ctx.textAlign='right';ctx.fillText(fmtK(flowMax*f),PAD.l-4,y+3);}
+  });
+
+  // Bars
+  var bw=Math.max(1.5,(iW/vd.length)*.55);
+  vd.forEach(function(r,i){
+    var x=PAD.l+(i/nn)*iW;
+    if(r.c>0){var h=(r.c/flowMax)*flowH;ctx.fillStyle='rgba(30,126,52,.8)';ctx.fillRect(x-bw/2,fTop+flowH-h,bw,h);}
+    if(r.w>0){var h=(r.w/flowMax)*flowH;ctx.fillStyle='rgba(196,86,0,.8)';ctx.fillRect(x-bw/2,fTop+flowH-h,bw,h);}
+  });
+
+  // Passive income line
+  ctx.beginPath();
+  vd.forEach(function(r,i){
+    var x=PAD.l+(i/nn)*iW,y=fTop+flowH-(r.ben/flowMax)*flowH;
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.strokeStyle='#6F42C1';ctx.lineWidth=2;ctx.stroke();
+
+  // Flow Y label
+  ctx.fillStyle='#6F42C1';ctx.font='bold 9px Arial';ctx.textAlign='left';
+  ctx.fillText('FLUX',PAD.l+4,fTop+10);
+
+  // ── AXES ────────────────────────────────────────────────
+  ctx.strokeStyle='#CCC';ctx.lineWidth=1;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(PAD.l,mTop);ctx.lineTo(PAD.l,mTop+mainH);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(PAD.l,fTop);ctx.lineTo(PAD.l,fTop+flowH);ctx.lineTo(PAD.l+iW,fTop+flowH);ctx.stroke();
+  // Divider
+  ctx.strokeStyle='#DDD';ctx.setLineDash([2,4]);
+  ctx.beginPath();ctx.moveTo(PAD.l,fTop-3);ctx.lineTo(PAD.l+iW,fTop-3);ctx.stroke();ctx.setLineDash([]);
+
+  // ── X TICKS ──────────────────────────────────────────────
+  var range=VIEW.e-VIEW.s;
+  var step=range>60?10:range>25?5:range>10?2:1;
+  ctx.fillStyle='#AAA';ctx.font='10px Arial';ctx.textAlign='center';
+  ages.forEach(function(age,i){
+    if(age%step===0){
+      var x=PAD.l+(i/nn)*iW;
+      ctx.fillText(age,x,fTop+flowH+PAD.b-4);
+      ctx.strokeStyle='#DDD';ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(x,fTop+flowH);ctx.lineTo(x,fTop+flowH+3);ctx.stroke();
+    }
+  });
+
+  // ── HOVER ────────────────────────────────────────────────
+  if(hoverIdx!=null&&hoverIdx<vd.length){
+    var hx=PAD.l+(hoverIdx/nn)*iW;
+    ctx.strokeStyle='rgba(9,87,151,.2)';ctx.lineWidth=1;ctx.setLineDash([4,3]);
+    ctx.beginPath();ctx.moveTo(hx,mTop);ctx.lineTo(hx,fTop+flowH);ctx.stroke();ctx.setLineDash([]);
+
+    // Dot on balance
+    var r=vd[hoverIdx];
+    var dotY=mTop+mainH-(r.bal/balMax)*mainH;
+    ctx.beginPath();ctx.arc(hx,dotY,5,0,Math.PI*2);
+    ctx.fillStyle='rgb(9,87,151)';ctx.fill();
+    ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
+
+    // Dot on passive income
+    if(flowMax>0){
+      var piY=fTop+flowH-(r.ben/flowMax)*flowH;
+      ctx.beginPath();ctx.arc(hx,piY,4,0,Math.PI*2);
+      ctx.fillStyle='#6F42C1';ctx.fill();
+      ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
+    }
+  }
 }
 
-function setupHover(id, seriesFn){
-  var cv=document.getElementById(id); if(!cv)return;
-  var geo=null;
+function startAnim(){
+  cancelAnimationFrame(ANIM.raf);
+  ANIM.prog=0;
+  var frame=0,dur=50;
+  function step(){
+    frame++;ANIM.prog=Math.min(1,frame/dur);
+    renderChart(ANIM.prog,null);
+    if(ANIM.prog<1)ANIM.raf=requestAnimationFrame(step);
+    else ANIM.raf=null;
+  }
+  ANIM.raf=requestAnimationFrame(step);
+}
+
+// ── TOOLTIP ──────────────────────────────────────────────
+var TIP=document.getElementById('tip');
+function row(l,v,c){return '<div class="tr"><span style="color:#555">'+l+'</span><b style="color:'+c+'">'+v+'</b></div>';}
+function showTip(e,r){
+  var h='<div class="th">'+r.age+' ans</div>';
+  h+=row('Portefeuille',fmtK(r.bal),'rgb(9,87,151)');
+  h+='<div class="td"></div>';
+  if(r.c>0) h+=row('Contributions/an',fmtK(r.c),'#1E7E34');
+  if(r.w>0) h+=row('Retrait',fmtK(r.w),'#C45600');
+  if(r.c>0||r.w>0) h+='<div class="td"></div>';
+  if(r.rrq>0) h+=row('RRQ/an',fmtK(r.rrq),'#1E7E34');
+  if(r.sv>0)  h+=row('SV/an', fmtK(r.sv), '#6F42C1');
+  if(r.srg>0) h+=row('SRG/an',fmtK(r.srg),'#6F42C1');
+  if(r.ben>0) h+='<div class="td"></div>';
+  if(r.t>0) h+=row('Impôt',fmtK(r.t),'#C45600');
+  h+=row('Revenu net/an',fmtK(Math.max(0,r.net)),'#1E7E34');
+  h+='<div class="ts">Taux eff. '+(r.rate*100).toFixed(1)+'%</div>';
+  TIP.innerHTML=h;TIP.style.display='block';
+  var tx=e.clientX+16,ty=e.clientY-16;
+  if(tx+185>window.innerWidth)tx=e.clientX-195;
+  if(ty+300>window.innerHeight)ty=window.innerHeight-305;
+  TIP.style.left=tx+'px';TIP.style.top=ty+'px';
+}
+
+// ── CHART INTERACTIONS ────────────────────────────────────
+function initChartEvents(){
+  var cv=document.getElementById('chart1');
+  if(!cv)return;
+
+  // Hover / drag
   cv.addEventListener('mousemove',function(e){
-    var rect=cv.getBoundingClientRect();
-    var mx=e.clientX-rect.left;
-    var ages=getAges();
-    if(!geo) geo=drawChart(id,seriesFn(),ages,null);
-    if(!geo)return;
-    var ratio=Math.max(0,Math.min(1,(mx-geo.pad.l)/geo.iW));
-    var idx=Math.round(ratio*(ages.length-1));
-    geo=drawChart(id,seriesFn(),ages,idx);
-    showTip(e,idx);
+    if(DRAG.on){
+      var iW=cv.offsetWidth-PAD.l-PAD.r;
+      var dx=e.clientX-DRAG.x0;
+      var range=DRAG.v0.e-DRAG.v0.s;
+      var shift=Math.round(-dx/iW*range);
+      var sa=+document.getElementById('ageFrom').value;
+      var ea=+document.getElementById('ageTo').value;
+      var ns=Math.max(sa,DRAG.v0.s+shift),ne=Math.min(ea,DRAG.v0.e+shift);
+      if(ne-ns<2)return;
+      VIEW.s=ns;VIEW.e=ne;
+      updateViewInfo();
+      renderChart(1,null);TIP.style.display='none';
+    } else {
+      var vis=getVis();if(!vis.length)return;
+      var rect=cv.getBoundingClientRect();
+      var iW=cv.offsetWidth-PAD.l-PAD.r;
+      var ratio=Math.max(0,Math.min(1,(e.clientX-rect.left-PAD.l)/iW));
+      var idx=Math.round(ratio*(vis.length-1));
+      HOVER=idx;
+      renderChart(1,idx);
+      showTip(e,vis[idx]);
+    }
   });
+  cv.addEventListener('mousedown',function(e){
+    DRAG.on=true;DRAG.x0=e.clientX;DRAG.v0={s:VIEW.s,e:VIEW.e};
+    cv.style.cursor='grabbing';
+  });
+  cv.addEventListener('mouseup',function(){DRAG.on=false;cv.style.cursor='crosshair';});
   cv.addEventListener('mouseleave',function(){
-    TIP.style.display='none';
-    geo=drawChart(id,seriesFn(),getAges(),null);
-    geo=null;
+    if(DRAG.on){DRAG.on=false;cv.style.cursor='crosshair';}
+    TIP.style.display='none';HOVER=null;renderChart(1,null);
   });
+
+  // Zoom
+  cv.addEventListener('wheel',function(e){
+    e.preventDefault();
+    var sa=+document.getElementById('ageFrom').value;
+    var ea=+document.getElementById('ageTo').value;
+    var iW=cv.offsetWidth-PAD.l-PAD.r;
+    var rect=cv.getBoundingClientRect();
+    var ratio=Math.max(0,Math.min(1,(e.clientX-rect.left-PAD.l)/iW));
+    var range=VIEW.e-VIEW.s;
+    var center=VIEW.s+ratio*range;
+    var factor=e.deltaY>0?1.18:.85;
+    var nr=Math.max(4,Math.min(ea-sa,range*factor));
+    var ns=Math.round(center-ratio*nr);
+    var ne=Math.round(ns+nr);
+    if(ns<sa){ns=sa;ne=Math.min(ea,ns+Math.round(nr));}
+    if(ne>ea){ne=ea;ns=Math.max(sa,ne-Math.round(nr));}
+    VIEW.s=ns;VIEW.e=ne;
+    updateViewInfo();
+    renderChart(1,null);
+  },{passive:false});
 }
 
-// ── Sidebar builders ──────────────────────────────────────
+function resetZoom(){
+  VIEW.s=+document.getElementById('ageFrom').value;
+  VIEW.e=+document.getElementById('ageTo').value;
+  updateViewInfo();
+  renderChart(1,null);
+}
+function updateViewInfo(){
+  var el=document.getElementById('viewInfo2');
+  var elH=document.getElementById('viewInfo');
+  var s='Vue: '+VIEW.s+'–'+VIEW.e+' ans';
+  if(el)el.textContent=s;
+  if(elH)elH.textContent=(VIEW.s!==+document.getElementById('ageFrom').value||VIEW.e!==+document.getElementById('ageTo').value)?s:'';
+}
+
+// ── SIDEBAR BUILDERS ──────────────────────────────────────
 function buildContribs(){
   var h='';
   contrib.forEach(function(c,i){
-    h+='<div class="entry"><div class="erow">';
-    h+='<span class="sep">De</span>';
+    h+='<div class="entry"><div class="erow"><span class="sep">De</span>';
     h+='<input type="number" class="w-age" value="'+c.startAge+'" onchange="contrib['+i+'].startAge=+this.value;update()">';
     h+='<span class="sep">à</span>';
     h+='<input type="number" class="w-age" value="'+c.endAge+'" onchange="contrib['+i+'].endAge=+this.value;update()">';
     h+='<span class="sep">ans</span>';
     h+='<select style="flex:1;min-width:0" onchange="contrib['+i+'].vehicle=this.value;update()">';
     ['REER','CELI','Non-enreg'].forEach(function(v){h+='<option'+(c.vehicle===v?' selected':'')+'>'+v+'</option>';});
-    h+='</select></div>';
-    h+='<div class="erow">';
+    h+='</select></div><div class="erow">';
     h+='<input type="number" value="'+c.amount+'" placeholder="$/an" onchange="contrib['+i+'].amount=+this.value;update()">';
-    h+='<input type="number" class="w-rate" value="'+c.rate+'" step="0.25" min="0" max="20" onchange="contrib['+i+'].rate=+this.value;update()"><span class="sep">%</span>';
-    h+='<button class="del" onclick="contrib.splice('+i+',1);update()">✕</button></div>';
-    h+='<div class="entry-info">'+c.startAge+'→'+c.endAge+' ans · '+Math.round(c.amount).toLocaleString('fr-CA')+'\u202f$/an · '+c.vehicle+' · '+c.rate+'\u202f%</div></div>';
+    h+='<input type="number" class="w-rt" value="'+c.rate+'" step=".25" min="0" max="20" onchange="contrib['+i+'].rate=+this.value;update()">';
+    h+='<span class="sep">%/an</span>';
+    h+='<button class="del" onclick="contrib.splice('+i+',1);update()">✕</button>';
+    h+='</div><div class="ei">'+c.startAge+'→'+c.endAge+' ans · '+Math.round(c.amount).toLocaleString('fr-CA')+'\u202f$/an · '+c.vehicle+' · '+c.rate+'%</div></div>';
   });
   document.getElementById('contribList').innerHTML=h;
 }
 function buildWithdraws(){
   var h='';
   withdraw.forEach(function(w,i){
-    h+='<div class="entry"><div class="erow">';
-    h+='<span class="sep">Âge</span>';
+    h+='<div class="entry"><div class="erow"><span class="sep">Âge</span>';
     h+='<input type="number" class="w-age" value="'+w.age+'" onchange="withdraw['+i+'].age=+this.value;update()">';
     h+='<input type="number" value="'+w.amount+'" placeholder="$/an" onchange="withdraw['+i+'].amount=+this.value;update()">';
-    h+='<button class="del" onclick="withdraw.splice('+i+',1);update()">✕</button></div>';
-    h+='<div class="entry-info">À '+w.age+' ans · '+Math.round(w.amount).toLocaleString('fr-CA')+'\u202f$ (one-shot)</div></div>';
+    h+='<button class="del" onclick="withdraw.splice('+i+',1);update()">✕</button>';
+    h+='</div><div class="ei">À '+w.age+' ans · '+Math.round(w.amount).toLocaleString('fr-CA')+'\u202f$ (one-shot)</div></div>';
   });
   document.getElementById('withdrawList').innerHTML=h;
 }
+function bRRQ(a){return a<65?'<span class="badge bo">Pénalité '+(-(65-a)*5.4).toFixed(1)+'%</span>':a>65?'<span class="badge bg">+'+((Math.min(a-65,7))*4.2).toFixed(1)+'%</span>':'<span class="badge bg">Référence</span>';}
+function bSV(a){return a>65?'<span class="badge bg">+'+((a-65)*7.2).toFixed(1)+'%</span>':'<span class="badge bg">Référence</span>';}
 
-function badgeRRQ(a){ return a<65?'<span class="badge badge-orange">Pénalité '+(-(65-a)*5.4).toFixed(1)+'%</span>':a>65?'<span class="badge badge-green">Bonif. +'+(Math.min(a-65,7)*4.2).toFixed(1)+'%</span>':'<span class="badge badge-green">Référence</span>'; }
-function badgeSV(a){ return a>65?'<span class="badge badge-green">+'+((a-65)*7.2).toFixed(1)+'%</span>':'<span class="badge badge-green">Référence</span>'; }
-
-// ── Main update ───────────────────────────────────────────
+// ── MAIN UPDATE ───────────────────────────────────────────
 function update(){
-  var ib=+document.getElementById('initBal').value,
-      sa=+document.getElementById('startAge').value,
-      ar=+document.getElementById('ageRRQ').value,
-      as=+document.getElementById('ageSV').value,
-      asg=+document.getElementById('ageSRG').value;
+  var f=+document.getElementById('ageFrom').value,t=+document.getElementById('ageTo').value;
+  if(f>=t){t=Math.min(100,f+1);document.getElementById('ageTo').value=t;}
+  document.getElementById('d1').textContent=(+document.getElementById('initBal').value).toLocaleString('fr-CA')+'\u202f$';
+  document.getElementById('dHz').textContent=f+' à '+t+' ans';
+  document.getElementById('dRRQ').textContent=document.getElementById('ageRRQ').value;
+  document.getElementById('dSV').textContent=document.getElementById('ageSV').value;
+  document.getElementById('dSRG').textContent=document.getElementById('ageSRG').value;
+  document.getElementById('bRRQ').outerHTML='<span id="bRRQ">'+bRRQ(+document.getElementById('ageRRQ').value)+'</span>';
+  document.getElementById('bSV').outerHTML='<span id="bSV">'+bSV(+document.getElementById('ageSV').value)+'</span>';
 
-  document.getElementById('d1').textContent=ib.toLocaleString('fr-CA')+'\u202f$';
-  document.getElementById('d2').textContent=sa;
-  document.getElementById('dRRQ').textContent=ar;
-  document.getElementById('dSV').textContent=as;
-  document.getElementById('dSRG').textContent=asg;
-  document.getElementById('badgeRRQ').outerHTML='<span id="badgeRRQ">'+badgeRRQ(ar)+'</span>';
-  document.getElementById('badgeSV').outerHTML='<span id="badgeSV">'+badgeSV(as)+'</span>';
+  // Clamp view to sim range
+  VIEW.s=Math.max(f,VIEW.s);VIEW.e=Math.min(t,VIEW.e);
+  if(VIEW.e-VIEW.s<2){VIEW.s=f;VIEW.e=t;}
+  updateViewInfo();
 
-  buildContribs();
-  buildWithdraws();
+  buildContribs();buildWithdraws();
 
-  SIM = simulate();
+  SIM=simulate();
   var tc=0,tw=0,tt=0,tb=0;
   SIM.forEach(function(r){tc+=r.c;tw+=r.w;tt+=r.t;tb+=r.ben;});
   document.getElementById('s1').textContent=fmtCAD(tc);
@@ -498,19 +660,15 @@ function update(){
   document.getElementById('s4').textContent=fmtCAD(tb);
   document.getElementById('s5').textContent=fmtCAD(SIM[SIM.length-1].bal);
 
-  var rMin=(Math.min.apply(null,SIM.map(function(r){return r.rate;}))*100).toFixed(1);
-  var rMax=(Math.max.apply(null,SIM.map(function(r){return r.rate;}))*100).toFixed(1);
-  document.getElementById('rateInfo').textContent='Taux eff. '+rMin+'%–'+rMax+'%';
+  var aR=+document.getElementById('ageRRQ').value,aS=+document.getElementById('ageSV').value,aSG=+document.getElementById('ageSRG').value;
+  var rrqMo=Math.round(Math.min(+document.getElementById('avgSalary').value*.25,15888)/12);
+  document.getElementById('lblRRQ').textContent='Dès '+aR+' ans · ~'+rrqMo.toLocaleString('fr-CA')+'\u202f$/mois';
+  document.getElementById('lblSV').textContent='SV dès '+aS+' ans · SRG dès '+aSG+' ans';
 
-  var rrqMo=Math.round(Math.min(+document.getElementById('avgSalary').value*0.25,15888)/12);
-  document.getElementById('lblRRQ').textContent='Dès '+ar+' ans · ~'+rrqMo.toLocaleString('fr-CA')+'\u202f$/mois base';
-  document.getElementById('lblSV').textContent='SV dès '+as+' ans · SRG dès '+asg+' ans';
-
-  var ages=getAges();
-  drawChart('chart1',getSeries1(),ages,null);
-  drawChart('chart2',getSeries2(),ages,null);
-  drawChart('chart3',getSeries3(),ages,null);
-  drawChart('chart4',getSeries4(),ages,null);
+  renderChart(1,null);
+  drawSmall('chart2',SIM.map(function(r){return r.rrq;}),'#1E7E34');
+  drawSmall('chart3',SIM.map(function(r){return r.sv+r.srg;}),'#6F42C1');
+  drawSmall('chart4',SIM.map(function(r){return r.t;}),'#C45600');
 
   var h='';
   for(var i=0;i<SIM.length;i+=2){
@@ -525,21 +683,37 @@ function update(){
   document.getElementById('tbody').innerHTML=h;
 }
 
-function addContrib(){ contrib.push({id:nextC++,startAge:30,endAge:65,amount:5000,vehicle:'REER',rate:5}); update(); }
-function addWithdraw(){ withdraw.push({id:nextW++,age:65,amount:30000}); update(); }
+function addContrib(){contrib.push({id:nextC++,startAge:30,endAge:65,amount:5000,vehicle:'REER',rate:5});update();}
+function addWithdraw(){withdraw.push({id:nextW++,age:65,amount:30000});update();}
 
-['initBal','startAge','avgSalary','ageRRQ','ageSV','ageSRG'].forEach(function(id){
-  document.getElementById(id).addEventListener('input',update);
+['initBal','ageSalary','ageRRQ','ageSV','ageSRG'].forEach(function(id){
+  var el=document.getElementById(id);if(el)el.addEventListener('input',update);
+});
+document.getElementById('avgSalary').addEventListener('input',update);
+document.getElementById('initBal').addEventListener('input',update);
+['ageRRQ','ageSV','ageSRG'].forEach(function(id){document.getElementById(id).addEventListener('input',update);});
+
+document.getElementById('ageFrom').addEventListener('input',function(){
+  var f=+this.value,t=+document.getElementById('ageTo').value;
+  if(f>=t)document.getElementById('ageTo').value=Math.min(100,f+1);
+  VIEW.s=+document.getElementById('ageFrom').value;
+  VIEW.e=+document.getElementById('ageTo').value;
+  update();
+});
+document.getElementById('ageTo').addEventListener('input',function(){
+  var t=+this.value,f=+document.getElementById('ageFrom').value;
+  if(t<=f)document.getElementById('ageFrom').value=Math.max(18,t-1);
+  VIEW.s=+document.getElementById('ageFrom').value;
+  VIEW.e=+document.getElementById('ageTo').value;
+  update();
 });
 
-// Setup hover after first render
-window.addEventListener('resize',function(){ update(); });
+window.addEventListener('resize',function(){renderChart(1,HOVER);drawSmall('chart2',SIM.map(function(r){return r.rrq;}),'#1E7E34');drawSmall('chart3',SIM.map(function(r){return r.sv+r.srg;}),'#6F42C1');drawSmall('chart4',SIM.map(function(r){return r.t;}),'#C45600');});
+
 window.addEventListener('load',function(){
-  setupHover('chart1',getSeries1);
-  setupHover('chart2',getSeries2);
-  setupHover('chart3',getSeries3);
-  setupHover('chart4',getSeries4);
+  initChartEvents();
   update();
+  startAnim();
 });
 </script>
 </body>
