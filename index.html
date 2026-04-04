@@ -229,8 +229,9 @@
                     </div>
 
                     {fiscalite==="celi" && (
-                      <div style={{fontSize:13,color:QC.gris,lineHeight:1.5}}>
-                        La rente reçue à 60 ans est investie en totalité (<b style={{color:QC.texte}}>{fmtCAD(investi)}/mois</b>). Aucun impôt appliqué sur le montant investi.
+                      <div style={{fontSize:12,color:QC.gris,lineHeight:1.6,background:"#F0F7FF",border:`1px solid ${QC.bleu}33`,borderRadius:3,padding:"8px 12px"}}>
+                        La rente est investie en totalité (<b style={{color:QC.texte}}>{fmtCAD(investi)}/mois</b>) sans impôt sur la croissance ni les retraits.<br/>
+                        <span style={{color:QC.orange}}>⚠ La rente RRQ reste un revenu imposable</span>, mais les gains accumulés dans le CÉLI en sont à l'abri. La retenue à la source n'est <b>pas automatique</b> — vous devez en faire la demande à Retraite Québec ou verser des acomptes provisionnels.
                       </div>
                     )}
 
@@ -243,10 +244,15 @@
                         <input type="range" min={20} max={53} step={0.5} value={tauxImpot}
                           onChange={e => setTauxImpot(+e.target.value)}
                           style={{accentColor:QC.orange}} />
-                        <div style={{display:"flex",justifyContent:"space-between",fontSize:11,color:QC.gris}}>
+                        <div style={{display:"flex",justifyContent:"space-between",fontSize:11,color:QC.gris,marginBottom:10}}>
                           <span>20 %</span>
                           <span>36,12 % (art. JDQ)</span>
                           <span>53 %</span>
+                        </div>
+                        <div style={{fontSize:12,color:QC.gris,lineHeight:1.6,background:"#FFF8F0",border:`1px solid ${QC.orange}55`,borderRadius:3,padding:"8px 12px"}}>
+                          <span style={{color:QC.orange}}>⚠ La retenue à la source n'est pas automatique</span> — vous devez en faire la demande à Retraite Québec ou verser des acomptes provisionnels trimestriels.<br/>
+                          Taux marginal combiné (QC + fédéral) approximatif selon vos revenus totaux à la retraite :<br/>
+                          <b>~27–32 %</b> (&lt; 51 780 $) · <b>~41–45 %</b> (51 780 $–103 545 $) · <b>~48–53 %</b> (&gt; 103 545 $)
                         </div>
                       </div>
                     )}
