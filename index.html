@@ -1,277 +1,292 @@
-import { useState, useMemo } from "react";
-import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid,
-  Tooltip, Legend, ReferenceLine, ResponsiveContainer
-} from "recharts";
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculateur RRQ — Retraite Québec</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.12.7/Recharts.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #F5F6FA; font-family: Arial, sans-serif; font-size: 14px; }
+    input[type=range] { width: 100%; margin-top: 6px; }
+    table { border-collapse: collapse; width: 100%; }
+    button { font-family: Arial, sans-serif; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
 
-const QC = {
-  bleu: "rgb(9, 87, 151)",
-  bleuClair: "rgb(9, 87, 151)",
-  bleuPale: "#E6EFF7",
-  bleuAccent: "rgb(9, 87, 151)",
-  or: "rgb(240, 150, 134)",
-  fond: "#F5F6FA",
-  blanc: "#FFFFFF",
-  texte: "#1A1A1A",
-  gris: "#666666",
-  grisClair: "#E0E0E0",
-  bordure: "#CCCCCC",
-  vert: "#1E7E34",
-  orange: "#C45600",
-  violet: "#6F42C1",
-};
+  <script type="text/babel">
+    const { useState, useMemo } = React;
+    const {
+      LineChart, Line, XAxis, YAxis, CartesianGrid,
+      Tooltip, Legend, ReferenceLine, ResponsiveContainer
+    } = Recharts;
 
-// Données officielles RRQ 2026
-const TABLE = [
-  { age: 60, facteur: "−30 % à −36 %", moy: 490, max: 965 },
-  { age: 61, facteur: "−24 % à −28,8 %", moy: 538, max: 1073 },
-  { age: 62, facteur: "−18 % à −21,6 %", moy: 586, max: 1182 },
-  { age: 63, facteur: "−12 % à −14,4 %", moy: 634, max: 1291 },
-  { age: 64, facteur: "−6 % à −7,2 %", moy: 683, max: 1399 },
-  { age: 65, facteur: "0 %", moy: 731, max: 1508 },
-  { age: 66, facteur: "+8,4 %", moy: 792, max: 1634 },
-  { age: 67, facteur: "+16,8 %", moy: 854, max: 1761 },
-  { age: 68, facteur: "+25,2 %", moy: 915, max: 1888 },
-  { age: 69, facteur: "+33,6 %", moy: 976, max: 2014 },
-  { age: 70, facteur: "+42,0 %", moy: 1038, max: 2141 },
-  { age: 71, facteur: "+50,4 %", moy: 1099, max: 2268 },
-  { age: 72, facteur: "+58,8 %", moy: 1161, max: 2394 },
-];
+    const QC = {
+      bleu: "rgb(9, 87, 151)",
+      bleuPale: "#E6EFF7",
+      or: "rgb(240, 150, 134)",
+      fond: "#F5F6FA",
+      blanc: "#FFFFFF",
+      texte: "#1A1A1A",
+      gris: "#666666",
+      grisClair: "#E0E0E0",
+      bordure: "#CCCCCC",
+      vert: "#1E7E34",
+      orange: "#C45600",
+      violet: "#6F42C1",
+    };
 
-const fmtCAD = (v) =>
-  new Intl.NumberFormat("fr-CA", { style: "currency", currency: "CAD", maximumFractionDigits: 0 }).format(v);
+    const TABLE = [
+      { age: 60, facteur: "−30 % à −36 %", moy: 490, max: 965 },
+      { age: 61, facteur: "−24 % à −28,8 %", moy: 538, max: 1073 },
+      { age: 62, facteur: "−18 % à −21,6 %", moy: 586, max: 1182 },
+      { age: 63, facteur: "−12 % à −14,4 %", moy: 634, max: 1291 },
+      { age: 64, facteur: "−6 % à −7,2 %", moy: 683, max: 1399 },
+      { age: 65, facteur: "0 %", moy: 731, max: 1508 },
+      { age: 66, facteur: "+8,4 %", moy: 792, max: 1634 },
+      { age: 67, facteur: "+16,8 %", moy: 854, max: 1761 },
+      { age: 68, facteur: "+25,2 %", moy: 915, max: 1888 },
+      { age: 69, facteur: "+33,6 %", moy: 976, max: 2014 },
+      { age: 70, facteur: "+42,0 %", moy: 1038, max: 2141 },
+      { age: 71, facteur: "+50,4 %", moy: 1099, max: 2268 },
+      { age: 72, facteur: "+58,8 %", moy: 1161, max: 2394 },
+    ];
 
-const fmtK = (v) =>
-  v >= 1000000 ? `${(v / 1000000).toFixed(2)} M$`
-  : v >= 1000 ? `${(v / 1000).toFixed(0)} k$`
-  : `${Math.round(v)} $`;
+    const fmtCAD = v =>
+      new Intl.NumberFormat("fr-CA", { style: "currency", currency: "CAD", maximumFractionDigits: 0 }).format(v);
 
-const CustomTooltip = ({ active, payload, label }) => {
-  if (!active || !payload?.length) return null;
-  return (
-    <div style={{ background: QC.blanc, border: `1px solid ${QC.bordure}`, borderRadius: 4, padding: "10px 14px", fontSize: 13, boxShadow: "0 2px 8px rgba(0,0,0,0.15)" }}>
-      <div style={{ color: QC.bleu, fontWeight: 700, marginBottom: 6, borderBottom: `1px solid ${QC.grisClair}`, paddingBottom: 4 }}>{label} ans</div>
-      {payload.map((p) => (
-        <div key={p.name} style={{ color: p.color, marginBottom: 3, fontSize: 13 }}>
-          <span style={{ color: QC.texte }}>{p.name} : </span><b>{fmtK(p.value)}</b>
+    const fmtK = v =>
+      v >= 1000000 ? `${(v/1000000).toFixed(2)} M$`
+      : v >= 1000 ? `${(v/1000).toFixed(0)} k$`
+      : `${Math.round(v)} $`;
+
+    const CustomTooltip = ({ active, payload, label }) => {
+      if (!active || !payload?.length) return null;
+      return (
+        <div style={{ background: QC.blanc, border: `1px solid ${QC.bordure}`, borderRadius: 4, padding: "10px 14px", fontSize: 13, boxShadow: "0 2px 8px rgba(0,0,0,0.15)" }}>
+          <div style={{ color: QC.bleu, fontWeight: 700, marginBottom: 6, borderBottom: `1px solid ${QC.grisClair}`, paddingBottom: 4 }}>{label} ans</div>
+          {payload.map(p => (
+            <div key={p.name} style={{ marginBottom: 3 }}>
+              <span style={{ color: QC.texte }}>{p.name} : </span>
+              <b style={{ color: p.color }}>{fmtK(p.value)}</b>
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
-  );
-};
+      );
+    };
 
-export default function App() {
-  const [profil, setProfil] = useState("moy");
-  const [amount65, setAmount65] = useState(731);
-  const [rate, setRate] = useState(5);
-  const [tab, setTab] = useState("graphique");
+    function App() {
+      const [profil, setProfil] = useState("moy");
+      const [amount65, setAmount65] = useState(731);
+      const [rate, setRate] = useState(5);
+      const [tab, setTab] = useState("graphique");
 
-  const a60 = Math.round(amount65 * (1 - 0.006 * 60));
-  const a72 = Math.round(amount65 * (1 + 0.007 * 84));
-  const monthlyRate = rate / 100 / 12;
+      const a60 = Math.round(amount65 * (1 - 0.006 * 60));
+      const a72 = Math.round(amount65 * (1 + 0.007 * 84));
+      const monthlyRate = rate / 100 / 12;
 
-  const { data, be6065, be6572, beInv } = useMemo(() => {
-    const pts = [];
-    let c60 = 0, c65 = 0, c72 = 0, cap = 0;
-    let be6065 = null, be6572 = null, beInv = null;
-    for (let m = 0; m <= 35 * 12; m++) {
-      const age = 60 + m / 12;
-      c60 += a60;
-      if (age >= 65) c65 += amount65;
-      if (age >= 72) c72 += a72;
-      cap = cap * (1 + monthlyRate) + a60;
-      if (!be6065 && c65 >= c60 && age > 65) be6065 = Math.round(age);
-      if (!be6572 && c72 >= c65 && age > 72) be6572 = Math.round(age);
-      if (!beInv && cap >= c65 && age > 65) beInv = Math.round(age);
-      if (m % 12 === 0) pts.push({
-        age: Math.round(age),
-        "60 ans": Math.round(c60),
-        "65 ans": Math.round(c65),
-        "72 ans": Math.round(c72),
-        "60 ans + invest.": Math.round(cap),
+      const { data, be6065, be6572, beInv } = useMemo(() => {
+        const pts = [];
+        let c60 = 0, c65 = 0, c72 = 0, cap = 0;
+        let be6065 = null, be6572 = null, beInv = null;
+        for (let m = 0; m <= 35 * 12; m++) {
+          const age = 60 + m / 12;
+          c60 += a60;
+          if (age >= 65) c65 += amount65;
+          if (age >= 72) c72 += a72;
+          cap = cap * (1 + monthlyRate) + a60;
+          if (!be6065 && c65 >= c60 && age > 65) be6065 = Math.round(age);
+          if (!be6572 && c72 >= c65 && age > 72) be6572 = Math.round(age);
+          if (!beInv && cap >= c65 && age > 65) beInv = Math.round(age);
+          if (m % 12 === 0) pts.push({
+            age: Math.round(age),
+            "60 ans": Math.round(c60),
+            "65 ans": Math.round(c65),
+            "72 ans": Math.round(c72),
+            "60 ans + invest.": Math.round(cap),
+          });
+        }
+        return { data: pts, be6065, be6572, beInv };
+      }, [a60, amount65, a72, monthlyRate]);
+
+      const setProfils = p => {
+        setProfil(p);
+        if (p === "moy") setAmount65(731);
+        else if (p === "max") setAmount65(1508);
+      };
+
+      const tabStyle = t => ({
+        padding: "10px 20px", cursor: "pointer", fontSize: 14,
+        fontWeight: tab === t ? 700 : 400,
+        background: tab === t ? QC.bleu : "transparent",
+        color: tab === t ? QC.blanc : QC.bleu,
+        border: "none",
+        borderBottom: tab === t ? "none" : `2px solid ${QC.bordure}`,
       });
-    }
-    return { data: pts, be6065, be6572, beInv };
-  }, [a60, amount65, a72, monthlyRate]);
 
-  const setProfils = (p) => {
-    setProfil(p);
-    if (p === "moy") setAmount65(731);
-    else if (p === "max") setAmount65(1508);
-  };
+      return (
+        <div style={{ background: QC.fond, minHeight: "100vh", color: QC.texte }}>
+          <div style={{ maxWidth: 900, margin: "0 auto", padding: "28px 24px" }}>
 
-  const tabStyle = (t) => ({
-    padding: "10px 20px", cursor: "pointer", fontSize: 14, fontWeight: tab === t ? 700 : 400,
-    background: tab === t ? QC.bleu : "transparent",
-    color: tab === t ? QC.blanc : QC.bleu,
-    border: "none", borderBottom: tab === t ? "none" : `2px solid ${QC.bordure}`,
-    transition: "all 0.15s",
-  });
+            <h1 style={{ color: QC.bleu, fontSize: 24, fontWeight: 700, margin: "0 0 6px", borderBottom: `3px solid ${QC.or}`, paddingBottom: 12, display: "inline-block" }}>
+              Calculateur — Rente de retraite RRQ
+            </h1>
+            <p style={{ color: QC.gris, margin: "12px 0 24px", lineHeight: 1.6 }}>
+              Comparez les scénarios de retraite à 60, 65 et 72 ans selon les données officielles 2026 de Retraite Québec.
+            </p>
 
-  return (
-    <div style={{ background: QC.fond, minHeight: "100vh", fontFamily: "Arial, sans-serif", fontSize: 14, color: QC.texte }}>
-      <div style={{ maxWidth: 900, margin: "0 auto", padding: "28px 24px" }}>
-        {/* Titre */}
-        <h1 style={{ color: QC.bleu, fontSize: 24, fontWeight: 700, margin: "0 0 6px", borderBottom: `3px solid ${QC.or}`, paddingBottom: 12, display: "inline-block" }}>
-          Calculateur — Rente de retraite RRQ
-        </h1>
-        <p style={{ color: QC.gris, margin: "12px 0 24px", fontSize: 14, lineHeight: 1.6 }}>
-          Comparez les scénarios de retraite à 60, 65 et 72 ans selon les données officielles 2026 de Retraite Québec.
-        </p>
+            <div style={{ background: QC.bleuPale, border: `1px solid ${QC.bleu}`, borderLeft: `4px solid ${QC.bleu}`, borderRadius: 3, padding: "12px 16px", marginBottom: 24, lineHeight: 1.6 }}>
+              <b style={{ color: QC.bleu }}>À savoir :</b> La rente est réduite de 0,5 % à 0,6 % par mois avant 65 ans (max −36 %) et majorée de 0,7 % par mois après 65 ans (max +58,8 % à 72 ans). Le montant choisi s'applique à vie.
+            </div>
 
-        {/* Encadré info */}
-        <div style={{ background: QC.bleuPale, border: `1px solid ${QC.bleuAccent}`, borderLeft: `4px solid ${QC.bleuAccent}`, borderRadius: 3, padding: "12px 16px", marginBottom: 24, fontSize: 13, lineHeight: 1.6 }}>
-          <b style={{ color: QC.bleu }}>À savoir :</b> La rente est réduite de 0,5 % à 0,6 % par mois avant 65 ans (max −36 %) et majorée de 0,7 % par mois après 65 ans (max +58,8 % à 72 ans). Le montant choisi s'applique à vie.
-        </div>
-
-        {/* Paramètres */}
-        <div style={{ background: QC.blanc, border: `1px solid ${QC.bordure}`, borderRadius: 4, marginBottom: 24, overflow: "hidden" }}>
-          <div style={{ background: QC.bleu, color: QC.blanc, padding: "10px 18px", fontSize: 14, fontWeight: 700 }}>
-            Vos paramètres
-          </div>
-          <div style={{ padding: 20, display: "flex", flexWrap: "wrap", gap: 28 }}>
-            <div style={{ flex: 1, minWidth: 220 }}>
-              <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 8, color: QC.bleu }}>Profil de rente à 65 ans</div>
-              <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
-                {[["moy", "Moyenne (731 $)"], ["max", "Maximum (1 508 $)"], ["custom", "Personnalisé"]].map(([v, l]) => (
-                  <button key={v} onClick={() => setProfils(v)} style={{
-                    background: profil === v ? QC.bleu : QC.blanc,
-                    color: profil === v ? QC.blanc : QC.bleu,
-                    border: `1px solid ${profil === v ? QC.bleu : QC.bordure}`,
-                    padding: "6px 12px", borderRadius: 3, cursor: "pointer", fontSize: 12, fontWeight: 600
-                  }}>{l}</button>
-                ))}
-              </div>
-              {profil === "custom" && (
-                <>
-                  <label style={{ fontSize: 13, color: QC.gris }}>
-                    Rente à 65 ans : <b style={{ color: QC.texte }}>{fmtCAD(amount65)} / mois</b>
-                  </label>
-                  <input type="range" min={200} max={1508} step={10} value={amount65}
-                    onChange={e => setAmount65(+e.target.value)}
-                    style={{ width: "100%", accentColor: QC.bleu, marginTop: 6 }} />
-                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: QC.gris }}>
-                    <span>200 $</span><span>1 508 $ (max)</span>
+            {/* Paramètres */}
+            <div style={{ background: QC.blanc, border: `1px solid ${QC.bordure}`, borderRadius: 4, marginBottom: 24, overflow: "hidden" }}>
+              <div style={{ background: QC.bleu, color: QC.blanc, padding: "10px 18px", fontWeight: 700 }}>Vos paramètres</div>
+              <div style={{ padding: 20, display: "flex", flexWrap: "wrap", gap: 28 }}>
+                <div style={{ flex: 1, minWidth: 220 }}>
+                  <div style={{ fontWeight: 700, marginBottom: 8, color: QC.bleu }}>Profil de rente à 65 ans</div>
+                  <div style={{ display: "flex", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
+                    {[["moy","Moyenne (731 $)"],["max","Maximum (1 508 $)"],["custom","Personnalisé"]].map(([v,l]) => (
+                      <button key={v} onClick={() => setProfils(v)} style={{
+                        background: profil === v ? QC.bleu : QC.blanc,
+                        color: profil === v ? QC.blanc : QC.bleu,
+                        border: `1px solid ${profil === v ? QC.bleu : QC.bordure}`,
+                        padding: "6px 12px", borderRadius: 3, fontSize: 12, fontWeight: 600
+                      }}>{l}</button>
+                    ))}
                   </div>
+                  {profil === "custom" && (
+                    <>
+                      <label style={{ color: QC.gris }}>Rente à 65 ans : <b style={{ color: QC.texte }}>{fmtCAD(amount65)} / mois</b></label>
+                      <input type="range" min={200} max={1508} step={10} value={amount65}
+                        onChange={e => setAmount65(+e.target.value)}
+                        style={{ accentColor: QC.bleu }} />
+                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: QC.gris }}>
+                        <span>200 $</span><span>1 508 $ (max)</span>
+                      </div>
+                    </>
+                  )}
+                </div>
+                <div style={{ flex: 1, minWidth: 220 }}>
+                  <div style={{ fontWeight: 700, marginBottom: 8, color: QC.bleu }}>Rendement (scénario investissement)</div>
+                  <label style={{ color: QC.gris }}>Taux annuel : <b style={{ color: QC.texte }}>{rate} %</b></label>
+                  <input type="range" min={0} max={12} step={0.25} value={rate}
+                    onChange={e => setRate(+e.target.value)}
+                    style={{ accentColor: QC.violet }} />
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: QC.gris }}>
+                    <span>0 %</span><span>CELI ~5 %</span><span>12 %</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Cartes */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: 24 }}>
+              {[
+                { label: "Rente à 60 ans", montant: a60, delta: `${((a60/amount65-1)*100).toFixed(1)} % vs 65 ans`, color: QC.orange, bg: "#FFF4EC" },
+                { label: "Rente à 65 ans", montant: amount65, delta: "Référence (100 %)", color: QC.bleu, bg: QC.bleuPale },
+                { label: "Rente à 72 ans", montant: a72, delta: `+${((a72/amount65-1)*100).toFixed(1)} % vs 65 ans`, color: QC.vert, bg: "#EDF7F0" },
+              ].map(({ label, montant, delta, color, bg }) => (
+                <div key={label} style={{ background: bg, border: `1px solid ${color}44`, borderTop: `4px solid ${color}`, borderRadius: 4, padding: "14px 16px" }}>
+                  <div style={{ fontSize: 12, color: QC.gris, marginBottom: 4 }}>{label}</div>
+                  <div style={{ fontSize: 22, fontWeight: 700, color, marginBottom: 4 }}>{fmtCAD(montant)}</div>
+                  <div style={{ fontSize: 12, color: QC.gris }}>par mois · {delta}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Points de bascule */}
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 24 }}>
+              {[
+                { label: "65 ans rattrape 60 ans", val: be6065, color: QC.bleu },
+                { label: "72 ans rattrape 65 ans", val: be6572, color: QC.vert },
+                { label: "60 + invest. rattrape 65", val: beInv, color: QC.violet },
+              ].map(({ label, val, color }) => (
+                <div key={label} style={{ background: QC.blanc, border: `1px solid ${QC.bordure}`, borderRadius: 4, padding: "8px 16px", flex: 1, minWidth: 160 }}>
+                  <span style={{ color: QC.gris }}>{label} : </span>
+                  <b style={{ color }}>{val ? `${val} ans` : "—"}</b>
+                </div>
+              ))}
+            </div>
+
+            {/* Onglets */}
+            <div style={{ display: "flex", borderBottom: `2px solid ${QC.bordure}` }}>
+              {[["graphique","📈 Graphique cumulatif"],["tableau","📋 Tableau officiel 2026"]].map(([v,l]) => (
+                <button key={v} onClick={() => setTab(v)} style={tabStyle(v)}>{l}</button>
+              ))}
+            </div>
+
+            <div style={{ background: QC.blanc, border: `1px solid ${QC.bordure}`, borderTop: "none", borderRadius: "0 0 4px 4px", padding: tab === "graphique" ? "20px 12px 12px" : 0, overflow: "hidden" }}>
+              {tab === "graphique" ? (
+                <>
+                  <div style={{ fontSize: 13, color: QC.gris, marginBottom: 12, paddingLeft: 8 }}>
+                    Cumul total reçu selon l'âge de début de la rente (en dollars constants)
+                  </div>
+                  <ResponsiveContainer width="100%" height={360}>
+                    <LineChart data={data} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+                      <CartesianGrid stroke={QC.grisClair} strokeDasharray="3 3" />
+                      <XAxis dataKey="age" stroke={QC.gris} tick={{ fontSize: 12 }} label={{ value: "Âge", position: "insideBottomRight", offset: -10, fill: QC.gris, fontSize: 12 }} />
+                      <YAxis tickFormatter={fmtK} stroke={QC.gris} tick={{ fontSize: 11 }} width={72} />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend wrapperStyle={{ fontSize: 13, paddingTop: 10 }} />
+                      {be6065 && <ReferenceLine x={be6065} stroke={QC.bleu} strokeDasharray="5 3" label={{ value: `${be6065}a`, fill: QC.bleu, fontSize: 10 }} />}
+                      {be6572 && <ReferenceLine x={be6572} stroke={QC.vert} strokeDasharray="5 3" label={{ value: `${be6572}a`, fill: QC.vert, fontSize: 10 }} />}
+                      <Line type="monotone" dataKey="60 ans" stroke={QC.orange} dot={false} strokeWidth={2.5} />
+                      <Line type="monotone" dataKey="65 ans" stroke={QC.bleu} dot={false} strokeWidth={2.5} />
+                      <Line type="monotone" dataKey="72 ans" stroke={QC.vert} dot={false} strokeWidth={2.5} />
+                      <Line type="monotone" dataKey="60 ans + invest." stroke={QC.violet} dot={false} strokeWidth={2} strokeDasharray="7 3" />
+                    </LineChart>
+                  </ResponsiveContainer>
                 </>
+              ) : (
+                <table>
+                  <thead>
+                    <tr style={{ background: QC.bleu, color: QC.blanc }}>
+                      <th style={{ padding: "10px 14px", textAlign: "left" }}>Âge</th>
+                      <th style={{ padding: "10px 14px", textAlign: "left" }}>Facteur d'ajustement</th>
+                      <th style={{ padding: "10px 14px", textAlign: "right" }}>Rente moyenne</th>
+                      <th style={{ padding: "10px 14px", textAlign: "right" }}>Rente maximale</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {TABLE.map((r, i) => (
+                      <tr key={r.age} style={{ background: r.age === 65 ? QC.bleuPale : i % 2 === 0 ? QC.blanc : "#FAFAFA", borderBottom: `1px solid ${QC.grisClair}`, fontWeight: r.age === 65 ? 700 : 400 }}>
+                        <td style={{ padding: "9px 14px", color: r.age === 60 ? QC.orange : r.age === 65 ? QC.bleu : r.age === 72 ? QC.vert : QC.texte }}>
+                          {r.age} ans {r.age === 65 && "⭐"}
+                        </td>
+                        <td style={{ padding: "9px 14px", color: r.age < 65 ? QC.orange : QC.vert }}>{r.facteur}</td>
+                        <td style={{ padding: "9px 14px", textAlign: "right" }}>{fmtCAD(r.moy)}</td>
+                        <td style={{ padding: "9px 14px", textAlign: "right", fontWeight: 600 }}>{fmtCAD(r.max)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               )}
             </div>
-            <div style={{ flex: 1, minWidth: 220 }}>
-              <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 8, color: QC.bleu }}>Rendement (scénario investissement)</div>
-              <label style={{ fontSize: 13, color: QC.gris }}>
-                Taux annuel : <b style={{ color: QC.texte }}>{rate} %</b>
-              </label>
-              <input type="range" min={0} max={12} step={0.25} value={rate}
-                onChange={e => setRate(+e.target.value)}
-                style={{ width: "100%", accentColor: QC.violet, marginTop: 6 }} />
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: QC.gris }}>
-                <span>0 %</span><span>CELI ~5 %</span><span>12 %</span>
-              </div>
+
+            <p style={{ color: QC.gris, fontSize: 11, marginTop: 16, borderTop: `1px solid ${QC.bordure}`, paddingTop: 12, lineHeight: 1.6 }}>
+              Source : <a href="https://www.rrq.gouv.qc.ca" style={{ color: QC.bleu }}>Retraite Québec</a> — Données officielles 2026.
+              Réduction : 0,5 % à 0,6 %/mois avant 65 ans · Majoration : 0,7 %/mois après 65 ans.
+              Le rendement d'investissement est une simulation hypothétique à titre informatif seulement.
+            </p>
+          </div>
+
+          <div style={{ background: QC.bleu, color: QC.blanc, padding: "20px 24px", marginTop: 20 }}>
+            <div style={{ maxWidth: 900, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12, fontSize: 12 }}>
+              <span>⚜ <b>Retraite Québec</b> — Partenaire de votre sécurité financière</span>
+              <span style={{ opacity: 0.8 }}>© Gouvernement du Québec</span>
             </div>
           </div>
         </div>
+      );
+    }
 
-        {/* Cartes montants */}
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: 24 }}>
-          {[
-            { label: "Rente à 60 ans", montant: a60, delta: `${((a60/amount65-1)*100).toFixed(1)} % vs 65 ans`, color: QC.orange, bg: "#FFF4EC" },
-            { label: "Rente à 65 ans", montant: amount65, delta: "Référence (100 %)", color: QC.bleu, bg: QC.bleuPale },
-            { label: "Rente à 72 ans", montant: a72, delta: `+${((a72/amount65-1)*100).toFixed(1)} % vs 65 ans`, color: QC.vert, bg: "#EDF7F0" },
-          ].map(({ label, montant, delta, color, bg }) => (
-            <div key={label} style={{ background: bg, border: `1px solid ${color}44`, borderTop: `4px solid ${color}`, borderRadius: 4, padding: "14px 16px" }}>
-              <div style={{ fontSize: 12, color: QC.gris, marginBottom: 4 }}>{label}</div>
-              <div style={{ fontSize: 22, fontWeight: 700, color, marginBottom: 4 }}>{fmtCAD(montant)}</div>
-              <div style={{ fontSize: 12, color: QC.gris }}>par mois · {delta}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* Points de bascule */}
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 24 }}>
-          {[
-            { label: "65 ans rattrape 60 ans", val: be6065, color: QC.bleu },
-            { label: "72 ans rattrape 65 ans", val: be6572, color: QC.vert },
-            { label: "60 + invest. rattrape 65", val: beInv, color: QC.violet },
-          ].map(({ label, val, color }) => (
-            <div key={label} style={{ background: QC.blanc, border: `1px solid ${QC.bordure}`, borderRadius: 4, padding: "8px 16px", flex: 1, minWidth: 160 }}>
-              <span style={{ fontSize: 12, color: QC.gris }}>{label} : </span>
-              <b style={{ color }}>{val ? `${val} ans` : "—"}</b>
-            </div>
-          ))}
-        </div>
-
-        {/* Onglets */}
-        <div style={{ display: "flex", borderBottom: `2px solid ${QC.bordure}`, marginBottom: 0 }}>
-          {[["graphique", "📈 Graphique cumulatif"], ["tableau", "📋 Tableau officiel 2026"]].map(([v, l]) => (
-            <button key={v} onClick={() => setTab(v)} style={tabStyle(v)}>{l}</button>
-          ))}
-        </div>
-
-        <div style={{ background: QC.blanc, border: `1px solid ${QC.bordure}`, borderTop: "none", borderRadius: "0 0 4px 4px", padding: tab === "graphique" ? "20px 12px 12px" : 0, overflow: "hidden" }}>
-          {tab === "graphique" ? (
-            <>
-              <div style={{ fontSize: 13, color: QC.gris, marginBottom: 12, paddingLeft: 8 }}>
-                Cumul total reçu selon l'âge de début de la rente (en dollars constants)
-              </div>
-              <ResponsiveContainer width="100%" height={360}>
-                <LineChart data={data} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
-                  <CartesianGrid stroke={QC.grisClair} strokeDasharray="3 3" />
-                  <XAxis dataKey="age" stroke={QC.gris} tick={{ fontSize: 12 }} label={{ value: "Âge", position: "insideBottomRight", offset: -10, fill: QC.gris, fontSize: 12 }} />
-                  <YAxis tickFormatter={fmtK} stroke={QC.gris} tick={{ fontSize: 11 }} width={72} />
-                  <Tooltip content={<CustomTooltip />} />
-                  <Legend wrapperStyle={{ fontSize: 13, paddingTop: 10 }} />
-                  {be6065 && <ReferenceLine x={be6065} stroke={QC.bleu} strokeDasharray="5 3" label={{ value: `${be6065}a`, fill: QC.bleu, fontSize: 10 }} />}
-                  {be6572 && <ReferenceLine x={be6572} stroke={QC.vert} strokeDasharray="5 3" label={{ value: `${be6572}a`, fill: QC.vert, fontSize: 10 }} />}
-                  <Line type="monotone" dataKey="60 ans" stroke={QC.orange} dot={false} strokeWidth={2.5} />
-                  <Line type="monotone" dataKey="65 ans" stroke={QC.bleu} dot={false} strokeWidth={2.5} />
-                  <Line type="monotone" dataKey="72 ans" stroke={QC.vert} dot={false} strokeWidth={2.5} />
-                  <Line type="monotone" dataKey="60 ans + invest." stroke={QC.violet} dot={false} strokeWidth={2} strokeDasharray="7 3" />
-                </LineChart>
-              </ResponsiveContainer>
-            </>
-          ) : (
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13 }}>
-              <thead>
-                <tr style={{ background: QC.bleu, color: QC.blanc }}>
-                  <th style={{ padding: "10px 14px", textAlign: "left", fontWeight: 700 }}>Âge</th>
-                  <th style={{ padding: "10px 14px", textAlign: "left", fontWeight: 700 }}>Facteur d'ajustement</th>
-                  <th style={{ padding: "10px 14px", textAlign: "right", fontWeight: 700 }}>Rente moyenne</th>
-                  <th style={{ padding: "10px 14px", textAlign: "right", fontWeight: 700 }}>Rente maximale</th>
-                </tr>
-              </thead>
-              <tbody>
-                {TABLE.map((r, i) => (
-                  <tr key={r.age} style={{ background: r.age === 65 ? QC.bleuPale : i % 2 === 0 ? QC.blanc : "#FAFAFA", borderBottom: `1px solid ${QC.grisClair}`, fontWeight: r.age === 65 ? 700 : 400 }}>
-                    <td style={{ padding: "9px 14px", color: r.age === 60 ? QC.orange : r.age === 65 ? QC.bleu : r.age === 72 ? QC.vert : QC.texte }}>
-                      {r.age} ans {r.age === 65 && "⭐"}
-                    </td>
-                    <td style={{ padding: "9px 14px", color: r.age < 65 ? QC.orange : QC.vert }}>{r.facteur}</td>
-                    <td style={{ padding: "9px 14px", textAlign: "right" }}>{fmtCAD(r.moy)}</td>
-                    <td style={{ padding: "9px 14px", textAlign: "right", fontWeight: 600 }}>{fmtCAD(r.max)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
-
-        {/* Note légale */}
-        <p style={{ color: QC.gris, fontSize: 11, marginTop: 16, borderTop: `1px solid ${QC.bordure}`, paddingTop: 12, lineHeight: 1.6 }}>
-          Source : <a href="https://www.rrq.gouv.qc.ca" style={{ color: QC.bleuAccent }}>Retraite Québec</a> — Données officielles 2026. Réduction : 0,5 % à 0,6 %/mois avant 65 ans · Majoration : 0,7 %/mois après 65 ans. Le rendement d'investissement est une simulation hypothétique à titre informatif seulement.
-        </p>
-      </div>
-
-      {/* Footer */}
-      <div style={{ background: QC.bleu, color: QC.blanc, padding: "20px 24px", marginTop: 20 }}>
-        <div style={{ maxWidth: 900, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12, fontSize: 12 }}>
-          <span>⚜ <b>Retraite Québec</b> — Partenaire de votre sécurité financière</span>
-          <div style={{ display: "flex", gap: 20, opacity: 0.8 }}>
-            <span style={{ cursor: "pointer" }}>Accessibilité</span>
-            <span style={{ cursor: "pointer" }}>Nous joindre</span>
-            <span style={{ cursor: "pointer" }}>© Gouvernement du Québec</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
