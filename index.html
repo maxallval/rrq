@@ -85,7 +85,8 @@
       const [profil, setProfil] = useState("moy");
       const [amount65, setAmount65] = useState(731);
       const [rate, setRate] = useState(5);
-      const [tab, setTab] = useState("graphique");
+      const [editingRate, setEditingRate] = useState(false);
+      const [rateInput, setRateInput] = useState("5");
 
       const a60 = Math.round(amount65 * (1 - 0.006 * 60));
       const a72 = Math.round(amount65 * (1 + 0.007 * 84));
@@ -175,9 +176,24 @@
                 </div>
                 <div style={{ flex: 1, minWidth: 220 }}>
                   <div style={{ fontWeight: 700, marginBottom: 8, color: QC.bleu }}>Rendement (scénario investissement)</div>
-                  <label style={{ color: QC.gris }}>Taux annuel : <b style={{ color: QC.texte }}>{rate} %</b></label>
+                  <label style={{ color: QC.gris }}>Taux annuel : {editingRate ? (
+                    <input
+                      type="number" min="0" max="12" step="0.25"
+                      value={rateInput}
+                      autoFocus
+                      onChange={e => setRateInput(e.target.value)}
+                      onBlur={e => commitRate(e.target.value)}
+                      onKeyDown={e => e.key === "Enter" && commitRate(e.target.value)}
+                      style={{ width: 60, fontWeight: 700, color: QC.violet, border: `1px solid ${QC.violet}`, borderRadius: 3, padding: "1px 4px", fontSize: 14, textAlign: "center" }}
+                    />
+                  ) : (
+                    <b style={{ color: QC.violet, borderBottom: `1px dashed ${QC.violet}`, cursor: "pointer" }}
+                      onClick={() => { setRateInput(String(rate)); setEditingRate(true); }}>
+                      {rate} %
+                    </b>
+                  )} <span style={{ fontSize: 11, color: QC.gris }}>(cliquer pour modifier)</span></label>
                   <input type="range" min={0} max={12} step={0.25} value={rate}
-                    onChange={e => setRate(+e.target.value)}
+                    onChange={e => { setRate(+e.target.value); setRateInput(e.target.value); }}
                     style={{ accentColor: QC.violet }} />
                   <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: QC.gris }}>
                     <span>0 %</span><span>CELI ~5 %</span><span>12 %</span>
