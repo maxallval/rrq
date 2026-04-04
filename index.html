@@ -80,10 +80,9 @@
       const a72 = Math.round(amount65 * (1 + 0.007 * 84));
       const monthlyRate = rate / 100 / 12;
 
-      // Montant réellement investi chaque mois selon le mode
-      const investi = fiscalite === "celi"
-        ? a60
-        : Math.round(a60 * (1 - tauxImpot / 100));
+      // Facteur net appliqué à toutes les courbes
+      const facteurNet = fiscalite === "impot" ? (1 - tauxImpot / 100) : 1;
+      const investi = Math.round(a60 * facteurNet);
 
       // Seuil critique affiché
       const seuilBrut = 2.6;
@@ -103,9 +102,9 @@
         let be6065=null, be6572=null, beInv=null;
         for (let m=0; m<=35*12; m++) {
           const age = 60 + m/12;
-          c60 += a60;
-          if (age>=65) c65 += amount65;
-          if (age>=72) c72 += a72;
+          c60 += a60 * facteurNet;
+          if (age>=65) c65 += amount65 * facteurNet;
+          if (age>=72) c72 += a72 * facteurNet;
           cap = cap*(1+monthlyRate) + investi;
           if (!be6065 && c65>=c60 && age>65) be6065=Math.round(age);
           if (!be6572 && c72>=c65 && age>72) be6572=Math.round(age);
@@ -119,7 +118,7 @@
           });
         }
         return { data:pts, be6065, be6572, beInv };
-      }, [a60, amount65, a72, monthlyRate, investi]);
+      }, [a60, amount65, a72, monthlyRate, investi, facteurNet]);
 
       const setProfils = p => {
         setProfil(p);
