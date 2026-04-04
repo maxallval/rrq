@@ -1,0 +1,389 @@
+import React, { useState, useMemo } from 'react';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ComposedChart, Area } from 'recharts';
+
+const calculateSV = (age, revenuNet) => {
+  if (age < 65) return 0;
+  const svBase = 8000;
+  const threshold = 90997;
+  return Math.max(0, svBase - Math.max(0, revenuNet - threshold) * 0.15);
+};
+
+const calculateSRG = (age, revenuNet, svAmount) => {
+  if (age < 60) return 0;
+  const incomeForSRG = Math.max(0, revenuNet - svAmount);
+  const srgMax = 12000;
+  return Math.max(0, srgMax - incomeForSRG * 0.5);
+};
+
+const calculateRRQ = (age, yearsContribution, avgSalary) => {
+  if (age < 60) return 0;
+  let baseRRQ = Math.min(avgSalary * 0.25, 15888);
+  if (age < 65) {
+    const reduction = 0.054 * (65 - age);
+    baseRRQ = baseRRQ * (1 - reduction);
+  } else if (age > 65) {
+    const bonus = 0.042 * Math.min(age - 65, 7);
+    baseRRQ = baseRRQ * (1 + bonus);
+  }
+  return baseRRQ;
+};
+
+const calculateTax = (income) => {
+  if (income <= 0) return 0;
+  const fedBrackets = [
+    { limit: 55867, rate: 0.15 },
+    { limit: 111733, rate: 0.205 },
+    { limit: 173205, rate: 0.26 },
+    { limit: Infinity, rate: 0.33 }
+  ];
+  const qcBrackets = [
+    { limit: 49275, rate: 0.15 },
+    { limit: 98540, rate: 0.20 },
+    { limit: 119910, rate: 0.2575 },
+    { limit: Infinity, rate: 0.2975 }
+  ];
+  const calcTax = (brackets) => {
+    let tax = 0, prev = 0;
+    for (const b of brackets) {
+      const taxable = Math.min(income, b.limit) - prev;
+      tax += Math.max(0, taxable) * b.rate;
+      prev = b.limit;
+      if (income <= b.limit) break;
+    }
+    return tax;
+  };
+  const fed = calcTax(fedBrackets);
+  const qc = calcTax(qcBrackets);
+  const basicCredit = (0.15 + 0.15) * 15705;
+  return Math.max(0, fed + qc - basicCredit);
+};
+
+export default function RetirementCalculator() {
+  const [contributions, setContributions] = useState([
+    { id: 1, age: 30, amount: 10000, vehicle: 'REER' }
+  ]);
+  const [withdrawals, setWithdrawals] = useState([
+    { id: 1, age: 65, amount: 40000 }
+  ]);
+  const [startAge, setStartAge] = useState(25);
+  const [endAge, setEndAge] = useState(95);
+  const [initialBalance, setInitialBalance] = useState(50000);
+  const [returnRate, setReturnRate] = useState(0.05);
+  const [avgSalary, setAvgSalary] = useState(80000);
+  const [nextContribId, setNextContribId] = useState(2);
+  const [nextWithdrawId, setNextWithdrawId] = useState(2);
+
+  const simulationData = useMemo(() => {
+    const results = [];
+    let balance = initialBalance;
+    let yearsContributed = 0;
+    for (let age = startAge; age <= endAge; age++) {
+      const yearContributions = contributions.filter(c => c.age === age).reduce((sum, c) => sum + c.amount, 0);
+      const yearWithdrawals = withdrawals.filter(w => w.age === age).reduce((sum, w) => sum + w.amount, 0);
+      balance = balance * (1 + returnRate) + yearContributions - yearWithdrawals;
+      if (yearContributions > 0) yearsContributed++;
+      const withdrawalTax = withdrawals.some(w => w.age === age) ? calculateTax(yearWithdrawals) : 0;
+      const rrq = calculateRRQ(age, yearsContributed, avgSalary);
+      const sv = calculateSV(age, yearWithdrawals);
+      const srg = calculateSRG(age, yearWithdrawals, sv);
+      const totalBenefits = rrq + sv + srg;
+      const grossIncome = yearWithdrawals + totalBenefits;
+      const netIncome = grossIncome - withdrawalTax;
+      results.push({
+        age,
+        balance: Math.max(0, balance),
+        contributions: yearContributions,
+        withdrawals: yearWithdrawals,
+        tax: withdrawalTax,
+        rrq,
+        sv,
+        srg,
+        totalBenefits,
+        grossIncome,
+        netIncome,
+        yearsContributed
+      });
+    }
+    return results;
+  }, [contributions, withdrawals, startAge, endAge, initialBalance, returnRate, avgSalary]);
+
+  const addContribution = () => {
+    setContributions([...contributions, { id: nextContribId, age: 40, amount: 5000, vehicle: 'REER' }]);
+    setNextContribId(nextContribId + 1);
+  };
+  const addWithdrawal = () => {
+    setWithdrawals([...withdrawals, { id: nextWithdrawId, age: 70, amount: 30000 }]);
+    setNextWithdrawId(nextWithdrawId + 1);
+  };
+  const updateContribution = (id, field, value) => {
+    setContributions(contributions.map(c => 
+      c.id === id ? { ...c, [field]: field === 'amount' || field === 'age' ? parseInt(value) : value } : c
+    ));
+  };
+  const updateWithdrawal = (id, field, value) => {
+    setWithdrawals(withdrawals.map(w => 
+      w.id === id ? { ...w, [field]: parseInt(value) } : w
+    ));
+  };
+  const removeContribution = (id) => {
+    setContributions(contributions.filter(c => c.id !== id));
+  };
+  const removeWithdrawal = (id) => {
+    setWithdrawals(withdrawals.filter(w => w.id !== id));
+  };
+
+  const finalBalance = simulationData[simulationData.length - 1]?.balance || 0;
+  const totalContributions = simulationData.reduce((sum, d) => sum + d.contributions, 0);
+  const totalWithdrawals = simulationData.reduce((sum, d) => sum + d.withdrawals, 0);
+  const totalTax = simulationData.reduce((sum, d) => sum + d.tax, 0);
+  const totalBenefits = simulationData.reduce((sum, d) => sum + d.totalBenefits, 0);
+
+  return (
+    <div className="w-screen h-screen bg-white flex flex-col" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+      {/* Header */}
+      <header className="border-b border-gray-200 px-8 py-6">
+        <div>
+          <h1 className="text-4xl font-bold text-gray-900" style={{ fontWeight: 700 }}>Calculateur Retraite</h1>
+          <p className="text-sm text-gray-500 mt-1">Québec & Canada • Contributions • Retraits • Prestations</p>
+        </div>
+      </header>
+
+      {/* Main */}
+      <main className="flex flex-1 overflow-hidden">
+        {/* Left Panel */}
+        <div className="w-96 border-r border-gray-200 overflow-y-auto bg-gray-50">
+          <div className="p-6 space-y-6">
+            {/* Paramètres */}
+            <section>
+              <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wide mb-4">Paramètres</h2>
+              <div className="space-y-4 bg-white rounded p-4 border border-gray-200">
+                <div>
+                  <div className="flex justify-between items-baseline mb-2">
+                    <label className="text-xs font-medium text-gray-600">Solde initial</label>
+                    <span className="text-sm font-semibold text-gray-900">${initialBalance.toLocaleString('fr-CA')}</span>
+                  </div>
+                  <input type="range" min="0" max="500000" step="10000" value={initialBalance} onChange={(e) => setInitialBalance(parseInt(e.target.value))} className="w-full h-1.5 bg-gray-300 rounded appearance-none cursor-pointer" />
+                </div>
+                <div>
+                  <div className="flex justify-between items-baseline mb-2">
+                    <label className="text-xs font-medium text-gray-600">Âge début</label>
+                    <span className="text-sm font-semibold text-gray-900">{startAge}</span>
+                  </div>
+                  <input type="range" min="18" max="65" value={startAge} onChange={(e) => setStartAge(parseInt(e.target.value))} className="w-full h-1.5 bg-gray-300 rounded appearance-none cursor-pointer" />
+                </div>
+                <div>
+                  <div className="flex justify-between items-baseline mb-2">
+                    <label className="text-xs font-medium text-gray-600">Âge fin</label>
+                    <span className="text-sm font-semibold text-gray-900">{endAge}</span>
+                  </div>
+                  <input type="range" min={startAge + 1} max="105" value={endAge} onChange={(e) => setEndAge(parseInt(e.target.value))} className="w-full h-1.5 bg-gray-300 rounded appearance-none cursor-pointer" />
+                </div>
+                <div>
+                  <div className="flex justify-between items-baseline mb-2">
+                    <label className="text-xs font-medium text-gray-600">Rendement annuel</label>
+                    <span className="text-sm font-semibold text-gray-900">{(returnRate * 100).toFixed(1)}%</span>
+                  </div>
+                  <input type="range" min="0" max="0.10" step="0.01" value={returnRate} onChange={(e) => setReturnRate(parseFloat(e.target.value))} className="w-full h-1.5 bg-gray-300 rounded appearance-none cursor-pointer" />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-gray-600 block mb-2">Salaire moyen</label>
+                  <input type="number" value={avgSalary} onChange={(e) => setAvgSalary(parseInt(e.target.value))} className="w-full px-3 py-2 border border-gray-300 rounded text-sm focus:outline-none focus:border-gray-400" />
+                </div>
+              </div>
+            </section>
+
+            {/* Contributions */}
+            <section>
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">Contributions</h2>
+                <button onClick={addContribution} className="px-3 py-1 bg-gray-900 text-white rounded text-xs font-medium hover:bg-gray-800 transition">+ Ajouter</button>
+              </div>
+              <div className="space-y-2">
+                {contributions.map(c => (
+                  <div key={c.id} className="bg-white border border-gray-200 rounded p-3">
+                    <div className="flex gap-2 mb-2">
+                      <input type="number" min="18" max="105" value={c.age} onChange={(e) => updateContribution(c.id, 'age', e.target.value)} className="w-14 px-2 py-1 border border-gray-300 rounded text-xs focus:outline-none focus:border-gray-400" />
+                      <input type="number" value={c.amount} onChange={(e) => updateContribution(c.id, 'amount', e.target.value)} className="flex-1 px-2 py-1 border border-gray-300 rounded text-xs focus:outline-none focus:border-gray-400" />
+                      <select value={c.vehicle} onChange={(e) => updateContribution(c.id, 'vehicle', e.target.value)} className="px-2 py-1 border border-gray-300 rounded text-xs focus:outline-none focus:border-gray-400">
+                        <option value="REER">REER</option>
+                        <option value="CELI">CELI</option>
+                        <option value="Non-enreg">Non-enreg</option>
+                      </select>
+                      <button onClick={() => removeContribution(c.id)} className="px-2 py-1 text-gray-500 hover:text-gray-900 transition">✕</button>
+                    </div>
+                    <p className="text-xs text-gray-500">Âge {c.age} • ${c.amount.toLocaleString('fr-CA')} • {c.vehicle}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Retraits */}
+            <section>
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">Retraits</h2>
+                <button onClick={addWithdrawal} className="px-3 py-1 bg-gray-900 text-white rounded text-xs font-medium hover:bg-gray-800 transition">+ Ajouter</button>
+              </div>
+              <div className="space-y-2">
+                {withdrawals.map(w => (
+                  <div key={w.id} className="bg-white border border-gray-200 rounded p-3">
+                    <div className="flex gap-2 mb-2">
+                      <input type="number" min="18" max="105" value={w.age} onChange={(e) => updateWithdrawal(w.id, 'age', e.target.value)} className="w-14 px-2 py-1 border border-gray-300 rounded text-xs focus:outline-none focus:border-gray-400" />
+                      <input type="number" value={w.amount} onChange={(e) => updateWithdrawal(w.id, 'amount', e.target.value)} className="flex-1 px-2 py-1 border border-gray-300 rounded text-xs focus:outline-none focus:border-gray-400" />
+                      <button onClick={() => removeWithdrawal(w.id)} className="px-2 py-1 text-gray-500 hover:text-gray-900 transition">✕</button>
+                    </div>
+                    <p className="text-xs text-gray-500">Âge {w.age} • ${w.amount.toLocaleString('fr-CA')}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Résumé */}
+            <section className="bg-white border border-gray-200 rounded p-4">
+              <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wide mb-3">Résumé</h2>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between text-xs">
+                  <span className="text-gray-600">Total contributions</span>
+                  <span className="font-semibold text-gray-900">${totalContributions.toLocaleString('fr-CA', { maximumFractionDigits: 0 })}</span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-gray-600">Total retraits</span>
+                  <span className="font-semibold text-gray-900">${totalWithdrawals.toLocaleString('fr-CA', { maximumFractionDigits: 0 })}</span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-gray-600">Total impôts</span>
+                  <span className="font-semibold text-gray-900">${totalTax.toLocaleString('fr-CA', { maximumFractionDigits: 0 })}</span>
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="text-gray-600">Total prestations</span>
+                  <span className="font-semibold text-gray-900">${totalBenefits.toLocaleString('fr-CA', { maximumFractionDigits: 0 })}</span>
+                </div>
+                <div className="border-t border-gray-200 pt-2 flex justify-between">
+                  <span className="text-xs font-semibold text-gray-900">Solde final (âge {endAge})</span>
+                  <span className={`font-bold ${finalBalance > 0 ? 'text-gray-900' : 'text-red-600'}`}>
+                    ${finalBalance.toLocaleString('fr-CA', { maximumFractionDigits: 0 })}
+                  </span>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        {/* Right Panel */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="p-6 space-y-6">
+            {/* Main Chart */}
+            <div className="bg-white border border-gray-200 rounded">
+              <div className="p-4 border-b border-gray-200">
+                <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">Portefeuille</h2>
+              </div>
+              <div className="p-4" style={{ height: '320px' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <ComposedChart data={simulationData} margin={{ top: 0, right: 0, left: -40, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
+                    <XAxis dataKey="age" tick={{ fontSize: 12 }} stroke="#9ca3af" />
+                    <YAxis yAxisId="left" tick={{ fontSize: 12 }} stroke="#9ca3af" />
+                    <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 12 }} stroke="#9ca3af" />
+                    <Tooltip formatter={(value) => `$${value.toLocaleString('fr-CA', { maximumFractionDigits: 0 })}`} contentStyle={{ backgroundColor: '#fff', border: '1px solid #e5e7eb', borderRadius: '4px' }} />
+                    <Legend wrapperStyle={{ fontSize: '12px' }} />
+                    <Area yAxisId="left" type="monotone" dataKey="balance" fill="#f3f4f6" stroke="#6b7280" strokeWidth={2} name="Portefeuille" />
+                    <Line yAxisId="right" type="monotone" dataKey="netIncome" stroke="#374151" strokeWidth={2} dot={false} name="Revenu net" />
+                  </ComposedChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* 3-Column Stats */}
+            <div className="grid grid-cols-3 gap-4">
+              <div className="bg-white border border-gray-200 rounded">
+                <div className="p-4 border-b border-gray-200">
+                  <h3 className="text-xs font-semibold text-gray-900 uppercase tracking-wide">RRQ/RPC</h3>
+                </div>
+                <div style={{ height: '200px' }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={simulationData.filter((_, i) => i % 2 === 0)}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
+                      <XAxis dataKey="age" tick={{ fontSize: 10 }} stroke="#9ca3af" />
+                      <YAxis tick={{ fontSize: 10 }} stroke="#9ca3af" />
+                      <Tooltip formatter={(value) => `$${value.toLocaleString('fr-CA', { maximumFractionDigits: 0 })}`} contentStyle={{ fontSize: '11px', backgroundColor: '#fff', border: '1px solid #e5e7eb' }} />
+                      <Bar dataKey="rrq" fill="#6b7280" radius={[2, 2, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              <div className="bg-white border border-gray-200 rounded">
+                <div className="p-4 border-b border-gray-200">
+                  <h3 className="text-xs font-semibold text-gray-900 uppercase tracking-wide">SV + SRG</h3>
+                </div>
+                <div style={{ height: '200px' }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={simulationData.filter((_, i) => i % 2 === 0)}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
+                      <XAxis dataKey="age" tick={{ fontSize: 10 }} stroke="#9ca3af" />
+                      <YAxis tick={{ fontSize: 10 }} stroke="#9ca3af" />
+                      <Tooltip formatter={(value) => `$${value.toLocaleString('fr-CA', { maximumFractionDigits: 0 })}`} contentStyle={{ fontSize: '11px', backgroundColor: '#fff', border: '1px solid #e5e7eb' }} />
+                      <Bar dataKey="sv" fill="#9ca3af" stackId="a" radius={[2, 2, 0, 0]} />
+                      <Bar dataKey="srg" fill="#d1d5db" stackId="a" radius={[2, 2, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              <div className="bg-white border border-gray-200 rounded">
+                <div className="p-4 border-b border-gray-200">
+                  <h3 className="text-xs font-semibold text-gray-900 uppercase tracking-wide">Impôts</h3>
+                </div>
+                <div style={{ height: '200px' }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={simulationData.filter((_, i) => i % 2 === 0)}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
+                      <XAxis dataKey="age" tick={{ fontSize: 10 }} stroke="#9ca3af" />
+                      <YAxis tick={{ fontSize: 10 }} stroke="#9ca3af" />
+                      <Tooltip formatter={(value) => `$${value.toLocaleString('fr-CA', { maximumFractionDigits: 0 })}`} contentStyle={{ fontSize: '11px', backgroundColor: '#fff', border: '1px solid #e5e7eb' }} />
+                      <Bar dataKey="tax" fill="#4b5563" radius={[2, 2, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            </div>
+
+            {/* Table */}
+            <div className="bg-white border border-gray-200 rounded">
+              <div className="p-4 border-b border-gray-200">
+                <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">Détails année par année</h2>
+              </div>
+              <div className="overflow-x-auto max-h-64 overflow-y-auto">
+                <table className="w-full text-xs">
+                  <thead className="bg-gray-50 border-b border-gray-200 sticky top-0">
+                    <tr>
+                      <th className="px-3 py-2 text-left font-semibold text-gray-600">Âge</th>
+                      <th className="px-3 py-2 text-right font-semibold text-gray-600">Portef.</th>
+                      <th className="px-3 py-2 text-right font-semibold text-gray-600">RRQ</th>
+                      <th className="px-3 py-2 text-right font-semibold text-gray-600">SV</th>
+                      <th className="px-3 py-2 text-right font-semibold text-gray-600">SRG</th>
+                      <th className="px-3 py-2 text-right font-semibold text-gray-600">Impôt</th>
+                      <th className="px-3 py-2 text-right font-semibold text-gray-600">Net</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {simulationData.filter((_, i) => i % 3 === 0).map(row => (
+                      <tr key={row.age} className="border-b border-gray-100 hover:bg-gray-50">
+                        <td className="px-3 py-2 font-semibold text-gray-900">{row.age}</td>
+                        <td className="px-3 py-2 text-right text-gray-700">${(row.balance / 1000).toFixed(0)}k</td>
+                        <td className="px-3 py-2 text-right text-gray-700">${row.rrq.toLocaleString('fr-CA', { maximumFractionDigits: 0 })}</td>
+                        <td className="px-3 py-2 text-right text-gray-700">${row.sv.toLocaleString('fr-CA', { maximumFractionDigits: 0 })}</td>
+                        <td className="px-3 py-2 text-right text-gray-700">${row.srg.toLocaleString('fr-CA', { maximumFractionDigits: 0 })}</td>
+                        <td className="px-3 py-2 text-right text-gray-700">${row.tax.toLocaleString('fr-CA', { maximumFractionDigits: 0 })}</td>
+                        <td className="px-3 py-2 text-right font-semibold text-gray-900">${row.netIncome.toLocaleString('fr-CA', { maximumFractionDigits: 0 })}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
