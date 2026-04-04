@@ -1,720 +1,738 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<title>Calculateur Retraite</title>
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{background:#F0F4F8;font-family:Arial,sans-serif;font-size:14px;color:#1A1A1A;height:100vh;overflow:hidden}
-.wrap{display:flex;flex-direction:column;height:100vh}
-header{background:rgb(9,87,151);padding:16px 24px;flex-shrink:0}
-header h1{color:#fff;font-size:19px;font-weight:700;margin-bottom:2px}
-header p{color:rgba(255,255,255,.75);font-size:12px}
-.or-bar{height:3px;background:rgb(240,150,134);border-radius:2px;margin-top:10px;width:60px}
-main{display:flex;flex:1;overflow:hidden}
-.sidebar{width:336px;background:#F0F4F8;border-right:1px solid #CCC;overflow-y:auto;padding:12px 13px 20px;flex-shrink:0}
-.content{flex:1;overflow-y:auto;padding:13px 16px 20px}
-.sec-head{display:flex;align-items:center;gap:8px;margin-bottom:9px;margin-top:13px}
-.sec-head:first-of-type{margin-top:0}
-.sec-num{background:rgb(9,87,151);color:#fff;border-radius:50%;width:21px;height:21px;min-width:21px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
-.sec-title{color:rgb(9,87,151);font-size:13px;font-weight:700;white-space:nowrap}
-.sec-line{flex:1;height:1px;background:rgba(9,87,151,.25)}
-.card{background:#fff;border:1px solid #CCC;border-radius:4px;padding:11px;margin-bottom:7px}
-.group{margin-bottom:10px}.group:last-child{margin-bottom:0}
-.group label{display:block;font-size:10px;color:#555;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
-.val{color:#1A1A1A;font-weight:700;font-size:13px}
-input[type=range]{width:100%;margin-top:3px;cursor:pointer}
-input[type=number]{width:100%;padding:5px 6px;border:1px solid #CCC;border-radius:3px;font-family:Arial;font-size:12px;color:#1A1A1A}
-select{padding:5px 4px;border:1px solid #CCC;border-radius:3px;font-family:Arial;font-size:12px;background:#fff}
-.rl{display:flex;justify-content:space-between;font-size:10px;color:#888;margin-top:1px}
-.hz{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.hz .sub{font-size:10px;color:#888;margin-bottom:2px}
-.entry{background:#fff;border:1px solid #CCC;border-radius:4px;padding:8px;margin-bottom:5px}
-.erow{display:flex;gap:4px;margin-bottom:4px;align-items:center}
-.erow input[type=number]{flex:1;min-width:0}
-.w-age{max-width:46px!important}.w-rt{max-width:50px!important}
-.erow select{flex:0 0 86px}
-.erow .del{flex-shrink:0;padding:4px 6px;background:#fecaca;color:#991b1b;border:none;border-radius:3px;cursor:pointer;font-size:11px}
-.erow .sep{font-size:11px;color:#888;flex-shrink:0}
-.ei{font-size:10px;color:#777;padding-top:1px}
-.btn-add{padding:4px 11px;background:rgb(9,87,151);color:#fff;border:none;border-radius:3px;font-family:Arial;font-size:12px;font-weight:600;cursor:pointer;margin-bottom:4px}
-.badge{display:inline-block;font-size:10px;font-weight:700;padding:1px 5px;border-radius:10px}
-.bg{background:#D1FAE5;color:#065F46}.bo{background:#FEF3C7;color:#92400E}
-.sr{display:flex;justify-content:space-between;font-size:12px;padding:4px 0;border-bottom:1px solid #E0E0E0}
-.sr.f{border-bottom:none;border-top:2px solid rgb(9,87,151);margin-top:4px;padding-top:7px;font-weight:700;color:rgb(9,87,151);font-size:13px}
-/* Content */
-.cc{background:#fff;border:1px solid #CCC;border-radius:4px;margin-bottom:13px}
-.ch{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#555;padding:8px 13px 6px;border-bottom:1px solid #E0E0E0;display:flex;justify-content:space-between;align-items:center}
-.cb{padding:5px 3px 3px}
-canvas{width:100%;display:block}
-.cg{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-bottom:13px}
-.legend{display:flex;gap:14px;padding:5px 13px 9px;font-size:11px;color:#555;flex-wrap:wrap;border-top:1px solid #F0F0F0}
-.li{display:flex;align-items:center;gap:5px}
-.ll{width:20px;height:3px;border-radius:1px;flex-shrink:0}
-.lb{width:11px;height:9px;border-radius:2px;flex-shrink:0}
-.zb{display:flex;align-items:center;gap:8px;padding:5px 13px;font-size:10px;color:#999;border-top:1px solid #F0F0F0}
-.zbtn{padding:2px 7px;border:1px solid #CCC;border-radius:3px;background:#fff;font-size:11px;cursor:pointer;color:#555}
-.zbtn:hover{background:#F0F4F8}
-table{width:100%;border-collapse:collapse;font-size:11px}
-thead tr{background:rgb(9,87,151);color:#fff}
-th{padding:7px 8px;text-align:right;font-size:11px;white-space:nowrap}
-th:first-child{text-align:left}
-td{padding:6px 8px;border-bottom:1px solid #E0E0E0;text-align:right}
-td:first-child{text-align:left;font-weight:700;color:rgb(9,87,151)}
-tr:nth-child(even) td{background:#F7F9FB}
-.note{font-size:10px;color:#888}
-/* Tooltip */
-#tip{position:fixed;display:none;background:#fff;border:1px solid #CCC;border-radius:4px;padding:10px 13px;font-size:12px;pointer-events:none;box-shadow:0 4px 18px rgba(0,0,0,.13);z-index:999;min-width:168px}
-.th{color:rgb(9,87,151);font-weight:700;font-size:13px;margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid #E0E0E0}
-.tr{display:flex;justify-content:space-between;gap:14px;margin-bottom:3px;font-size:11px}
-.td{border-top:1px solid #F0F0F0;margin:5px 0}
-.ts{font-size:10px;color:#888;margin-top:4px}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RetirePlan QC</title>
+  <style>
+    /* Réinitialisation de base pour correspondre au design system */
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #F0F4F8;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    }
+    * {
+      box-sizing: border-box;
+    }
+  </style>
+
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  
+  <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <script crossorigin src="https://unpkg.com/recharts@2.12.0/umd/Recharts.js"></script>
 </head>
 <body>
-<div id="tip"></div>
-<div class="wrap">
-<header>
-  <h1>Calculateur Retraite</h1>
-  <p>Québec et Canada · Contributions récurrentes · Graphique interactif</p>
-  <div class="or-bar"></div>
-</header>
-<main>
-<!-- ─── SIDEBAR ─── -->
-<div class="sidebar">
+  <div id="root"></div>
 
-  <div class="sec-head"><div class="sec-num">1</div><div class="sec-title">Paramètres</div><div class="sec-line"></div></div>
-  <div class="card">
-    <div class="group">
-      <label>Solde initial · <span class="val" id="d1">50 000 $</span></label>
-      <input type="range" id="initBal" min="0" max="500000" step="5000" value="50000" style="accent-color:rgb(9,87,151)">
-      <div class="rl"><span>0 $</span><span>500 k$</span></div>
-    </div>
-    <div class="group">
-      <label>Horizon · <span class="val" id="dHz">18 à 100 ans</span></label>
-      <div class="hz">
-        <div>
-          <div class="sub">De</div>
-          <input type="range" id="ageFrom" min="18" max="99" value="18" style="accent-color:rgb(9,87,151)">
-          <div class="rl"><span>18</span><span>99</span></div>
+  <script type="text/babel">
+    const { useState, useMemo, useEffect, useCallback } = React;
+    const { ComposedChart, AreaChart, Area, LineChart, Line, XAxis, YAxis,
+            CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } = Recharts;
+
+    // ── DESIGN SYSTEM ────────────────────────────────────────
+    const C = {
+      bg:'#F0F4F8', card:'#FFFFFF', navy:'#0F172A', blue:'#2563EB',
+      teal:'#0D9488', green:'#10B981', amber:'#F59E0B', red:'#EF4444',
+      purple:'#7C3AED', muted:'#64748B', border:'#E2E8F0',
+      sh:'0 1px 3px rgba(0,0,0,.08),0 4px 16px rgba(0,0,0,.04)',
+      shHover:'0 4px 12px rgba(0,0,0,.12)',
+    };
+
+    // ── CONSTANTS ────────────────────────────────────────────
+    const ACCT_DEF = {
+      REER:   {label:'REER',           icon:'🏦', color:'#2563EB', tax:'Déductible · Imposable au retrait'},
+      CELI:   {label:'CÉLI',           icon:'🌱', color:'#10B981', tax:'Libre d\'impôt'},
+      NONREG: {label:'Non enregistré', icon:'📈', color:'#F59E0B', tax:'Gains en capital imposables'},
+      IMMO:   {label:'Immobilier',     icon:'🏠', color:'#7C3AED', tax:'Valeur nette estimée'},
+      AUTRE:  {label:'Autre actif',    icon:'💼', color:'#64748B', tax:'Actif personnalisé'},
+    };
+
+    const RISKS = {
+      low:   {label:'Faible',  vol:.05, color:C.green},
+      medium:{label:'Modéré',  vol:.12, color:C.amber},
+      high:  {label:'Élevé',   vol:.20, color:C.red},
+    };
+
+    const STRATS = {
+      'celi-first': {label:'CÉLI d\'abord',   order:['CELI','NONREG','REER','IMMO','AUTRE']},
+      'reer-first': {label:'REER d\'abord',   order:['REER','NONREG','CELI','IMMO','AUTRE']},
+      'balanced':   {label:'Proportionnel',   order:null},
+    };
+
+    const uid = () => Math.random().toString(36).slice(2,8);
+
+    const DEF_ACCOUNTS = [
+      {id:uid(),name:'REER',   type:'REER',   balance:50000, contribAmt:10000,contribFreq:'annual',contribStart:25,contribEnd:65,oneTime:[],rate:6,risk:'medium'},
+      {id:uid(),name:'CÉLI',   type:'CELI',   balance:20000, contribAmt:6000, contribFreq:'annual',contribStart:25,contribEnd:65,oneTime:[],rate:5,risk:'low'},
+    ];
+    const DEF_WITHDRAWALS = [{id:uid(),startAge:65,endAge:100,amount:45000,type:'fixed'}];
+    const DEF_PARAMS = {ageFrom:25,ageTo:95,inflation:2.5,salary:80000,ageRRQ:65,ageSV:65,ageSRG:60,strategy:'celi-first'};
+
+    // ── MATH ────────────────────────────────────────────────
+    function randNorm(){
+      let u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();
+      return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);
+    }
+    function fmtK(v,d=0){
+      if(!isFinite(v)||isNaN(v))return'—';
+      if(Math.abs(v)>=1e6)return(v/1e6).toFixed(1)+'M$';
+      if(Math.abs(v)>=1000)return(v/1000).toFixed(d)+'k$';
+      return Math.round(v)+'$';
+    }
+    function fmtCAD(v){return Math.round(v).toLocaleString('fr-CA')+' $';}
+
+    function calcRRQ(age,aR,sal){
+      if(age<aR)return 0;
+      let b=Math.min(sal*.25,15888),d=aR-65;
+      if(d<0)b*=(1+d*.054);else if(d>0)b*=(1+Math.min(d,7)*.042);
+      return b;
+    }
+    function calcSV(age,aSV){
+      if(age<aSV)return 0;
+      return 8000*(1+.072*Math.max(0,aSV-65));
+    }
+    function calcSRG(age,aSV,aSRG,inc,sv){
+      if(age<aSV||age<aSRG)return 0;
+      return Math.max(0,12000-Math.max(0,inc-sv)*.5);
+    }
+    function calcTax(inc){
+      if(inc<=0)return 0;
+      const f=[55867,111733,173205],fr=[.15,.205,.26,.33];
+      const q=[49275,98540,119910],qr=[.15,.20,.2575,.2975];
+      let t=0,p=0;
+      for(let i=0;i<4;i++){const l=i<f.length?f[i]:inc+1,x=Math.min(inc,l)-p;t+=Math.max(0,x)*fr[i];p=l;if(inc<=l)break;}
+      p=0;
+      for(let i=0;i<4;i++){const l=i<q.length?q[i]:inc+1,x=Math.min(inc,l)-p;t+=Math.max(0,x)*qr[i];p=l;if(inc<=l)break;}
+      return Math.max(0,t-.3*15705);
+    }
+
+    // ── SIMULATION ──────────────────────────────────────────
+    function getPriorityIds(strategy,accounts){
+      const order=STRATS[strategy]?.order;
+      if(!order)return accounts.map(a=>a.id);
+      const byType={};
+      accounts.forEach(a=>{if(!byType[a.type])byType[a.type]=[];byType[a.type].push(a.id);});
+      const ids=[];
+      order.forEach(t=>{if(byType[t])ids.push(...byType[t]);});
+      accounts.forEach(a=>{if(!ids.includes(a.id))ids.push(a.id);});
+      return ids;
+    }
+
+    function runSim(accounts,withdrawals,params,shocks=null){
+      if(!accounts.length)return[];
+      const {ageFrom,ageTo,salary,ageRRQ,ageSV,ageSRG,strategy}=params;
+      const bals={};accounts.forEach(a=>bals[a.id]=a.balance);
+      const pids=getPriorityIds(strategy,accounts);
+      const results=[];
+
+      for(let age=ageFrom;age<=ageTo;age++){
+        const yr=age-ageFrom;
+        // Growth
+        accounts.forEach(a=>{
+          const r=(a.rate/100)+(shocks?(shocks[a.id]?.[yr]??0):0);
+          bals[a.id]=Math.max(0,bals[a.id]*(1+r));
+        });
+        // Recurring contribs
+        accounts.forEach(a=>{
+          if(age<a.contribStart||age>a.contribEnd)return;
+          bals[a.id]+=(a.contribFreq==='monthly'?a.contribAmt*12:a.contribAmt);
+        });
+        // One-time contribs
+        accounts.forEach(a=>(a.oneTime||[]).forEach(ot=>{if(ot.age===age)bals[a.id]+=ot.amount;}));
+
+        const rrq=calcRRQ(age,ageRRQ,salary);
+        const sv=calcSV(age,ageSV);
+        const srg=calcSRG(age,ageSV,ageSRG,0,sv);
+        const gov=rrq+sv+srg;
+        const total=Object.values(bals).reduce((s,v)=>s+v,0);
+
+        let needed=0;
+        withdrawals.forEach(w=>{
+          if(age<w.startAge||age>w.endAge)return;
+          needed+=w.type==='fixed'?w.amount:total*(w.amount/100);
+        });
+
+        let fromPort=Math.max(0,needed-gov);
+        if(STRATS[strategy]?.order){
+          for(const id of pids){if(fromPort<=0)break;const t=Math.min(bals[id]||0,fromPort);bals[id]-=t;fromPort-=t;}
+        } else {
+          const tt=Object.values(bals).reduce((s,v)=>s+v,0)||1;
+          accounts.forEach(a=>{const sh=(bals[a.id]/tt)*fromPort;bals[a.id]=Math.max(0,bals[a.id]-sh);});
+        }
+
+        const totalBal=Object.values(bals).reduce((s,v)=>s+v,0);
+        const tax=needed>gov?calcTax(Math.max(0,needed-gov)):0;
+        results.push({age,totalBalance:Math.round(totalBal),gov,rrq,sv,srg,withdrawal:needed,tax:Math.round(tax),net:Math.round(needed+gov-tax),balances:{...bals}});
+        if(totalBal<=0){for(let a2=age+1;a2<=ageTo;a2++)results.push({age:a2,totalBalance:0,gov,rrq,sv,srg,withdrawal:needed,tax:0,net:0,balances:{}});break;}
+      }
+      return results;
+    }
+
+    function runMC(accounts,withdrawals,params,N=180){
+      if(!accounts.length)return null;
+      const runs=[];let ok=0;
+      for(let i=0;i<N;i++){
+        const sh={};
+        accounts.forEach(a=>{
+          const vol=RISKS[a.risk]?.vol||.12;sh[a.id]={};
+          for(let y=0;y<=(params.ageTo-params.ageFrom+1);y++)sh[a.id][y]=randNorm()*vol;
+        });
+        const res=runSim(accounts,withdrawals,params,sh);
+        runs.push(res);
+        if((res[res.length-1]?.totalBalance||0)>0)ok++;
+      }
+      const len=runs[0]?.length||0;
+      const chartData=[];
+      for(let i=0;i<len;i++){
+        const vals=runs.map(r=>r[i]?.totalBalance||0).sort((a,b)=>a-b);
+        const p=(f)=>Math.max(0,vals[Math.floor(N*f)]||0);
+        const p10=p(.10),p25=p(.25),p50=p(.50),p75=p(.75),p90=p(.90);
+        chartData.push({age:runs[0][i].age,p10,p25,p50,p75,p90,
+          b1:Math.max(0,p25-p10),b2:Math.max(0,p75-p25),b3:Math.max(0,p90-p75)});
+      }
+      return {chartData,successRate:Math.round(ok/N*100),N};
+    }
+
+    function getSuggestions(sim,params,accounts,mc){
+      const s=[];if(!sim.length)return s;
+      const sr=mc?.successRate??100;
+      const hasRRQ=accounts.some(a=>a.type==='REER');
+      const hasCELI=accounts.some(a=>a.type==='CELI');
+      const avgRate=accounts.reduce((s,a)=>s+a.rate,0)/Math.max(accounts.length,1);
+      if(sr<70)s.push({lvl:'danger', icon:'🚨', txt:`Probabilité de succès à ${sr} %. Augmenter les contributions de 10–15 % ou réduire les retraits planifiés.`});
+      else if(sr<85)s.push({lvl:'warning',icon:'⚠️', txt:`Probabilité ${sr} %. Ajouter 5 000 $/an dans le CÉLI améliorerait considérablement ta retraite.`});
+      if(!hasCELI)s.push({lvl:'info',   icon:'🌱', txt:'Aucun CÉLI détecté. Un CÉLI est fiscalement optimal : les retraits sont totalement libres d\'impôt.'});
+      if(params.ageRRQ<65)s.push({lvl:'info',icon:'🕐',txt:`RRQ à ${params.ageRRQ} ans = pénalité permanente de ${((65-params.ageRRQ)*5.4).toFixed(0)} %. Attendre 65 ans, ou idéalement 70 ans (+42 %).`});
+      if(avgRate<4&&accounts.length)s.push({lvl:'info',icon:'📈',txt:`Rendement moyen de ${avgRate.toFixed(1)} %/an. Des FNB diversifiés ciblent historiquement 6–8 % sur le long terme.`});
+      return s.slice(0,3);
+    }
+
+    // ── MICRO COMPONENTS ─────────────────────────────────────
+    const Lbl = ({children}) => <div style={{fontSize:10,fontWeight:700,color:C.muted,textTransform:'uppercase',letterSpacing:.5,marginBottom:4}}>{children}</div>;
+
+    function KPI({label,value,sub,color}){
+      return(
+        <div style={{background:C.card,borderRadius:12,padding:'15px 18px',boxShadow:C.sh,flex:1,minWidth:130}}>
+          <Lbl>{label}</Lbl>
+          <div style={{fontSize:22,fontWeight:800,color:color||C.navy,lineHeight:1.1,marginBottom:4}}>{value}</div>
+          {sub&&<div style={{fontSize:11,color:C.muted}}>{sub}</div>}
         </div>
-        <div>
-          <div class="sub">À</div>
-          <input type="range" id="ageTo" min="19" max="100" value="100" style="accent-color:rgb(9,87,151)">
-          <div class="rl"><span>19</span><span>100</span></div>
+      );
+    }
+
+    function Gauge({pct}){
+      const color=pct>=80?C.green:pct>=65?C.amber:C.red;
+      const lbl=pct>=80?'Excellent':pct>=70?'Bon':pct>=60?'À améliorer':'Risqué';
+      const arc=Math.min(1,pct/100)*157;
+      return(
+        <div style={{textAlign:'center'}}>
+          <svg width="130" height="76" viewBox="0 0 130 76">
+            <path d="M14,66 A52,52,0,0,1,116,66" stroke={C.border} strokeWidth="11" fill="none" strokeLinecap="round"/>
+            <path d="M14,66 A52,52,0,0,1,116,66" stroke={color} strokeWidth="11" fill="none" strokeLinecap="round" strokeDasharray={`${arc} 200`}/>
+            <text x="65" y="64" textAnchor="middle" fontSize="22" fontWeight="800" fill={color}>{pct}%</text>
+            <text x="65" y="76" textAnchor="middle" fontSize="11" fill={C.muted}>{lbl}</text>
+          </svg>
         </div>
-      </div>
-    </div>
-    <div class="group" style="margin-bottom:0">
-      <label>Salaire moyen</label>
-      <input type="number" id="avgSalary" value="80000">
-    </div>
-  </div>
-
-  <div class="sec-head"><div class="sec-num">2</div><div class="sec-title">Prestations gouvernementales</div><div class="sec-line"></div></div>
-  <div class="card">
-    <div class="group">
-      <label>Âge RRQ · <span class="val" id="dRRQ">65</span> ans · <span id="bRRQ" class="badge bg">Référence</span></label>
-      <input type="range" id="ageRRQ" min="60" max="72" step="1" value="65" style="accent-color:#1E7E34">
-      <div class="rl"><span>60 (−36 %)</span><span>65</span><span>72 (+58,8 %)</span></div>
-    </div>
-    <div class="group">
-      <label>Âge SV/SRG · <span class="val" id="dSV">65</span> ans · <span id="bSV" class="badge bg">Référence</span></label>
-      <input type="range" id="ageSV" min="65" max="70" step="1" value="65" style="accent-color:#1E7E34">
-      <div class="rl"><span>65</span><span>70 (+36 %)</span></div>
-    </div>
-    <div class="group" style="margin-bottom:0">
-      <label>Âge SRG · <span class="val" id="dSRG">60</span> ans</label>
-      <input type="range" id="ageSRG" min="60" max="65" step="1" value="60" style="accent-color:#6F42C1">
-      <div class="rl"><span>60</span><span>65</span></div>
-    </div>
-  </div>
-
-  <div class="sec-head"><div class="sec-num">3</div><div class="sec-title">Contributions récurrentes</div><div class="sec-line"></div></div>
-  <div id="contribList"></div>
-  <button class="btn-add" onclick="addContrib()">+ Ajouter</button>
-
-  <div class="sec-head"><div class="sec-num">4</div><div class="sec-title">Retraits (one-shot)</div><div class="sec-line"></div></div>
-  <div id="withdrawList"></div>
-  <button class="btn-add" onclick="addWithdraw()">+ Ajouter</button>
-
-  <div class="sec-head"><div class="sec-num">5</div><div class="sec-title">Résumé (cumul)</div><div class="sec-line"></div></div>
-  <div class="card">
-    <div class="sr"><span>Contributions versées</span><span id="s1">—</span></div>
-    <div class="sr"><span>Retraits bruts</span><span id="s2">—</span></div>
-    <div class="sr"><span>Impôts estimés</span><span id="s3">—</span></div>
-    <div class="sr"><span>Prestations (RRQ+SV+SRG)</span><span id="s4">—</span></div>
-    <div class="sr f"><span>Solde final</span><span id="s5">—</span></div>
-  </div>
-  <div class="note" style="margin-top:4px;padding:0 2px">Simulation à titre indicatif. Consultez un planificateur financier.</div>
-</div>
-
-<!-- ─── CONTENT ─── -->
-<div class="content">
-
-  <!-- Main chart -->
-  <div class="cc">
-    <div class="ch">
-      <span>Vue d'ensemble</span>
-      <div style="display:flex;gap:6px;align-items:center">
-        <span id="viewInfo" class="note"></span>
-        <button class="zbtn" onclick="resetZoom()">↺ Zoom</button>
-      </div>
-    </div>
-    <div class="cb" style="height:290px"><canvas id="chart1" style="cursor:crosshair"></canvas></div>
-    <div class="legend">
-      <div class="li"><span class="ll" style="background:rgb(9,87,151)"></span>Portefeuille</div>
-      <div class="li"><span class="lb" style="background:rgba(30,126,52,.8)"></span>Contributions/an</div>
-      <div class="li"><span class="lb" style="background:rgba(196,86,0,.8)"></span>Retraits/an</div>
-      <div class="li"><span class="ll" style="background:#6F42C1"></span>Revenus passifs/an</div>
-    </div>
-    <div class="zb">
-      <span>🔍 Molette pour zoomer · Cliquer-glisser pour déplacer</span>
-      <span id="viewInfo2" style="margin-left:auto"></span>
-    </div>
-  </div>
-
-  <!-- Small charts -->
-  <div class="cg">
-    <div class="cc">
-      <div class="ch"><span>RRQ /an</span><span id="lblRRQ" class="note"></span></div>
-      <div class="cb" style="height:115px"><canvas id="chart2"></canvas></div>
-    </div>
-    <div class="cc">
-      <div class="ch"><span>SV + SRG /an</span><span id="lblSV" class="note"></span></div>
-      <div class="cb" style="height:115px"><canvas id="chart3"></canvas></div>
-    </div>
-    <div class="cc">
-      <div class="ch"><span>Impôts /an</span></div>
-      <div class="cb" style="height:115px"><canvas id="chart4"></canvas></div>
-    </div>
-  </div>
-
-  <!-- Table -->
-  <div class="cc">
-    <div class="ch"><span>Détails (1 rangée / 2 ans)</span></div>
-    <table>
-      <thead><tr><th>Âge</th><th>Taux</th><th>Portef.</th><th>RRQ/an</th><th>SV/an</th><th>SRG/an</th><th>Impôt</th><th>Net</th></tr></thead>
-      <tbody id="tbody"></tbody>
-    </table>
-  </div>
-</div>
-</main>
-</div>
-
-<script>
-// ── DATA ─────────────────────────────────────────────────
-var contrib  = [{id:1,startAge:25,endAge:65,amount:10000,vehicle:'REER',rate:5}];
-var withdraw = [{id:1,age:65,amount:40000}];
-var nextC=2, nextW=2;
-var SIM = [];
-var VIEW = {s:18, e:100};
-var HOVER = null;
-var DRAG  = {on:false,x0:0,v0:null};
-var ANIM  = {raf:null,prog:1};
-
-// ── FORMAT ────────────────────────────────────────────────
-function fmtCAD(v){return Math.round(v).toLocaleString('fr-CA')+'\u202f$';}
-function fmtK(v){
-  if(v>=1e6)return (v/1e6).toFixed(1)+'M$';
-  if(v>=1000)return (v/1000).toFixed(0)+'k$';
-  return Math.round(v)+'$';
-}
-function niceMax(v){
-  if(!v||v<=0)return 1;
-  var m=Math.pow(10,Math.floor(Math.log10(v)));
-  return Math.ceil(v/m)*m;
-}
-function ease(t){return t<.5?2*t*t:-1+(4-2*t)*t;}
-
-// ── SIMULATION ────────────────────────────────────────────
-function yearRate(age){
-  var act=contrib.filter(function(c){return age>=c.startAge&&age<=c.endAge;});
-  if(!act.length)return contrib.length?contrib.reduce(function(s,c){return s+c.rate/100;},0)/contrib.length:.05;
-  var tot=act.reduce(function(s,c){return s+c.amount;},0);
-  return tot?act.reduce(function(s,c){return s+c.amount*(c.rate/100);},0)/tot:.05;
-}
-function calcRRQ(age,aR,sal){
-  if(age<aR)return 0;
-  var b=Math.min(sal*.25,15888),d=aR-65;
-  if(d<0)b*=(1+d*.054);else if(d>0)b*=(1+Math.min(d,7)*.042);
-  return b;
-}
-function calcSV(age,aS,inc){
-  if(age<aS)return 0;
-  return Math.max(0,8000*(1+.072*Math.max(0,aS-65))-Math.max(0,inc-90997)*.15);
-}
-function calcSRG(age,aS,aSG,inc,sv){
-  if(age<aS||age<aSG)return 0;
-  return Math.max(0,12000-Math.max(0,inc-sv)*.5);
-}
-function calcTax(inc){
-  if(inc<=0)return 0;
-  var f=[55867,111733,173205],fr=[.15,.205,.26,.33];
-  var q=[49275,98540,119910],qr=[.15,.20,.2575,.2975];
-  var t=0,p=0,i;
-  for(i=0;i<4;i++){var l=i<f.length?f[i]:inc+1,x=Math.min(inc,l)-p;t+=Math.max(0,x)*fr[i];p=l;if(inc<=l)break;}
-  p=0;
-  for(i=0;i<4;i++){var l=i<q.length?q[i]:inc+1,x=Math.min(inc,l)-p;t+=Math.max(0,x)*qr[i];p=l;if(inc<=l)break;}
-  return Math.max(0,t-.3*15705);
-}
-function simulate(){
-  var ib=+document.getElementById('initBal').value,
-      sa=+document.getElementById('ageFrom').value,
-      ea=+document.getElementById('ageTo').value,
-      sal=+document.getElementById('avgSalary').value,
-      aR=+document.getElementById('ageRRQ').value,
-      aS=+document.getElementById('ageSV').value,
-      aSG=+document.getElementById('ageSRG').value;
-  var res=[],bal=ib;
-  for(var age=sa;age<=ea;age++){
-    var r=yearRate(age),c=0,w=0;
-    contrib.forEach(function(ct){if(age>=ct.startAge&&age<=ct.endAge)c+=ct.amount;});
-    withdraw.forEach(function(wt){if(wt.age===age)w+=wt.amount;});
-    bal=Math.max(0,bal*(1+r)+c-w);
-    var t=w?calcTax(w):0,rrq=calcRRQ(age,aR,sal),sv=calcSV(age,aS,w),srg=calcSRG(age,aS,aSG,w,sv);
-    res.push({age:age,bal:bal,c:c,w:w,t:t,rrq:rrq,sv:sv,srg:srg,ben:rrq+sv+srg,net:(w+rrq+sv+srg)-t,rate:r});
-  }
-  return res;
-}
-
-// ── CHART ENGINE ──────────────────────────────────────────
-var PAD={t:14,r:18,b:26,l:58,gap:6};
-var SPLIT=.63;
-
-function getVis(){return SIM.filter(function(r){return r.age>=VIEW.s&&r.age<=VIEW.e;});}
-
-function setupCanvas(id){
-  var cv=document.getElementById(id);if(!cv)return null;
-  var dpr=window.devicePixelRatio||1;
-  var W=cv.offsetWidth||600,H=cv.offsetHeight||300;
-  cv.width=W*dpr;cv.height=H*dpr;
-  cv.style.width=W+'px';cv.style.height=H+'px';
-  var ctx=cv.getContext('2d');ctx.scale(dpr,dpr);
-  return {cv:cv,ctx:ctx,W:W,H:H};
-}
-
-// Draw a simple line+area small chart
-function drawSmall(id,vals,color){
-  var s=setupCanvas(id);if(!s||!vals.length)return;
-  var ctx=s.ctx,W=s.W,H=s.H;
-  var pad={t:8,r:10,b:18,l:44};
-  var iW=W-pad.l-pad.r,iH=H-pad.t-pad.b;
-  var max=niceMax(Math.max.apply(null,vals)||1);
-  ctx.clearRect(0,0,W,H);
-
-  // Grid
-  [0,.5,1].forEach(function(f){
-    var y=pad.t+iH*(1-f);
-    ctx.strokeStyle='#E0E0E0';ctx.lineWidth=1;ctx.setLineDash([3,3]);
-    ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+iW,y);ctx.stroke();
-    ctx.setLineDash([]);
-    if(f>0){ctx.fillStyle='#999';ctx.font='9px Arial';ctx.textAlign='right';ctx.fillText(fmtK(max*f),pad.l-4,y+3);}
-  });
-
-  // Axes
-  ctx.strokeStyle='#CCC';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,pad.t+iH);ctx.lineTo(pad.l+iW,pad.t+iH);ctx.stroke();
-
-  // Area gradient
-  var grad=ctx.createLinearGradient(0,pad.t,0,pad.t+iH);
-  grad.addColorStop(0,color+'44');grad.addColorStop(1,color+'08');
-  ctx.beginPath();
-  vals.forEach(function(v,i){
-    var x=pad.l+(i/(vals.length-1||1))*iW,y=pad.t+iH-(v/max)*iH;
-    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-  });
-  ctx.lineTo(pad.l+iW,pad.t+iH);ctx.lineTo(pad.l,pad.t+iH);ctx.closePath();
-  ctx.fillStyle=grad;ctx.fill();
-
-  // Line
-  ctx.beginPath();
-  vals.forEach(function(v,i){
-    var x=pad.l+(i/(vals.length-1||1))*iW,y=pad.t+iH-(v/max)*iH;
-    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-  });
-  ctx.strokeStyle=color;ctx.lineWidth=2;ctx.stroke();
-
-  // X age labels (start / end)
-  var ages=SIM.map(function(r){return r.age;});
-  if(ages.length){
-    ctx.fillStyle='#999';ctx.font='9px Arial';
-    ctx.textAlign='left';ctx.fillText(ages[0],pad.l,H-2);
-    ctx.textAlign='right';ctx.fillText(ages[ages.length-1],pad.l+iW,H-2);
-  }
-}
-
-// Main interactive chart
-function renderChart(prog, hoverIdx){
-  var s=setupCanvas('chart1');if(!s||!SIM.length)return;
-  var ctx=s.ctx,W=s.W,H=s.H;
-  var iW=W-PAD.l-PAD.r;
-  var mainH=Math.floor((H-PAD.t-PAD.b-PAD.gap)*SPLIT);
-  var flowH=H-PAD.t-PAD.b-PAD.gap-mainH;
-  var mTop=PAD.t,fTop=PAD.t+mainH+PAD.gap;
-
-  var vis=getVis();if(!vis.length)return;
-  var p=prog==null?1:prog;
-  var n=Math.max(2,Math.round(vis.length*ease(p)));
-  var vd=vis.slice(0,n);
-  var ages=vd.map(function(r){return r.age;});
-  var nn=vd.length-1||1;
-
-  ctx.clearRect(0,0,W,H);
-
-  // ── PORTFOLIO area ───────────────────────────────────────
-  var balMax=niceMax(Math.max.apply(null,SIM.map(function(r){return r.bal;}))||1);
-
-  // Y grid main
-  [0,.25,.5,.75,1].forEach(function(f){
-    var y=mTop+mainH*(1-f);
-    ctx.strokeStyle='#EAEAEA';ctx.lineWidth=1;ctx.setLineDash([3,3]);
-    ctx.beginPath();ctx.moveTo(PAD.l,y);ctx.lineTo(PAD.l+iW,y);ctx.stroke();ctx.setLineDash([]);
-    ctx.fillStyle='#AAA';ctx.font='9px Arial';ctx.textAlign='right';
-    ctx.fillText(fmtK(balMax*f),PAD.l-4,y+3);
-  });
-
-  // Contribution zones (subtle bg)
-  var inC=false;
-  vd.forEach(function(r,i){
-    var x=PAD.l+(i/nn)*iW;
-    var wasC=inC;inC=r.c>0;
-    if(inC){
-      var x2=i<vd.length-1?PAD.l+((i+1)/nn)*iW:x+2;
-      ctx.fillStyle='rgba(30,126,52,.04)';
-      ctx.fillRect(x,mTop,x2-x,mainH);
+      );
     }
-  });
 
-  // Gradient fill under balance curve
-  ctx.beginPath();
-  vd.forEach(function(r,i){
-    var x=PAD.l+(i/nn)*iW,y=mTop+mainH-(r.bal/balMax)*mainH;
-    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-  });
-  var lastX=PAD.l+(nn/nn)*iW;
-  ctx.lineTo(lastX,mTop+mainH);ctx.lineTo(PAD.l,mTop+mainH);ctx.closePath();
-  var g1=ctx.createLinearGradient(0,mTop,0,mTop+mainH);
-  g1.addColorStop(0,'rgba(9,87,151,.28)');g1.addColorStop(.6,'rgba(9,87,151,.08)');g1.addColorStop(1,'rgba(9,87,151,.01)');
-  ctx.fillStyle=g1;ctx.fill();
-
-  // Balance line
-  ctx.beginPath();
-  vd.forEach(function(r,i){
-    var x=PAD.l+(i/nn)*iW,y=mTop+mainH-(r.bal/balMax)*mainH;
-    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-  });
-  ctx.strokeStyle='rgb(9,87,151)';ctx.lineWidth=2.5;ctx.setLineDash([]);ctx.stroke();
-
-  // Y label
-  ctx.fillStyle='rgb(9,87,151)';ctx.font='bold 9px Arial';ctx.textAlign='left';
-  ctx.fillText('PORTEF.',PAD.l+4,mTop+11);
-
-  // ── FLOW bars + passive income ───────────────────────────
-  var flowMax=niceMax(Math.max.apply(null,SIM.map(function(r){return Math.max(r.c,r.w,r.ben);})||[1]));
-
-  // Y grid flow (2 ticks)
-  [0,.5,1].forEach(function(f){
-    var y=fTop+flowH*(1-f);
-    ctx.strokeStyle='#EAEAEA';ctx.lineWidth=1;ctx.setLineDash([3,3]);
-    ctx.beginPath();ctx.moveTo(PAD.l,y);ctx.lineTo(PAD.l+iW,y);ctx.stroke();ctx.setLineDash([]);
-    if(f>0){ctx.fillStyle='#AAA';ctx.font='9px Arial';ctx.textAlign='right';ctx.fillText(fmtK(flowMax*f),PAD.l-4,y+3);}
-  });
-
-  // Bars
-  var bw=Math.max(1.5,(iW/vd.length)*.55);
-  vd.forEach(function(r,i){
-    var x=PAD.l+(i/nn)*iW;
-    if(r.c>0){var h=(r.c/flowMax)*flowH;ctx.fillStyle='rgba(30,126,52,.8)';ctx.fillRect(x-bw/2,fTop+flowH-h,bw,h);}
-    if(r.w>0){var h=(r.w/flowMax)*flowH;ctx.fillStyle='rgba(196,86,0,.8)';ctx.fillRect(x-bw/2,fTop+flowH-h,bw,h);}
-  });
-
-  // Passive income line
-  ctx.beginPath();
-  vd.forEach(function(r,i){
-    var x=PAD.l+(i/nn)*iW,y=fTop+flowH-(r.ben/flowMax)*flowH;
-    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-  });
-  ctx.strokeStyle='#6F42C1';ctx.lineWidth=2;ctx.stroke();
-
-  // Flow Y label
-  ctx.fillStyle='#6F42C1';ctx.font='bold 9px Arial';ctx.textAlign='left';
-  ctx.fillText('FLUX',PAD.l+4,fTop+10);
-
-  // ── AXES ────────────────────────────────────────────────
-  ctx.strokeStyle='#CCC';ctx.lineWidth=1;ctx.setLineDash([]);
-  ctx.beginPath();ctx.moveTo(PAD.l,mTop);ctx.lineTo(PAD.l,mTop+mainH);ctx.stroke();
-  ctx.beginPath();ctx.moveTo(PAD.l,fTop);ctx.lineTo(PAD.l,fTop+flowH);ctx.lineTo(PAD.l+iW,fTop+flowH);ctx.stroke();
-  // Divider
-  ctx.strokeStyle='#DDD';ctx.setLineDash([2,4]);
-  ctx.beginPath();ctx.moveTo(PAD.l,fTop-3);ctx.lineTo(PAD.l+iW,fTop-3);ctx.stroke();ctx.setLineDash([]);
-
-  // ── X TICKS ──────────────────────────────────────────────
-  var range=VIEW.e-VIEW.s;
-  var step=range>60?10:range>25?5:range>10?2:1;
-  ctx.fillStyle='#AAA';ctx.font='10px Arial';ctx.textAlign='center';
-  ages.forEach(function(age,i){
-    if(age%step===0){
-      var x=PAD.l+(i/nn)*iW;
-      ctx.fillText(age,x,fTop+flowH+PAD.b-4);
-      ctx.strokeStyle='#DDD';ctx.lineWidth=1;
-      ctx.beginPath();ctx.moveTo(x,fTop+flowH);ctx.lineTo(x,fTop+flowH+3);ctx.stroke();
+    function Tip({active,payload,label}){
+      if(!active||!payload?.length)return null;
+      const items=payload.filter(p=>!['b1','b2','b3','p10','base'].includes(p.dataKey)||p.dataKey==='base');
+      const base=payload.find(p=>p.dataKey==='base');
+      const p10r=payload.find(p=>p.dataKey==='p10');
+      const p50r=payload.find(p=>p.dataKey==='p50');
+      const p90r=payload.find(p=>p.dataKey==='p90')||(payload.find(p=>p.dataKey==='b3'));
+      return(
+        <div style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:10,padding:'11px 15px',fontSize:12,boxShadow:C.sh,minWidth:160}}>
+          <div style={{fontWeight:700,color:C.navy,marginBottom:7,fontSize:13,paddingBottom:5,borderBottom:`1px solid ${C.border}`}}>{label} ans</div>
+          {base&&<div style={{display:'flex',justifyContent:'space-between',gap:14,marginBottom:3}}><span style={{color:C.muted}}>Base</span><b style={{color:C.blue}}>{fmtK(base.value)}</b></div>}
+          {p10r&&<div style={{display:'flex',justifyContent:'space-between',gap:14,marginBottom:3}}><span style={{color:C.muted}}>P10</span><b style={{color:C.red}}>{fmtK(p10r.value)}</b></div>}
+          {p50r&&<div style={{display:'flex',justifyContent:'space-between',gap:14,marginBottom:3}}><span style={{color:C.muted}}>Médiane</span><b style={{color:C.blue}}>{fmtK(p50r.value)}</b></div>}
+        </div>
+      );
     }
-  });
 
-  // ── HOVER ────────────────────────────────────────────────
-  if(hoverIdx!=null&&hoverIdx<vd.length){
-    var hx=PAD.l+(hoverIdx/nn)*iW;
-    ctx.strokeStyle='rgba(9,87,151,.2)';ctx.lineWidth=1;ctx.setLineDash([4,3]);
-    ctx.beginPath();ctx.moveTo(hx,mTop);ctx.lineTo(hx,fTop+flowH);ctx.stroke();ctx.setLineDash([]);
-
-    // Dot on balance
-    var r=vd[hoverIdx];
-    var dotY=mTop+mainH-(r.bal/balMax)*mainH;
-    ctx.beginPath();ctx.arc(hx,dotY,5,0,Math.PI*2);
-    ctx.fillStyle='rgb(9,87,151)';ctx.fill();
-    ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
-
-    // Dot on passive income
-    if(flowMax>0){
-      var piY=fTop+flowH-(r.ben/flowMax)*flowH;
-      ctx.beginPath();ctx.arc(hx,piY,4,0,Math.PI*2);
-      ctx.fillStyle='#6F42C1';ctx.fill();
-      ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
+    function Input({label,value,onChange,type='number',min,max,step=1,suffix,prefix}){
+      return(
+        <div>
+          {label&&<Lbl>{label}</Lbl>}
+          <div style={{display:'flex',alignItems:'center',border:`2px solid ${C.border}`,borderRadius:8,overflow:'hidden',background:C.card}}>
+            {prefix&&<span style={{padding:'0 8px',color:C.muted,fontSize:12,background:C.bg,borderRight:`1px solid ${C.border}`,alignSelf:'stretch',display:'flex',alignItems:'center'}}>{prefix}</span>}
+            <input type={type} value={value} onChange={e=>onChange(type==='number'?+e.target.value:e.target.value)} min={min} max={max} step={step}
+              style={{flex:1,padding:'8px 10px',border:'none',outline:'none',fontSize:13,fontWeight:700,color:C.navy,background:'transparent'}}/>
+            {suffix&&<span style={{padding:'0 8px',color:C.muted,fontSize:12}}>{suffix}</span>}
+          </div>
+        </div>
+      );
     }
-  }
-}
 
-function startAnim(){
-  cancelAnimationFrame(ANIM.raf);
-  ANIM.prog=0;
-  var frame=0,dur=50;
-  function step(){
-    frame++;ANIM.prog=Math.min(1,frame/dur);
-    renderChart(ANIM.prog,null);
-    if(ANIM.prog<1)ANIM.raf=requestAnimationFrame(step);
-    else ANIM.raf=null;
-  }
-  ANIM.raf=requestAnimationFrame(step);
-}
-
-// ── TOOLTIP ──────────────────────────────────────────────
-var TIP=document.getElementById('tip');
-function row(l,v,c){return '<div class="tr"><span style="color:#555">'+l+'</span><b style="color:'+c+'">'+v+'</b></div>';}
-function showTip(e,r){
-  var h='<div class="th">'+r.age+' ans</div>';
-  h+=row('Portefeuille',fmtK(r.bal),'rgb(9,87,151)');
-  h+='<div class="td"></div>';
-  if(r.c>0) h+=row('Contributions/an',fmtK(r.c),'#1E7E34');
-  if(r.w>0) h+=row('Retrait',fmtK(r.w),'#C45600');
-  if(r.c>0||r.w>0) h+='<div class="td"></div>';
-  if(r.rrq>0) h+=row('RRQ/an',fmtK(r.rrq),'#1E7E34');
-  if(r.sv>0)  h+=row('SV/an', fmtK(r.sv), '#6F42C1');
-  if(r.srg>0) h+=row('SRG/an',fmtK(r.srg),'#6F42C1');
-  if(r.ben>0) h+='<div class="td"></div>';
-  if(r.t>0) h+=row('Impôt',fmtK(r.t),'#C45600');
-  h+=row('Revenu net/an',fmtK(Math.max(0,r.net)),'#1E7E34');
-  h+='<div class="ts">Taux eff. '+(r.rate*100).toFixed(1)+'%</div>';
-  TIP.innerHTML=h;TIP.style.display='block';
-  var tx=e.clientX+16,ty=e.clientY-16;
-  if(tx+185>window.innerWidth)tx=e.clientX-195;
-  if(ty+300>window.innerHeight)ty=window.innerHeight-305;
-  TIP.style.left=tx+'px';TIP.style.top=ty+'px';
-}
-
-// ── CHART INTERACTIONS ────────────────────────────────────
-function initChartEvents(){
-  var cv=document.getElementById('chart1');
-  if(!cv)return;
-
-  // Hover / drag
-  cv.addEventListener('mousemove',function(e){
-    if(DRAG.on){
-      var iW=cv.offsetWidth-PAD.l-PAD.r;
-      var dx=e.clientX-DRAG.x0;
-      var range=DRAG.v0.e-DRAG.v0.s;
-      var shift=Math.round(-dx/iW*range);
-      var sa=+document.getElementById('ageFrom').value;
-      var ea=+document.getElementById('ageTo').value;
-      var ns=Math.max(sa,DRAG.v0.s+shift),ne=Math.min(ea,DRAG.v0.e+shift);
-      if(ne-ns<2)return;
-      VIEW.s=ns;VIEW.e=ne;
-      updateViewInfo();
-      renderChart(1,null);TIP.style.display='none';
-    } else {
-      var vis=getVis();if(!vis.length)return;
-      var rect=cv.getBoundingClientRect();
-      var iW=cv.offsetWidth-PAD.l-PAD.r;
-      var ratio=Math.max(0,Math.min(1,(e.clientX-rect.left-PAD.l)/iW));
-      var idx=Math.round(ratio*(vis.length-1));
-      HOVER=idx;
-      renderChart(1,idx);
-      showTip(e,vis[idx]);
+    function Seg({options,value,onChange}){
+      return(
+        <div style={{display:'flex',background:C.bg,borderRadius:8,padding:3,gap:2}}>
+          {options.map(o=>(
+            <button key={o.value} onClick={()=>onChange(o.value)} style={{
+              flex:1,padding:'6px 10px',border:'none',borderRadius:6,cursor:'pointer',fontSize:12,fontWeight:600,
+              background:value===o.value?C.card:'transparent',
+              color:value===o.value?C.navy:C.muted,
+              boxShadow:value===o.value?C.sh:'none',transition:'all .15s',
+            }}>{o.label}</button>
+          ))}
+        </div>
+      );
     }
-  });
-  cv.addEventListener('mousedown',function(e){
-    DRAG.on=true;DRAG.x0=e.clientX;DRAG.v0={s:VIEW.s,e:VIEW.e};
-    cv.style.cursor='grabbing';
-  });
-  cv.addEventListener('mouseup',function(){DRAG.on=false;cv.style.cursor='crosshair';});
-  cv.addEventListener('mouseleave',function(){
-    if(DRAG.on){DRAG.on=false;cv.style.cursor='crosshair';}
-    TIP.style.display='none';HOVER=null;renderChart(1,null);
-  });
 
-  // Zoom
-  cv.addEventListener('wheel',function(e){
-    e.preventDefault();
-    var sa=+document.getElementById('ageFrom').value;
-    var ea=+document.getElementById('ageTo').value;
-    var iW=cv.offsetWidth-PAD.l-PAD.r;
-    var rect=cv.getBoundingClientRect();
-    var ratio=Math.max(0,Math.min(1,(e.clientX-rect.left-PAD.l)/iW));
-    var range=VIEW.e-VIEW.s;
-    var center=VIEW.s+ratio*range;
-    var factor=e.deltaY>0?1.18:.85;
-    var nr=Math.max(4,Math.min(ea-sa,range*factor));
-    var ns=Math.round(center-ratio*nr);
-    var ne=Math.round(ns+nr);
-    if(ns<sa){ns=sa;ne=Math.min(ea,ns+Math.round(nr));}
-    if(ne>ea){ne=ea;ns=Math.max(sa,ne-Math.round(nr));}
-    VIEW.s=ns;VIEW.e=ne;
-    updateViewInfo();
-    renderChart(1,null);
-  },{passive:false});
-}
+    // ── ACCOUNT MODAL ────────────────────────────────────────
+    function AccountModal({acct,onSave,onClose}){
+      const [f,setF]=useState({...acct});
+      const set=(k,v)=>setF(p=>({...p,[k]:v}));
+      const addOT=()=>set('oneTime',[...(f.oneTime||[]),{id:uid(),age:35,amount:10000}]);
+      const updOT=(i,k,v)=>{const a=[...(f.oneTime||[])];a[i]={...a[i],[k]:v};set('oneTime',a);};
+      const delOT=i=>set('oneTime',(f.oneTime||[]).filter((_,j)=>j!==i));
+      const def=ACCT_DEF[f.type]||ACCT_DEF.AUTRE;
 
-function resetZoom(){
-  VIEW.s=+document.getElementById('ageFrom').value;
-  VIEW.e=+document.getElementById('ageTo').value;
-  updateViewInfo();
-  renderChart(1,null);
-}
-function updateViewInfo(){
-  var el=document.getElementById('viewInfo2');
-  var elH=document.getElementById('viewInfo');
-  var s='Vue: '+VIEW.s+'–'+VIEW.e+' ans';
-  if(el)el.textContent=s;
-  if(elH)elH.textContent=(VIEW.s!==+document.getElementById('ageFrom').value||VIEW.e!==+document.getElementById('ageTo').value)?s:'';
-}
+      return(
+        <div style={{position:'fixed',inset:0,background:'rgba(15,23,42,.6)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:1000,padding:20}}>
+          <div style={{background:C.card,borderRadius:16,width:'100%',maxWidth:500,maxHeight:'92vh',overflow:'auto',boxShadow:'0 24px 64px rgba(0,0,0,.25)'}}>
+            <div style={{height:5,background:def.color,borderRadius:'16px 16px 0 0'}}/>
+            <div style={{padding:'16px 20px',display:'flex',justifyContent:'space-between',alignItems:'center',borderBottom:`1px solid ${C.border}`}}>
+              <div style={{fontWeight:700,fontSize:15,display:'flex',alignItems:'center',gap:8}}><span style={{fontSize:20}}>{def.icon}</span>Configurer le placement</div>
+              <button onClick={onClose} style={{border:'none',background:'none',fontSize:22,cursor:'pointer',color:C.muted,lineHeight:1}}>×</button>
+            </div>
+            <div style={{padding:20,display:'flex',flexDirection:'column',gap:14}}>
+              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
+                <Input label="Nom" type="text" value={f.name} onChange={v=>set('name',v)}/>
+                <div>
+                  <Lbl>Type de compte</Lbl>
+                  <select value={f.type} onChange={e=>set('type',e.target.value)} style={{width:'100%',padding:'9px 10px',border:`2px solid ${C.border}`,borderRadius:8,fontSize:13,fontWeight:600,color:C.navy}}>
+                    {Object.entries(ACCT_DEF).map(([k,v])=><option key={k} value={k}>{v.icon} {v.label}</option>)}
+                  </select>
+                </div>
+              </div>
+              <div style={{padding:'10px 12px',background:`${def.color}12`,borderRadius:8,fontSize:11,color:def.color,fontWeight:600}}>{def.tax}</div>
+              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
+                <Input label="Solde actuel ($)" value={f.balance} onChange={v=>set('balance',v)} min={0}/>
+                <Input label="Rendement (%/an)" value={f.rate} onChange={v=>set('rate',v)} min={0} max={20} step={0.5} suffix="%"/>
+              </div>
 
-// ── SIDEBAR BUILDERS ──────────────────────────────────────
-function buildContribs(){
-  var h='';
-  contrib.forEach(function(c,i){
-    h+='<div class="entry"><div class="erow"><span class="sep">De</span>';
-    h+='<input type="number" class="w-age" value="'+c.startAge+'" onchange="contrib['+i+'].startAge=+this.value;update()">';
-    h+='<span class="sep">à</span>';
-    h+='<input type="number" class="w-age" value="'+c.endAge+'" onchange="contrib['+i+'].endAge=+this.value;update()">';
-    h+='<span class="sep">ans</span>';
-    h+='<select style="flex:1;min-width:0" onchange="contrib['+i+'].vehicle=this.value;update()">';
-    ['REER','CELI','Non-enreg'].forEach(function(v){h+='<option'+(c.vehicle===v?' selected':'')+'>'+v+'</option>';});
-    h+='</select></div><div class="erow">';
-    h+='<input type="number" value="'+c.amount+'" placeholder="$/an" onchange="contrib['+i+'].amount=+this.value;update()">';
-    h+='<input type="number" class="w-rt" value="'+c.rate+'" step=".25" min="0" max="20" onchange="contrib['+i+'].rate=+this.value;update()">';
-    h+='<span class="sep">%/an</span>';
-    h+='<button class="del" onclick="contrib.splice('+i+',1);update()">✕</button>';
-    h+='</div><div class="ei">'+c.startAge+'→'+c.endAge+' ans · '+Math.round(c.amount).toLocaleString('fr-CA')+'\u202f$/an · '+c.vehicle+' · '+c.rate+'%</div></div>';
-  });
-  document.getElementById('contribList').innerHTML=h;
-}
-function buildWithdraws(){
-  var h='';
-  withdraw.forEach(function(w,i){
-    h+='<div class="entry"><div class="erow"><span class="sep">Âge</span>';
-    h+='<input type="number" class="w-age" value="'+w.age+'" onchange="withdraw['+i+'].age=+this.value;update()">';
-    h+='<input type="number" value="'+w.amount+'" placeholder="$/an" onchange="withdraw['+i+'].amount=+this.value;update()">';
-    h+='<button class="del" onclick="withdraw.splice('+i+',1);update()">✕</button>';
-    h+='</div><div class="ei">À '+w.age+' ans · '+Math.round(w.amount).toLocaleString('fr-CA')+'\u202f$ (one-shot)</div></div>';
-  });
-  document.getElementById('withdrawList').innerHTML=h;
-}
-function bRRQ(a){return a<65?'<span class="badge bo">Pénalité '+(-(65-a)*5.4).toFixed(1)+'%</span>':a>65?'<span class="badge bg">+'+((Math.min(a-65,7))*4.2).toFixed(1)+'%</span>':'<span class="badge bg">Référence</span>';}
-function bSV(a){return a>65?'<span class="badge bg">+'+((a-65)*7.2).toFixed(1)+'%</span>':'<span class="badge bg">Référence</span>';}
+              <div>
+                <Lbl>Niveau de risque (volatilité Monte Carlo)</Lbl>
+                <div style={{display:'flex',gap:8}}>
+                  {Object.entries(RISKS).map(([k,v])=>(
+                    <button key={k} onClick={()=>set('risk',k)} style={{
+                      flex:1,padding:'9px 6px',border:`2px solid ${f.risk===k?v.color:C.border}`,
+                      borderRadius:8,background:f.risk===k?`${v.color}12`:'#fff',
+                      color:f.risk===k?v.color:C.muted,fontWeight:700,fontSize:12,cursor:'pointer',
+                      display:'flex',flexDirection:'column',alignItems:'center',gap:2,
+                    }}>
+                      <span>{v.label}</span><span style={{fontSize:10,fontWeight:400,opacity:.7}}>σ={Math.round(v.vol*100)}%/an</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-// ── MAIN UPDATE ───────────────────────────────────────────
-function update(){
-  var f=+document.getElementById('ageFrom').value,t=+document.getElementById('ageTo').value;
-  if(f>=t){t=Math.min(100,f+1);document.getElementById('ageTo').value=t;}
-  document.getElementById('d1').textContent=(+document.getElementById('initBal').value).toLocaleString('fr-CA')+'\u202f$';
-  document.getElementById('dHz').textContent=f+' à '+t+' ans';
-  document.getElementById('dRRQ').textContent=document.getElementById('ageRRQ').value;
-  document.getElementById('dSV').textContent=document.getElementById('ageSV').value;
-  document.getElementById('dSRG').textContent=document.getElementById('ageSRG').value;
-  document.getElementById('bRRQ').outerHTML='<span id="bRRQ">'+bRRQ(+document.getElementById('ageRRQ').value)+'</span>';
-  document.getElementById('bSV').outerHTML='<span id="bSV">'+bSV(+document.getElementById('ageSV').value)+'</span>';
+              <div style={{borderTop:`1px solid ${C.border}`,paddingTop:12}}>
+                <Lbl>Contributions récurrentes</Lbl>
+                <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr',gap:8}}>
+                  <div>
+                    <div style={{fontSize:10,color:C.muted,marginBottom:2}}>Montant</div>
+                    <input type="number" value={f.contribAmt} onChange={e=>set('contribAmt',+e.target.value)} style={{width:'100%',padding:'7px 8px',border:`2px solid ${C.border}`,borderRadius:8,fontSize:13,fontWeight:700}}/>
+                  </div>
+                  <div>
+                    <div style={{fontSize:10,color:C.muted,marginBottom:2}}>Fréq.</div>
+                    <select value={f.contribFreq} onChange={e=>set('contribFreq',e.target.value)} style={{width:'100%',padding:'7px 6px',border:`2px solid ${C.border}`,borderRadius:8,fontSize:12}}>
+                      <option value="annual">Annuel</option>
+                      <option value="monthly">Mensuel</option>
+                    </select>
+                  </div>
+                  <div>
+                    <div style={{fontSize:10,color:C.muted,marginBottom:2}}>De (âge)</div>
+                    <input type="number" value={f.contribStart} onChange={e=>set('contribStart',+e.target.value)} style={{width:'100%',padding:'7px 8px',border:`2px solid ${C.border}`,borderRadius:8,fontSize:13,fontWeight:700}}/>
+                  </div>
+                  <div>
+                    <div style={{fontSize:10,color:C.muted,marginBottom:2}}>À (âge)</div>
+                    <input type="number" value={f.contribEnd} onChange={e=>set('contribEnd',+e.target.value)} style={{width:'100%',padding:'7px 8px',border:`2px solid ${C.border}`,borderRadius:8,fontSize:13,fontWeight:700}}/>
+                  </div>
+                </div>
+              </div>
 
-  // Clamp view to sim range
-  VIEW.s=Math.max(f,VIEW.s);VIEW.e=Math.min(t,VIEW.e);
-  if(VIEW.e-VIEW.s<2){VIEW.s=f;VIEW.e=t;}
-  updateViewInfo();
+              <div style={{borderTop:`1px solid ${C.border}`,paddingTop:12}}>
+                <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:8}}>
+                  <Lbl>Contributions ponctuelles</Lbl>
+                  <button onClick={addOT} style={{padding:'4px 10px',border:`1px solid ${def.color}`,borderRadius:6,background:`${def.color}10`,color:def.color,cursor:'pointer',fontSize:11,fontWeight:700}}>+ Ajouter</button>
+                </div>
+                {(f.oneTime||[]).length===0&&<div style={{fontSize:11,color:C.muted,fontStyle:'italic',padding:'6px 0'}}>Ex: héritage à 40 ans, bonus, vente d'actif…</div>}
+                {(f.oneTime||[]).map((ot,i)=>(
+                  <div key={i} style={{display:'flex',gap:8,marginBottom:6,alignItems:'flex-end'}}>
+                    <div style={{flex:'0 0 80px'}}>
+                      <div style={{fontSize:10,color:C.muted,marginBottom:2}}>Âge</div>
+                      <input type="number" value={ot.age} onChange={e=>updOT(i,'age',+e.target.value)} style={{width:'100%',padding:'6px 7px',border:`1px solid ${C.border}`,borderRadius:7,fontSize:13,fontWeight:700}}/>
+                    </div>
+                    <div style={{flex:1}}>
+                      <div style={{fontSize:10,color:C.muted,marginBottom:2}}>Montant ($)</div>
+                      <input type="number" value={ot.amount} onChange={e=>updOT(i,'amount',+e.target.value)} style={{width:'100%',padding:'6px 7px',border:`1px solid ${C.border}`,borderRadius:7,fontSize:13,fontWeight:700}}/>
+                    </div>
+                    <button onClick={()=>delOT(i)} style={{padding:'6px 9px',border:'none',background:'#FEF2F2',color:C.red,borderRadius:7,cursor:'pointer'}}>✕</button>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div style={{padding:'14px 20px',borderTop:`1px solid ${C.border}`,display:'flex',justifyContent:'flex-end',gap:8}}>
+              <button onClick={onClose} style={{padding:'8px 16px',border:`1px solid ${C.border}`,borderRadius:8,background:C.card,cursor:'pointer',fontWeight:600,color:C.muted}}>Annuler</button>
+              <button onClick={()=>onSave(f)} style={{padding:'8px 20px',background:C.blue,color:'#fff',border:'none',borderRadius:8,cursor:'pointer',fontWeight:700,fontSize:13}}>Enregistrer</button>
+            </div>
+          </div>
+        </div>
+      );
+    }
 
-  buildContribs();buildWithdraws();
+    // ── APP ─────────────────────────────────────────────────
+    function App() {
+      const [accounts,setAccounts]=useState(DEF_ACCOUNTS);
+      const [withdrawals,setWithdrawals]=useState(DEF_WITHDRAWALS);
+      const [params,setParams]=useState(DEF_PARAMS);
+      const [tab,setTab]=useState('dashboard');
+      const [mc,setMc]=useState(null);
+      const [mcRunning,setMcRunning]=useState(false);
+      const [editAcct,setEditAcct]=useState(null);
 
-  SIM=simulate();
-  var tc=0,tw=0,tt=0,tb=0;
-  SIM.forEach(function(r){tc+=r.c;tw+=r.w;tt+=r.t;tb+=r.ben;});
-  document.getElementById('s1').textContent=fmtCAD(tc);
-  document.getElementById('s2').textContent=fmtCAD(tw);
-  document.getElementById('s3').textContent=fmtCAD(tt);
-  document.getElementById('s4').textContent=fmtCAD(tb);
-  document.getElementById('s5').textContent=fmtCAD(SIM[SIM.length-1].bal);
+      const sim=useMemo(()=>runSim(accounts,withdrawals,params),[accounts,withdrawals,params]);
 
-  var aR=+document.getElementById('ageRRQ').value,aS=+document.getElementById('ageSV').value,aSG=+document.getElementById('ageSRG').value;
-  var rrqMo=Math.round(Math.min(+document.getElementById('avgSalary').value*.25,15888)/12);
-  document.getElementById('lblRRQ').textContent='Dès '+aR+' ans · ~'+rrqMo.toLocaleString('fr-CA')+'\u202f$/mois';
-  document.getElementById('lblSV').textContent='SV dès '+aS+' ans · SRG dès '+aSG+' ans';
+      useEffect(()=>{
+        setMcRunning(true);
+        const t=setTimeout(()=>{setMc(runMC(accounts,withdrawals,params));setMcRunning(false);},350);
+        return()=>clearTimeout(t);
+      },[accounts,withdrawals,params]);
 
-  renderChart(1,null);
-  drawSmall('chart2',SIM.map(function(r){return r.rrq;}),'#1E7E34');
-  drawSmall('chart3',SIM.map(function(r){return r.sv+r.srg;}),'#6F42C1');
-  drawSmall('chart4',SIM.map(function(r){return r.t;}),'#C45600');
+      const suggestions=useMemo(()=>getSuggestions(sim,params,accounts,mc),[sim,params,accounts,mc]);
+      const setP=(k,v)=>setParams(p=>({...p,[k]:v}));
+      const last=sim[sim.length-1]||{totalBalance:0};
+      const retIdx=sim.findIndex(r=>r.age>=(withdrawals[0]?.startAge||65));
+      const retRow=sim[retIdx]||{};
+      const monthNet=retRow.net?Math.round(retRow.net/12):0;
 
-  var h='';
-  for(var i=0;i<SIM.length;i+=2){
-    var x=SIM[i];
-    h+='<tr><td>'+x.age+'</td><td>'+(x.rate*100).toFixed(1)+'%</td><td>'+fmtK(x.bal)+'</td>';
-    h+='<td>'+Math.round(x.rrq).toLocaleString('fr-CA')+'</td>';
-    h+='<td>'+Math.round(x.sv).toLocaleString('fr-CA')+'</td>';
-    h+='<td>'+Math.round(x.srg).toLocaleString('fr-CA')+'</td>';
-    h+='<td>'+Math.round(x.t).toLocaleString('fr-CA')+'</td>';
-    h+='<td>'+Math.round(x.net).toLocaleString('fr-CA')+'</td></tr>';
-  }
-  document.getElementById('tbody').innerHTML=h;
-}
+      // Chart: merge sim base + MC percentiles
+      const chartData=useMemo(()=>{
+        return sim.map((r,i)=>{
+          const m=mc?.chartData?.[i]||{};
+          return{age:r.age,base:r.totalBalance,p10:m.p10,b1:Math.max(0,(m.p25||0)-(m.p10||0)),b2:Math.max(0,(m.p75||0)-(m.p25||0)),b3:Math.max(0,(m.p90||0)-(m.p75||0)),p50:m.p50,p90:m.p90};
+        });
+      },[sim,mc]);
 
-function addContrib(){contrib.push({id:nextC++,startAge:30,endAge:65,amount:5000,vehicle:'REER',rate:5});update();}
-function addWithdraw(){withdraw.push({id:nextW++,age:65,amount:30000});update();}
+      const TABS=[
+        {id:'dashboard',icon:'📊',label:'Tableau de bord'},
+        {id:'accounts', icon:'💰',label:'Placements'},
+        {id:'withdrawals',icon:'📉',label:'Retraits'},
+        {id:'params',   icon:'⚙️',label:'Paramètres'},
+        {id:'analysis', icon:'🧠',label:'Analyse MC'},
+      ];
 
-['initBal','ageSalary','ageRRQ','ageSV','ageSRG'].forEach(function(id){
-  var el=document.getElementById(id);if(el)el.addEventListener('input',update);
-});
-document.getElementById('avgSalary').addEventListener('input',update);
-document.getElementById('initBal').addEventListener('input',update);
-['ageRRQ','ageSV','ageSRG'].forEach(function(id){document.getElementById(id).addEventListener('input',update);});
+      const retAge=withdrawals[0]?.startAge||65;
 
-document.getElementById('ageFrom').addEventListener('input',function(){
-  var f=+this.value,t=+document.getElementById('ageTo').value;
-  if(f>=t)document.getElementById('ageTo').value=Math.min(100,f+1);
-  VIEW.s=+document.getElementById('ageFrom').value;
-  VIEW.e=+document.getElementById('ageTo').value;
-  update();
-});
-document.getElementById('ageTo').addEventListener('input',function(){
-  var t=+this.value,f=+document.getElementById('ageFrom').value;
-  if(t<=f)document.getElementById('ageFrom').value=Math.max(18,t-1);
-  VIEW.s=+document.getElementById('ageFrom').value;
-  VIEW.e=+document.getElementById('ageTo').value;
-  update();
-});
+      return(
+        <div style={{height:'100vh',display:'flex',flexDirection:'column',background:C.bg,fontFamily:'-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif',fontSize:14,color:C.navy,overflow:'hidden'}}>
+          {/* ── HEADER ── */}
+          <div style={{background:C.navy,padding:'0 20px',display:'flex',alignItems:'center',gap:8,height:50,flexShrink:0}}>
+            <span style={{fontSize:17,fontWeight:800,color:'#fff',letterSpacing:-.5,marginRight:8}}>RetirePlan <span style={{color:C.teal,fontSize:12,fontWeight:600,letterSpacing:0}}>QC</span></span>
+            <div style={{display:'flex',gap:2,flex:1}}>
+              {TABS.map(t=>(
+                <button key={t.id} onClick={()=>setTab(t.id)} style={{
+                  padding:'5px 13px',borderRadius:6,border:'none',cursor:'pointer',fontSize:12,fontWeight:600,
+                  background:tab===t.id?'rgba(255,255,255,.14)':'transparent',
+                  color:tab===t.id?'#fff':'rgba(255,255,255,.5)',transition:'all .15s',whiteSpace:'nowrap',
+                }}>{t.icon} {t.label}</button>
+              ))}
+            </div>
+            {mcRunning&&<span style={{fontSize:10,color:C.amber,animation:'pulse 1s infinite'}}>⟳ Monte Carlo…</span>}
+            <span style={{fontSize:10,color:'rgba(255,255,255,.35)',marginLeft:8}}>{accounts.length} compte{accounts.length!==1?'s':''}</span>
+          </div>
 
-window.addEventListener('resize',function(){renderChart(1,HOVER);drawSmall('chart2',SIM.map(function(r){return r.rrq;}),'#1E7E34');drawSmall('chart3',SIM.map(function(r){return r.sv+r.srg;}),'#6F42C1');drawSmall('chart4',SIM.map(function(r){return r.t;}),'#C45600');});
+          <div style={{flex:1,overflow:'auto',padding:'18px 20px',display:'flex',flexDirection:'column',gap:16}}>
 
-window.addEventListener('load',function(){
-  initChartEvents();
-  update();
-  startAnim();
-});
-</script>
+            {/* ── DASHBOARD ── */}
+            {tab==='dashboard'&&(<>
+              {/* KPIs */}
+              <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
+                <KPI label="Solde final projeté" value={fmtK(last.totalBalance)} sub={`À ${params.ageTo} ans (scénario base)`} color={C.blue}/>
+                <KPI label="Probabilité de succès" value={mc?`${mc.successRate}%`:'…'} sub={`N=${mc?.N||180} simulations Monte Carlo`} color={mc?.successRate>=80?C.green:mc?.successRate>=65?C.amber:C.red}/>
+                <KPI label="Solde à la retraite" value={fmtK(retRow.totalBalance)} sub={`À ${retAge} ans — avant décaissement`} color={C.teal}/>
+                <KPI label="Revenu net / mois" value={monthNet>0?fmtK(monthNet):'—'} sub="Retraits + RRQ + SV − impôts" color={C.purple}/>
+              </div>
+
+              {/* Main chart */}
+              <div style={{background:C.card,borderRadius:14,boxShadow:C.sh,padding:'14px 6px 10px',flex:'0 0 auto'}}>
+                <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',padding:'0 16px 10px'}}>
+                  <div>
+                    <div style={{fontWeight:700,fontSize:14}}>Évolution du portefeuille</div>
+                    <div style={{fontSize:11,color:C.muted,marginTop:2}}>Bandes Monte Carlo P10→P90 · Ligne: scénario de base</div>
+                  </div>
+                  <div style={{display:'flex',gap:10,fontSize:10,color:C.muted,flexWrap:'wrap',justifyContent:'flex-end'}}>
+                    {[['Base',C.blue,false],[' P25–P75',C.blue+'66',true],[' P10–P90',C.blue+'33',true]].map(([l,c,box])=>(
+                      <div key={l} style={{display:'flex',alignItems:'center',gap:3}}>
+                        {box?<span style={{width:14,height:9,background:c,borderRadius:2,display:'inline-block'}}/>:<span style={{width:18,height:2.5,background:c,borderRadius:1,display:'inline-block'}}/>}
+                        {l}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <ResponsiveContainer width="100%" height={255}>
+                  <ComposedChart data={chartData} margin={{top:0,right:14,left:0,bottom:0}}>
+                    <defs>
+                      <linearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor={C.blue} stopOpacity={.45}/>
+                        <stop offset="95%" stopColor={C.blue} stopOpacity={.02}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid stroke="#F1F5F9" strokeDasharray="3 3"/>
+                    <XAxis dataKey="age" stroke={C.muted} tick={{fontSize:10}} label={{value:'Âge',position:'insideBottomRight',offset:-8,fill:C.muted,fontSize:10}}/>
+                    <YAxis tickFormatter={fmtK} stroke={C.muted} tick={{fontSize:9}} width={46}/>
+                    <Tooltip content={<Tip/>}/>
+                    <ReferenceLine x={retAge} stroke={C.teal} strokeDasharray="5 3" label={{value:'Retraite',fill:C.teal,fontSize:10,position:'insideTopLeft'}}/>
+                    {mc&&<Area stackId="mc" type="monotone" dataKey="p10" stroke="none" fill="transparent" dot={false}/>}
+                    {mc&&<Area stackId="mc" type="monotone" dataKey="b1"  stroke="none" fill={`${C.blue}20`} dot={false}/>}
+                    {mc&&<Area stackId="mc" type="monotone" dataKey="b2"  stroke="none" fill={`${C.blue}35`} dot={false}/>}
+                    {mc&&<Area stackId="mc" type="monotone" dataKey="b3"  stroke="none" fill={`${C.blue}20`} dot={false}/>}
+                    {mc&&<Line type="monotone" dataKey="p50" stroke={`${C.blue}90`} strokeWidth={1.5} dot={false} strokeDasharray="5 3" name="Médiane"/>}
+                    <Area type="monotone" dataKey="base" stroke={C.blue} strokeWidth={2.5} fill="url(#grad)" name="Base" dot={false}/>
+                  </ComposedChart>
+                </ResponsiveContainer>
+              </div>
+
+              {/* Suggestions */}
+              {suggestions.length>0&&(
+                <div style={{background:C.card,borderRadius:14,boxShadow:C.sh,padding:16}}>
+                  <div style={{fontWeight:700,fontSize:13,marginBottom:10}}>💡 Suggestions intelligentes</div>
+                  <div style={{display:'flex',flexDirection:'column',gap:7}}>
+                    {suggestions.map((s,i)=>(
+                      <div key={i} style={{
+                        padding:'10px 14px',borderRadius:9,fontSize:12,lineHeight:1.5,
+                        background:s.lvl==='danger'?'#FEF2F2':s.lvl==='warning'?'#FFFBEB':'#EFF6FF',
+                        borderLeft:`3px solid ${s.lvl==='danger'?C.red:s.lvl==='warning'?C.amber:C.blue}`,
+                      }}><span style={{marginRight:6}}>{s.icon}</span>{s.txt}</div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>)}
+
+            {/* ── PLACEMENTS ── */}
+            {tab==='accounts'&&(<>
+              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+                <div style={{fontWeight:700,fontSize:16}}>Mes placements <span style={{color:C.muted,fontSize:13,fontWeight:400}}>({accounts.length} compte{accounts.length!==1?'s':''})</span></div>
+                <button onClick={()=>setEditAcct({id:uid(),name:'Nouveau',type:'CELI',balance:0,contribAmt:5000,contribFreq:'annual',contribStart:params.ageFrom,contribEnd:params.ageFrom+40,oneTime:[],rate:5,risk:'medium',_new:true})} style={{padding:'8px 16px',background:C.blue,color:'#fff',border:'none',borderRadius:9,cursor:'pointer',fontWeight:700,fontSize:13}}>+ Ajouter un placement</button>
+              </div>
+              <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))',gap:12}}>
+                {accounts.map(a=>{
+                  const def=ACCT_DEF[a.type]||ACCT_DEF.AUTRE;
+                  const annualContrib=a.contribFreq==='monthly'?a.contribAmt*12:a.contribAmt;
+                  const riskDef=RISKS[a.risk]||RISKS.medium;
+                  return(
+                    <div key={a.id} style={{background:C.card,borderRadius:13,boxShadow:C.sh,overflow:'hidden',transition:'box-shadow .2s'}}>
+                      <div style={{height:4,background:`linear-gradient(90deg,${def.color},${def.color}88)`}}/>
+                      <div style={{padding:15}}>
+                        <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:12}}>
+                          <div style={{display:'flex',alignItems:'center',gap:9}}>
+                            <span style={{fontSize:26}}>{def.icon}</span>
+                            <div>
+                              <div style={{fontWeight:700,fontSize:14}}>{a.name}</div>
+                              <div style={{fontSize:11,color:C.muted}}>{def.label}</div>
+                            </div>
+                          </div>
+                          <div style={{display:'flex',gap:5}}>
+                            <button onClick={()=>setEditAcct({...a})} style={{padding:'4px 9px',border:`1px solid ${C.border}`,borderRadius:7,background:C.card,cursor:'pointer',fontSize:12}}>✏️</button>
+                            <button onClick={()=>setAccounts(p=>p.filter(x=>x.id!==a.id))} style={{padding:'4px 9px',border:'1px solid #FEE2E2',borderRadius:7,background:'#FEF2F2',cursor:'pointer',fontSize:12,color:C.red}}>✕</button>
+                          </div>
+                        </div>
+                        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:7,marginBottom:10}}>
+                          {[
+                            {l:'Solde actuel',   v:fmtK(a.balance,1)},
+                            {l:'Contrib./an',    v:fmtK(annualContrib)},
+                            {l:'Rendement',      v:`${a.rate}%/an`},
+                            {l:'Risque',         v:riskDef.label},
+                          ].map(({l,v})=>(
+                            <div key={l} style={{background:C.bg,borderRadius:7,padding:'7px 10px'}}>
+                              <div style={{fontSize:9,color:C.muted,textTransform:'uppercase',letterSpacing:.4,fontWeight:700,marginBottom:2}}>{l}</div>
+                              <div style={{fontWeight:700,fontSize:13,color:C.navy}}>{v}</div>
+                            </div>
+                          ))}
+                        </div>
+                        {a.oneTime?.length>0&&<div style={{fontSize:11,color:C.muted,marginBottom:8}}>🎯 {a.oneTime.length} contribution{a.oneTime.length>1?'s':''} ponctuelle{a.oneTime.length>1?'s':''}</div>}
+                        <div style={{padding:'6px 10px',background:`${def.color}12`,borderRadius:7,fontSize:10,color:def.color,fontWeight:700}}>{def.tax}</div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              {editAcct&&<AccountModal acct={editAcct} onSave={a=>{
+                setAccounts(p=>a._new?[...p,{...a,_new:undefined}]:p.map(x=>x.id===a.id?a:x));
+                setEditAcct(null);
+              }} onClose={()=>setEditAcct(null)}/>}
+            </>)}
+
+            {/* ── RETRAITS ── */}
+            {tab==='withdrawals'&&(
+              <div style={{maxWidth:680,display:'flex',flexDirection:'column',gap:14}}>
+                <div style={{fontWeight:700,fontSize:16}}>Stratégie de décaissement</div>
+
+                <div style={{background:C.card,borderRadius:14,boxShadow:C.sh,padding:16}}>
+                  <div style={{fontWeight:600,fontSize:13,marginBottom:10}}>Priorité de retrait</div>
+                  <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
+                    {Object.entries(STRATS).map(([k,v])=>(
+                      <button key={k} onClick={()=>setP('strategy',k)} style={{
+                        padding:'9px 18px',borderRadius:9,border:`2px solid ${params.strategy===k?C.blue:C.border}`,
+                        background:params.strategy===k?`${C.blue}10`:C.card,
+                        color:params.strategy===k?C.blue:C.muted,cursor:'pointer',fontWeight:700,fontSize:12,transition:'all .15s',
+                      }}>{v.label}</button>
+                    ))}
+                  </div>
+                  <div style={{marginTop:10,fontSize:11,color:C.muted,lineHeight:1.6,padding:'8px 12px',background:C.bg,borderRadius:8}}>
+                    {params.strategy==='celi-first'&&'✅ Optimal fiscalement : le CÉLI est retiré en premier (libre d\'impôt), puis le compte non enregistré, puis le REER/FERR qui est imposable.'}
+                    {params.strategy==='reer-first'&&'📋 Utile pour vider le REER avant conversion obligatoire en FERR à 71 ans.'}
+                    {params.strategy==='balanced'&&'⚖️ Retraits proportionnels selon la valeur de chaque compte. Fiscalement sous-optimal mais simple.'}
+                  </div>
+                </div>
+
+                <div style={{background:C.card,borderRadius:14,boxShadow:C.sh,padding:16}}>
+                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
+                    <div style={{fontWeight:600,fontSize:13}}>Retraits planifiés</div>
+                    <button onClick={()=>setWithdrawals(p=>[...p,{id:uid(),startAge:65,endAge:100,amount:30000,type:'fixed'}])} style={{padding:'5px 12px',border:`1px solid ${C.blue}`,borderRadius:7,background:`${C.blue}10`,color:C.blue,cursor:'pointer',fontSize:12,fontWeight:700}}>+ Ajouter</button>
+                  </div>
+                  {withdrawals.map((w,i)=>(
+                    <div key={w.id} style={{border:`1px solid ${C.border}`,borderRadius:9,padding:12,marginBottom:8,display:'flex',flexWrap:'wrap',gap:10,alignItems:'flex-end',background:'#FAFBFC'}}>
+                      {[
+                        {lbl:'De (âge)',k:'startAge',w:70},
+                        {lbl:'À (âge)', k:'endAge',  w:70},
+                        {lbl:'Montant', k:'amount',  w:120},
+                      ].map(f=>(
+                        <div key={f.k}>
+                          <Lbl>{f.lbl}</Lbl>
+                          <input type="number" value={w[f.k]} onChange={e=>{const v=[...withdrawals];v[i]={...w,[f.k]:+e.target.value};setWithdrawals(v);}} style={{width:f.w,padding:'7px 9px',border:`2px solid ${C.border}`,borderRadius:8,fontSize:13,fontWeight:700,color:C.navy}}/>
+                        </div>
+                      ))}
+                      <div>
+                        <Lbl>Type</Lbl>
+                        <select value={w.type} onChange={e=>{const v=[...withdrawals];v[i]={...w,type:e.target.value};setWithdrawals(v);}} style={{padding:'7px 9px',border:`2px solid ${C.border}`,borderRadius:8,fontSize:12,fontWeight:600}}>
+                          <option value="fixed">Fixe $</option>
+                          <option value="percent">% du portef.</option>
+                        </select>
+                      </div>
+                      <button onClick={()=>setWithdrawals(p=>p.filter(x=>x.id!==w.id))} style={{padding:'7px 11px',background:'#FEF2F2',border:'1px solid #FEE2E2',borderRadius:8,color:C.red,cursor:'pointer',fontSize:14}}>✕</button>
+                    </div>
+                  ))}
+                </div>
+
+                <div style={{background:C.card,borderRadius:14,boxShadow:C.sh,padding:16}}>
+                  <div style={{fontWeight:600,fontSize:13,marginBottom:12}}>Prestations gouvernementales (RRQ / SV / SRG)</div>
+                  <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:10}}>
+                    {[{l:'Âge RRQ',k:'ageRRQ',note:'60–72 ans'},{l:'Âge SV',k:'ageSV',note:'65–70 ans'},{l:'Salaire moyen',k:'salary',note:'Pour calcul RRQ'}].map(f=>(
+                      <div key={f.k}>
+                        <Lbl>{f.l}</Lbl>
+                        <input type="number" value={params[f.k]} onChange={e=>setP(f.k,+e.target.value)} style={{width:'100%',padding:'9px 10px',border:`2px solid ${C.border}`,borderRadius:9,fontSize:14,fontWeight:700,color:C.teal}}/>
+                        <div style={{fontSize:10,color:C.muted,marginTop:3}}>{f.note}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ── PARAMS ── */}
+            {tab==='params'&&(
+              <div style={{maxWidth:580,display:'flex',flexDirection:'column',gap:14}}>
+                <div style={{fontWeight:700,fontSize:16}}>Paramètres de simulation</div>
+                <div style={{background:C.card,borderRadius:14,boxShadow:C.sh,padding:20,display:'flex',flexDirection:'column',gap:16}}>
+                  <div>
+                    <Lbl>Horizon de simulation · {params.ageFrom} à {params.ageTo} ans</Lbl>
+                    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
+                      {[{l:'De',k:'ageFrom',min:18,max:64},{l:'À',k:'ageTo',min:65,max:110}].map(f=>(
+                        <div key={f.k}>
+                          <div style={{fontSize:10,color:C.muted,marginBottom:3}}>{f.l}</div>
+                          <input type="range" min={f.min} max={f.max} value={params[f.k]} onChange={e=>setP(f.k,+e.target.value)} style={{width:'100%',accentColor:C.blue}}/>
+                          <div style={{display:'flex',justifyContent:'space-between',fontSize:10,color:C.muted}}><span>{f.min}</span><span style={{fontWeight:700,color:C.navy}}>{params[f.k]} ans</span><span>{f.max}</span></div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <Lbl>Inflation annuelle · {params.inflation.toFixed(1)} %</Lbl>
+                    <input type="range" min={0} max={6} step={0.1} value={params.inflation} onChange={e=>setP('inflation',+e.target.value)} style={{width:'100%',accentColor:C.amber}}/>
+                    <div style={{fontSize:11,color:C.muted,marginTop:3}}>Cible Banque du Canada : 2 % — Note: les calculs sont en nominal. L'inflation érode le pouvoir d'achat réel.</div>
+                  </div>
+                  <Input label="Salaire moyen (pour RRQ)" value={params.salary} onChange={v=>setP('salary',v)} prefix="$" min={0}/>
+                  <div style={{padding:'10px 14px',background:'#EFF6FF',borderRadius:9,fontSize:12,color:C.blue,lineHeight:1.6}}>
+                    <b>Monte Carlo</b> — {mc?.N||180} simulations sont lancées avec des rendements variables (basés sur le niveau de risque de chaque compte). Les bandes P10–P90 représentent la fourchette réaliste des résultats.
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ── ANALYSE MC ── */}
+            {tab==='analysis'&&(<>
+              <div style={{fontWeight:700,fontSize:16}}>Analyse Monte Carlo</div>
+              <div style={{display:'flex',gap:14,flexWrap:'wrap'}}>
+                <div style={{background:C.card,borderRadius:14,boxShadow:C.sh,padding:20,flex:'0 0 220px'}}>
+                  <Lbl>Probabilité de succès</Lbl>
+                  <Gauge pct={mc?.successRate??0}/>
+                  <div style={{fontSize:11,color:C.muted,textAlign:'center',marginTop:6,lineHeight:1.5}}>Le portefeuille dure jusqu'à {params.ageTo} ans dans {mc?.successRate??'…'} % des simulations</div>
+                </div>
+                <div style={{background:C.card,borderRadius:14,boxShadow:C.sh,padding:20,flex:1,minWidth:220}}>
+                  <Lbl>Valeur du portefeuille à {params.ageTo} ans</Lbl>
+                  {[
+                    {l:'P10 — Pessimiste',  k:'p10',c:C.red},
+                    {l:'P50 — Médiane',     k:'p50',c:C.blue},
+                    {l:'P90 — Optimiste',   k:'p90',c:C.green},
+                    {l:'Base (fixe)',        k:'base',c:C.navy},
+                  ].map(s=>{
+                    const val=s.k==='base'?last.totalBalance:mc?.chartData?.[mc.chartData.length-1]?.[s.k];
+                    return(
+                      <div key={s.k} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'10px 0',borderBottom:`1px solid ${C.border}`}}>
+                        <span style={{fontSize:12,color:s.c,fontWeight:600}}>{s.l}</span>
+                        <span style={{fontWeight:800,fontSize:15,color:s.c}}>{val!=null?fmtK(val):'…'}</span>
+                      </div>
+                    );
+                  })}
+                  <div style={{marginTop:10,fontSize:11,color:C.muted}}>N={mc?.N||180} simulations · Volatilité par niveau de risque</div>
+                </div>
+              </div>
+
+              <div style={{background:C.card,borderRadius:14,boxShadow:C.sh,padding:'14px 6px 8px'}}>
+                <div style={{padding:'0 16px 10px',fontWeight:700,fontSize:13}}>Éventail Monte Carlo — {params.ageFrom} à {params.ageTo} ans</div>
+                <ResponsiveContainer width="100%" height={310}>
+                  <ComposedChart data={chartData} margin={{top:0,right:14,left:0,bottom:0}}>
+                    <CartesianGrid stroke="#F1F5F9" strokeDasharray="3 3"/>
+                    <XAxis dataKey="age" stroke={C.muted} tick={{fontSize:10}}/>
+                    <YAxis tickFormatter={fmtK} stroke={C.muted} tick={{fontSize:9}} width={46}/>
+                    <Tooltip content={<Tip/>}/>
+                    <ReferenceLine x={retAge} stroke={C.teal} strokeDasharray="5 3" label={{value:'Retraite',fill:C.teal,fontSize:10}}/>
+                    {mc&&<Area stackId="mc" type="monotone" dataKey="p10" stroke={`${C.red}80`} strokeWidth={1.5} strokeDasharray="4 3" fill="transparent" dot={false} name="P10 (pessimiste)"/>}
+                    {mc&&<Area stackId="mc" type="monotone" dataKey="b1"  stroke="none" fill={`${C.blue}18`} dot={false}/>}
+                    {mc&&<Area stackId="mc" type="monotone" dataKey="b2"  stroke="none" fill={`${C.blue}30`} dot={false}/>}
+                    {mc&&<Area stackId="mc" type="monotone" dataKey="b3"  stroke="none" fill={`${C.blue}18`} dot={false}/>}
+                    {mc&&<Line type="monotone" dataKey="p50" stroke={C.blue} strokeWidth={1.5} dot={false} strokeDasharray="6 3" name="Médiane (P50)"/>}
+                    <Line type="monotone" dataKey="base" stroke={C.navy} strokeWidth={2.5} dot={false} name="Scénario base"/>
+                  </ComposedChart>
+                </ResponsiveContainer>
+                <div style={{display:'flex',gap:16,padding:'6px 18px 2px',fontSize:10,color:C.muted,flexWrap:'wrap'}}>
+                  {[['Scénario base',C.navy,false],['Médiane P50',C.blue,true],['Zone P25–P75',C.blue+'55',true,true],['P10 (pessimiste)',C.red,true]].map(([l,c,d,box])=>(
+                    <div key={l} style={{display:'flex',alignItems:'center',gap:4}}>
+                      {box?<span style={{width:16,height:9,background:c,borderRadius:2,display:'inline-block'}}/>:<span style={{width:20,height:2.5,background:c,borderRadius:1,display:'inline-block',opacity:d?.5:1}}/>}
+                      {l}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>)}
+          </div>
+        </div>
+      );
+    }
+
+    // Initialisation de l'application React 18
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
 </body>
 </html>
