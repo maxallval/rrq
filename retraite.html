@@ -33,7 +33,6 @@
     select { padding: 5px 4px; border: 1px solid #CCC; border-radius: 3px; font-family: Arial; font-size: 12px; background: #fff; }
     .range-labels { display: flex; justify-content: space-between; font-size: 10px; color: #888; margin-top: 1px; }
 
-    /* Entries */
     .entry { background: #fff; border: 1px solid #CCC; border-radius: 4px; padding: 9px; margin-bottom: 6px; }
     .erow { display: flex; gap: 5px; margin-bottom: 5px; align-items: center; }
     .erow input[type="number"] { flex: 1; min-width: 0; }
@@ -46,22 +45,35 @@
 
     .btn-add { padding: 5px 12px; background: rgb(9,87,151); color: #fff; border: none; border-radius: 3px; font-family: Arial; font-size: 12px; font-weight: 600; cursor: pointer; margin-bottom: 4px; }
 
-    /* Badge info */
     .badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 10px; }
-    .badge-green { background: #D1FAE5; color: #065F46; }
+    .badge-green  { background: #D1FAE5; color: #065F46; }
     .badge-orange { background: #FEF3C7; color: #92400E; }
 
-    /* Summary */
     .sum-row { display: flex; justify-content: space-between; font-size: 12px; padding: 5px 0; border-bottom: 1px solid #E0E0E0; }
     .sum-row.final { border-bottom: none; border-top: 2px solid rgb(9,87,151); margin-top: 4px; padding-top: 8px; font-weight: 700; color: rgb(9,87,151); font-size: 13px; }
 
-    /* Content */
+    /* Chart cards */
     .ccard { background: #fff; border: 1px solid #CCC; border-radius: 4px; margin-bottom: 14px; }
-    .ccard-head { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: #555; padding: 9px 13px 7px; border-bottom: 1px solid #E0E0E0; display: flex; justify-content: space-between; align-items: center; }
-    .ccard-body { padding: 10px 12px; }
-    canvas { width: 100%; display: block; }
+    .ccard-head { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: #555; padding: 9px 14px 7px; border-bottom: 1px solid #E0E0E0; display: flex; justify-content: space-between; align-items: center; }
+    .ccard-body { padding: 6px 4px 4px; }
+    canvas { width: 100%; display: block; cursor: crosshair; }
     .cgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 14px; }
 
+    /* Legend */
+    .legend { display: flex; gap: 18px; padding: 6px 14px 10px; font-size: 11px; color: #555; flex-wrap: wrap; }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-line { width: 22px; height: 2.5px; border-radius: 2px; display: inline-block; flex-shrink: 0; }
+    .legend-line.dashed { background: repeating-linear-gradient(90deg,currentColor 0,currentColor 5px,transparent 5px,transparent 8px); }
+
+    /* Tooltip */
+    #chartTip { position:fixed; display:none; background:#fff; border:1px solid #CCC; border-radius:4px; padding:10px 14px; font-size:12px; pointer-events:none; box-shadow:0 2px 10px rgba(0,0,0,0.15); z-index:999; min-width:160px; }
+    #chartTip .tip-head { color:rgb(9,87,151); font-weight:700; font-size:13px; margin-bottom:7px; border-bottom:1px solid #E0E0E0; padding-bottom:5px; }
+    #chartTip .tip-row { display:flex; justify-content:space-between; gap:18px; margin-bottom:3px; }
+    #chartTip .tip-label { color:#555; }
+    #chartTip .tip-val { font-weight:700; }
+    #chartTip .tip-div { border-top:1px solid #E0E0E0; margin:5px 0; }
+
+    /* Table */
     table { width: 100%; border-collapse: collapse; font-size: 11px; }
     thead tr { background: rgb(9,87,151); color: #fff; }
     th { padding: 8px 9px; text-align: right; font-size: 11px; white-space: nowrap; }
@@ -69,11 +81,15 @@
     td { padding: 7px 9px; border-bottom: 1px solid #E0E0E0; text-align: right; }
     td:first-child { text-align: left; font-weight: 700; color: rgb(9,87,151); }
     tr:nth-child(even) td { background: #F7F9FB; }
-
-    .note { font-size: 10px; color: #888; font-style: italic; }
+    .note { font-size: 10px; color: #888; }
   </style>
 </head>
 <body>
+<div id="chartTip">
+  <div class="tip-head" id="tipHead"></div>
+  <div id="tipBody"></div>
+</div>
+
 <div class="wrap">
   <header>
     <h1>Calculateur Retraite</h1>
@@ -81,14 +97,9 @@
     <div class="or-bar"></div>
   </header>
   <main>
+    <!-- ── Sidebar ── -->
     <div class="sidebar">
-
-      <!-- 1. Paramètres -->
-      <div class="sec-head">
-        <div class="sec-num">1</div>
-        <div class="sec-title">Paramètres</div>
-        <div class="sec-line"></div>
-      </div>
+      <div class="sec-head"><div class="sec-num">1</div><div class="sec-title">Paramètres</div><div class="sec-line"></div></div>
       <div class="card">
         <div class="group">
           <label>Solde initial · <span class="val" id="d1">50 000 $</span></label>
@@ -106,12 +117,7 @@
         </div>
       </div>
 
-      <!-- 2. Gouvernement -->
-      <div class="sec-head">
-        <div class="sec-num">2</div>
-        <div class="sec-title">Prestations gouvernementales</div>
-        <div class="sec-line"></div>
-      </div>
+      <div class="sec-head"><div class="sec-num">2</div><div class="sec-title">Prestations gouvernementales</div><div class="sec-line"></div></div>
       <div class="card">
         <div class="group">
           <label>Âge RRQ · <span class="val" id="dRRQ">65</span> ans · <span id="badgeRRQ" class="badge badge-green">Référence</span></label>
@@ -130,30 +136,15 @@
         </div>
       </div>
 
-      <!-- 3. Contributions -->
-      <div class="sec-head">
-        <div class="sec-num">3</div>
-        <div class="sec-title">Contributions récurrentes</div>
-        <div class="sec-line"></div>
-      </div>
+      <div class="sec-head"><div class="sec-num">3</div><div class="sec-title">Contributions récurrentes</div><div class="sec-line"></div></div>
       <div id="contribList"></div>
       <button class="btn-add" onclick="addContrib()">+ Ajouter</button>
 
-      <!-- 4. Retraits -->
-      <div class="sec-head">
-        <div class="sec-num">4</div>
-        <div class="sec-title">Retraits (annuels)</div>
-        <div class="sec-line"></div>
-      </div>
+      <div class="sec-head"><div class="sec-num">4</div><div class="sec-title">Retraits (one-shot)</div><div class="sec-line"></div></div>
       <div id="withdrawList"></div>
       <button class="btn-add" onclick="addWithdraw()">+ Ajouter</button>
 
-      <!-- 5. Résumé -->
-      <div class="sec-head">
-        <div class="sec-num">5</div>
-        <div class="sec-title">Résumé (cumul)</div>
-        <div class="sec-line"></div>
-      </div>
+      <div class="sec-head"><div class="sec-num">5</div><div class="sec-title">Résumé (cumul)</div><div class="sec-line"></div></div>
       <div class="card">
         <div class="sum-row"><span>Contributions versées</span><span id="s1">—</span></div>
         <div class="sum-row"><span>Retraits bruts</span><span id="s2">—</span></div>
@@ -161,33 +152,42 @@
         <div class="sum-row"><span>Prestations (RRQ+SV+SRG)</span><span id="s4">—</span></div>
         <div class="sum-row final"><span>Solde à 100 ans</span><span id="s5">—</span></div>
       </div>
-      <div class="note" style="margin-top:4px; padding: 0 2px;">Simulation à titre indicatif. Consultez un planificateur financier.</div>
-
+      <div class="note" style="margin-top:4px;padding:0 2px">Simulation à titre indicatif. Consultez un planificateur financier.</div>
     </div>
 
-    <!-- Content -->
+    <!-- ── Content ── -->
     <div class="content">
+      <!-- Main chart -->
       <div class="ccard">
         <div class="ccard-head">
-          <span>Portefeuille</span>
+          <span>Portefeuille &amp; Revenus annuels</span>
           <span id="rateInfo" class="note"></span>
         </div>
-        <div class="ccard-body" style="height:200px"><canvas id="chart1"></canvas></div>
+        <div class="ccard-body" style="height:230px"><canvas id="chart1"></canvas></div>
+        <div class="legend">
+          <div class="legend-item"><span class="legend-line" style="background:rgb(9,87,151)"></span>Solde portef.</div>
+          <div class="legend-item"><span class="legend-line" style="background:#1E7E34"></span>Revenu net/an</div>
+          <div class="legend-item"><span class="legend-line" style="background:#C45600;opacity:.7"></span>Retrait brut/an</div>
+        </div>
       </div>
+
+      <!-- Small charts -->
       <div class="cgrid">
         <div class="ccard">
           <div class="ccard-head"><span>RRQ</span><span id="lblRRQ" class="note"></span></div>
-          <div class="ccard-body" style="height:110px"><canvas id="chart2"></canvas></div>
+          <div class="ccard-body" style="height:120px"><canvas id="chart2"></canvas></div>
         </div>
         <div class="ccard">
           <div class="ccard-head"><span>SV + SRG</span><span id="lblSV" class="note"></span></div>
-          <div class="ccard-body" style="height:110px"><canvas id="chart3"></canvas></div>
+          <div class="ccard-body" style="height:120px"><canvas id="chart3"></canvas></div>
         </div>
         <div class="ccard">
           <div class="ccard-head"><span>Impôts</span></div>
-          <div class="ccard-body" style="height:110px"><canvas id="chart4"></canvas></div>
+          <div class="ccard-body" style="height:120px"><canvas id="chart4"></canvas></div>
         </div>
       </div>
+
+      <!-- Table -->
       <div class="ccard">
         <div class="ccard-head"><span>Détails (1 rangée / 2 ans)</span></div>
         <table>
@@ -204,124 +204,240 @@
 </div>
 
 <script>
+// ── Data ──────────────────────────────────────────────────
 var contrib  = [{id:1, startAge:25, endAge:65, amount:10000, vehicle:'REER', rate:5}];
 var withdraw = [{id:1, age:65, amount:40000}];
 var nextC=2, nextW=2;
+var SIM = []; // current results, used by chart hovers
 
-function fmt(v){ return Math.round(v).toLocaleString('fr-CA')+'\u202f$'; }
-function fmtK(v){ return v>=1e6?(v/1e6).toFixed(2)+'\u202fM$':v>=1e3?(v/1e3).toFixed(0)+'\u202fk$':Math.round(v)+'\u202f$'; }
+// ── Format helpers ────────────────────────────────────────
+function fmtCAD(v){ return Math.round(v).toLocaleString('fr-CA')+'\u202f$'; }
+function fmtK(v){
+  if(v>=1e6) return (v/1e6).toFixed(2)+'\u202fM$';
+  if(v>=1e3) return (v/1e3).toFixed(0)+'\u202fk$';
+  return Math.round(v)+'\u202f$';
+}
 
-// Effective rate for a given age (weighted avg of active contributions, fallback to mean)
+// ── Finance helpers ───────────────────────────────────────
 function yearRate(age){
-  var act = contrib.filter(function(c){ return age>=c.startAge && age<=c.endAge; });
-  if(act.length===0){
-    if(contrib.length===0) return 0.05;
-    return contrib.reduce(function(s,c){return s+c.rate/100;},0)/contrib.length;
-  }
-  var tot = act.reduce(function(s,c){return s+c.amount;},0);
-  if(tot===0) return act.reduce(function(s,c){return s+c.rate/100;},0)/act.length;
+  var act=contrib.filter(function(c){return age>=c.startAge&&age<=c.endAge;});
+  if(!act.length){ return contrib.length?contrib.reduce(function(s,c){return s+c.rate/100;},0)/contrib.length:0.05; }
+  var tot=act.reduce(function(s,c){return s+c.amount;},0);
+  if(!tot) return act.reduce(function(s,c){return s+c.rate/100;},0)/act.length;
   return act.reduce(function(s,c){return s+c.amount*(c.rate/100);},0)/tot;
 }
-
-function calcRRQ(age, ageRRQ, salary){
-  if(age<ageRRQ) return 0;
-  var b = Math.min(salary*0.25, 15888);
-  var d = ageRRQ-65;
-  if(d<0) b*=(1+d*0.054);
-  else if(d>0) b*=(1+Math.min(d,7)*0.042);
+function calcRRQ(age,ageRRQ,salary){
+  if(age<ageRRQ)return 0;
+  var b=Math.min(salary*0.25,15888),d=ageRRQ-65;
+  if(d<0)b*=(1+d*0.054); else if(d>0)b*=(1+Math.min(d,7)*0.042);
   return b;
 }
-function calcSV(age, ageSV, income){
-  if(age<ageSV) return 0;
-  var base = 8000*(1+0.072*Math.max(0,ageSV-65));
-  return Math.max(0, base - Math.max(0,income-90997)*0.15);
+function calcSV(age,ageSV,income){
+  if(age<ageSV)return 0;
+  return Math.max(0,8000*(1+0.072*Math.max(0,ageSV-65))-Math.max(0,income-90997)*0.15);
 }
-function calcSRG(age, ageSV, ageSRG, income, sv){
-  if(age<ageSV || age<ageSRG) return 0;
-  return Math.max(0, 12000 - Math.max(0,income-sv)*0.5);
+function calcSRG(age,ageSV,ageSRG,income,sv){
+  if(age<ageSV||age<ageSRG)return 0;
+  return Math.max(0,12000-Math.max(0,income-sv)*0.5);
 }
 function calcTax(income){
-  if(income<=0) return 0;
-  var fed=[55867,111733,173205], fr=[0.15,0.205,0.26,0.33];
-  var qc=[49275,98540,119910],   qr=[0.15,0.20,0.2575,0.2975];
+  if(income<=0)return 0;
+  var fed=[55867,111733,173205],fr=[0.15,0.205,0.26,0.33];
+  var qc=[49275,98540,119910],qr=[0.15,0.20,0.2575,0.2975];
   var t=0,p=0,i;
   for(i=0;i<4;i++){var l=i<fed.length?fed[i]:income+1,x=Math.min(income,l)-p;t+=Math.max(0,x)*fr[i];p=l;if(income<=l)break;}
   p=0;
   for(i=0;i<4;i++){var l=i<qc.length?qc[i]:income+1,x=Math.min(income,l)-p;t+=Math.max(0,x)*qr[i];p=l;if(income<=l)break;}
-  return Math.max(0, t-(0.15+0.15)*15705);
+  return Math.max(0,t-(0.15+0.15)*15705);
 }
-
 function simulate(){
-  var initBal  = +document.getElementById('initBal').value;
-  var startAge = +document.getElementById('startAge').value;
-  var salary   = +document.getElementById('avgSalary').value;
-  var ageRRQ   = +document.getElementById('ageRRQ').value;
-  var ageSV    = +document.getElementById('ageSV').value;
-  var ageSRG   = +document.getElementById('ageSRG').value;
-
-  var res=[], bal=initBal;
-  for(var age=startAge; age<=100; age++){
-    var r = yearRate(age);
-    var c=0; contrib.forEach(function(ct){ if(age>=ct.startAge&&age<=ct.endAge) c+=ct.amount; });
-    var w=0; withdraw.forEach(function(wt){ if(wt.age===age) w+=wt.amount; });
-    bal = Math.max(0, bal*(1+r)+c-w);
-    var t   = w?calcTax(w):0;
-    var rrq = calcRRQ(age,ageRRQ,salary);
-    var sv  = calcSV(age,ageSV,w);
-    var srg = calcSRG(age,ageSV,ageSRG,w,sv);
+  var ib=+document.getElementById('initBal').value,
+      sa=+document.getElementById('startAge').value,
+      sal=+document.getElementById('avgSalary').value,
+      aRRQ=+document.getElementById('ageRRQ').value,
+      aSV=+document.getElementById('ageSV').value,
+      aSRG=+document.getElementById('ageSRG').value;
+  var res=[],bal=ib;
+  for(var age=sa;age<=100;age++){
+    var r=yearRate(age);
+    var c=0; contrib.forEach(function(ct){if(age>=ct.startAge&&age<=ct.endAge)c+=ct.amount;});
+    var w=0; withdraw.forEach(function(wt){if(wt.age===age)w+=wt.amount;});
+    bal=Math.max(0,bal*(1+r)+c-w);
+    var t=w?calcTax(w):0,
+        rrq=calcRRQ(age,aRRQ,sal),
+        sv=calcSV(age,aSV,w),
+        srg=calcSRG(age,aSV,aSRG,w,sv);
     res.push({age:age,bal:bal,c:c,w:w,t:t,rrq:rrq,sv:sv,srg:srg,ben:rrq+sv+srg,net:(w+rrq+sv+srg)-t,rate:r});
   }
   return res;
 }
 
-function drawLine(id, data, color){
-  var cv=document.getElementById(id); if(!cv)return;
-  cv.width=cv.offsetWidth||300; cv.height=cv.offsetHeight||150;
-  var W=cv.width, H=cv.height, ctx=cv.getContext('2d');
-  var pad={t:10,r:12,b:20,l:42};
-  var max=Math.max.apply(null,data.map(function(d){return d.v;}))||1;
-  ctx.clearRect(0,0,W,H);
+// ── Chart engine ──────────────────────────────────────────
+var TIP = document.getElementById('chartTip');
 
-  // Grid line at max
-  ctx.strokeStyle='#E0E0E0'; ctx.lineWidth=1;
-  ctx.setLineDash([3,3]);
-  ctx.beginPath(); ctx.moveTo(pad.l,pad.t); ctx.lineTo(W-pad.r,pad.t); ctx.stroke();
-  ctx.setLineDash([]);
-
-  // Axes
-  ctx.strokeStyle='#CCC';
-  ctx.beginPath(); ctx.moveTo(pad.l,pad.t); ctx.lineTo(pad.l,H-pad.b); ctx.lineTo(W-pad.r,H-pad.b); ctx.stroke();
-
-  // Y label
-  ctx.fillStyle='#888'; ctx.font='9px Arial'; ctx.textAlign='right';
-  ctx.fillText(fmtK(max), pad.l-3, pad.t+6);
-
-  // Line + fill
-  ctx.beginPath();
-  for(var i=0;i<data.length;i++){
-    var x=pad.l+(i/(data.length-1||1))*(W-pad.l-pad.r);
-    var y=H-pad.b-(data[i].v/max)*(H-pad.t-pad.b);
-    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
-  }
-  ctx.strokeStyle=color; ctx.lineWidth=2; ctx.stroke();
-  ctx.lineTo(W-pad.r,H-pad.b); ctx.lineTo(pad.l,H-pad.b); ctx.closePath();
-  ctx.fillStyle=color+'28'; ctx.fill();
-
-  // X ticks
-  ctx.fillStyle='#888'; ctx.textAlign='left';
-  ctx.fillText(data[0].label, pad.l, H-3);
-  ctx.textAlign='center';
-  var mid=Math.floor(data.length/2);
-  ctx.fillText(data[mid].label, pad.l+(mid/(data.length-1))*(W-pad.l-pad.r), H-3);
-  ctx.textAlign='right';
-  ctx.fillText(data[data.length-1].label, W-pad.r, H-3);
+function niceMax(v){
+  if(v===0)return 1;
+  var mag=Math.pow(10,Math.floor(Math.log10(v)));
+  return Math.ceil(v/mag)*mag;
 }
 
+/* series: [{label, color, data:[numbers], fill, dash, width}]
+   ages: [numbers]
+   highlight: index or null
+   returns geometry object */
+function drawChart(id, series, ages, highlight){
+  var cv=document.getElementById(id); if(!cv)return null;
+  var dpr=window.devicePixelRatio||1;
+  var W=cv.offsetWidth||400, H=cv.offsetHeight||200;
+  cv.width=W*dpr; cv.height=H*dpr;
+  cv.style.width=W+'px'; cv.style.height=H+'px';
+  var ctx=cv.getContext('2d'); ctx.scale(dpr,dpr);
+  var pad={t:12,r:16,b:26,l:54};
+  var iW=W-pad.l-pad.r, iH=H-pad.t-pad.b;
+
+  var allV=[]; series.forEach(function(s){allV=allV.concat(s.data);});
+  var max=niceMax(Math.max.apply(null,allV)||1);
+
+  ctx.clearRect(0,0,W,H);
+
+  // Y grid + labels
+  var nY=4;
+  for(var ti=0;ti<=nY;ti++){
+    var val=(max/nY)*ti, yy=pad.t+iH-(ti/nY)*iH;
+    ctx.strokeStyle='#E0E0E0'; ctx.lineWidth=1; ctx.setLineDash([3,3]);
+    ctx.beginPath(); ctx.moveTo(pad.l,yy); ctx.lineTo(pad.l+iW,yy); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='#999'; ctx.font='10px Arial'; ctx.textAlign='right';
+    ctx.fillText(fmtK(val),pad.l-5,yy+3);
+  }
+
+  // X ticks (every 5 yrs)
+  var xStep=ages.length>40?10:5;
+  ctx.textAlign='center'; ctx.fillStyle='#999'; ctx.font='10px Arial';
+  ages.forEach(function(age,i){
+    if(age%xStep===0){
+      var xx=pad.l+(i/(ages.length-1||1))*iW;
+      ctx.fillText(age,xx,H-5);
+      ctx.strokeStyle='#DDD'; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.moveTo(xx,pad.t+iH); ctx.lineTo(xx,pad.t+iH+3); ctx.stroke();
+    }
+  });
+
+  // Axes
+  ctx.strokeStyle='#CCC'; ctx.lineWidth=1; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(pad.l,pad.t); ctx.lineTo(pad.l,pad.t+iH); ctx.lineTo(pad.l+iW,pad.t+iH); ctx.stroke();
+
+  // Highlight crosshair
+  if(highlight!=null){
+    var hx=pad.l+(highlight/(ages.length-1||1))*iW;
+    ctx.strokeStyle='rgba(0,0,0,0.12)'; ctx.lineWidth=1; ctx.setLineDash([4,3]);
+    ctx.beginPath(); ctx.moveTo(hx,pad.t); ctx.lineTo(hx,pad.t+iH); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // Lines (fills first so lines sit on top)
+  series.forEach(function(s){
+    if(!s.data||!s.data.length||!s.fill)return;
+    ctx.beginPath();
+    s.data.forEach(function(v,i){
+      var xx=pad.l+(i/(s.data.length-1||1))*iW, yy=pad.t+iH-(v/max)*iH;
+      i===0?ctx.moveTo(xx,yy):ctx.lineTo(xx,yy);
+    });
+    ctx.lineTo(pad.l+(s.data.length-1)/(s.data.length-1||1)*iW,pad.t+iH);
+    ctx.lineTo(pad.l,pad.t+iH); ctx.closePath();
+    ctx.fillStyle=s.color+'1A'; ctx.fill();
+  });
+
+  series.forEach(function(s){
+    if(!s.data||!s.data.length)return;
+    ctx.beginPath();
+    s.data.forEach(function(v,i){
+      var xx=pad.l+(i/(s.data.length-1||1))*iW, yy=pad.t+iH-(v/max)*iH;
+      i===0?ctx.moveTo(xx,yy):ctx.lineTo(xx,yy);
+    });
+    ctx.strokeStyle=s.color; ctx.lineWidth=s.width||2;
+    ctx.setLineDash(s.dash||[]); ctx.stroke(); ctx.setLineDash([]);
+
+    // Dot at highlight
+    if(highlight!=null&&highlight<s.data.length){
+      var hxd=pad.l+(highlight/(s.data.length-1||1))*iW;
+      var hyd=pad.t+iH-(s.data[highlight]/max)*iH;
+      ctx.beginPath(); ctx.arc(hxd,hyd,4,0,Math.PI*2);
+      ctx.fillStyle=s.color; ctx.fill();
+      ctx.strokeStyle='#fff'; ctx.lineWidth=2; ctx.stroke();
+    }
+  });
+
+  return {pad:pad,iW:iW,iH:iH,max:max,n:ages.length};
+}
+
+// Returns series + ages from SIM for a given chart
+function getSeries1(){ // main chart: portfolio, net income, withdrawals
+  return [
+    {label:'Portef.',       color:'rgb(9,87,151)', fill:true,  width:2.5, data:SIM.map(function(r){return r.bal;})},
+    {label:'Revenu net/an', color:'#1E7E34',       fill:false, width:2,   data:SIM.map(function(r){return Math.max(0,r.net);})},
+    {label:'Retrait/an',    color:'#C45600',       fill:false, width:1.5, dash:[5,3], data:SIM.map(function(r){return r.w;})},
+  ];
+}
+function getSeries2(){ return [{label:'RRQ/an',    color:'#1E7E34',       fill:true, data:SIM.map(function(r){return r.rrq;})}]; }
+function getSeries3(){ return [{label:'SV+SRG/an', color:'#6F42C1',       fill:true, data:SIM.map(function(r){return r.sv+r.srg;})}]; }
+function getSeries4(){ return [{label:'Impôt/an',  color:'#C45600',       fill:true, data:SIM.map(function(r){return r.t;})}]; }
+function getAges(){    return SIM.map(function(r){return r.age;}); }
+
+// Tooltip builder
+function showTip(e, idx){
+  var r=SIM[idx]; if(!r)return;
+  document.getElementById('tipHead').textContent=r.age+' ans';
+  var rows=[
+    {l:'Portefeuille', v:fmtK(r.bal),   c:'rgb(9,87,151)'},
+    {l:'Contributions',v:r.c>0?fmtK(r.c):'—', c:'#555'},
+    {l:'Retrait brut', v:r.w>0?fmtK(r.w):'—', c:'#C45600'},
+    null,
+    {l:'RRQ/an',       v:r.rrq>0?fmtK(r.rrq):'—', c:'#1E7E34'},
+    {l:'SV/an',        v:r.sv>0?fmtK(r.sv):'—',  c:'#6F42C1'},
+    {l:'SRG/an',       v:r.srg>0?fmtK(r.srg):'—',c:'#6F42C1'},
+    null,
+    {l:'Impôt',        v:r.t>0?fmtK(r.t):'—', c:'#C45600'},
+    {l:'Net/an',       v:fmtK(Math.max(0,r.net)), c:'#1E7E34'},
+  ];
+  var h='';
+  rows.forEach(function(row){
+    if(!row){h+='<div class="tip-div"></div>';return;}
+    h+='<div class="tip-row"><span class="tip-label">'+row.l+'</span><span class="tip-val" style="color:'+row.c+'">'+row.v+'</span></div>';
+  });
+  document.getElementById('tipBody').innerHTML=h;
+  TIP.style.display='block';
+  var tx=e.clientX+16, ty=e.clientY-10;
+  if(tx+190>window.innerWidth) tx=e.clientX-200;
+  TIP.style.left=tx+'px'; TIP.style.top=ty+'px';
+}
+
+function setupHover(id, seriesFn){
+  var cv=document.getElementById(id); if(!cv)return;
+  var geo=null;
+  cv.addEventListener('mousemove',function(e){
+    var rect=cv.getBoundingClientRect();
+    var mx=e.clientX-rect.left;
+    var ages=getAges();
+    if(!geo) geo=drawChart(id,seriesFn(),ages,null);
+    if(!geo)return;
+    var ratio=Math.max(0,Math.min(1,(mx-geo.pad.l)/geo.iW));
+    var idx=Math.round(ratio*(ages.length-1));
+    geo=drawChart(id,seriesFn(),ages,idx);
+    showTip(e,idx);
+  });
+  cv.addEventListener('mouseleave',function(){
+    TIP.style.display='none';
+    geo=drawChart(id,seriesFn(),getAges(),null);
+    geo=null;
+  });
+}
+
+// ── Sidebar builders ──────────────────────────────────────
 function buildContribs(){
   var h='';
-  contrib.forEach(function(c, i){
-    h+='<div class="entry">';
-    h+='<div class="erow">';
+  contrib.forEach(function(c,i){
+    h+='<div class="entry"><div class="erow">';
     h+='<span class="sep">De</span>';
     h+='<input type="number" class="w-age" value="'+c.startAge+'" onchange="contrib['+i+'].startAge=+this.value;update()">';
     h+='<span class="sep">à</span>';
@@ -332,48 +448,35 @@ function buildContribs(){
     h+='</select></div>';
     h+='<div class="erow">';
     h+='<input type="number" value="'+c.amount+'" placeholder="$/an" onchange="contrib['+i+'].amount=+this.value;update()">';
-    h+='<input type="number" class="w-rate" value="'+c.rate+'" step="0.25" min="0" max="20" onchange="contrib['+i+'].rate=+this.value;update()"> ';
-    h+='<span class="sep">%/an</span>';
-    h+='<button class="del" onclick="contrib.splice('+i+',1);update()">✕</button>';
-    h+='</div>';
-    h+='<div class="entry-info">';
-    h+=c.startAge+'→'+c.endAge+' ans · '+Math.round(c.amount).toLocaleString('fr-CA')+'\u202f$/an · '+c.vehicle+' · '+c.rate+'\u202f%';
-    h+='</div></div>';
+    h+='<input type="number" class="w-rate" value="'+c.rate+'" step="0.25" min="0" max="20" onchange="contrib['+i+'].rate=+this.value;update()"><span class="sep">%</span>';
+    h+='<button class="del" onclick="contrib.splice('+i+',1);update()">✕</button></div>';
+    h+='<div class="entry-info">'+c.startAge+'→'+c.endAge+' ans · '+Math.round(c.amount).toLocaleString('fr-CA')+'\u202f$/an · '+c.vehicle+' · '+c.rate+'\u202f%</div></div>';
   });
   document.getElementById('contribList').innerHTML=h;
 }
-
 function buildWithdraws(){
   var h='';
-  withdraw.forEach(function(w, i){
+  withdraw.forEach(function(w,i){
     h+='<div class="entry"><div class="erow">';
     h+='<span class="sep">Âge</span>';
     h+='<input type="number" class="w-age" value="'+w.age+'" onchange="withdraw['+i+'].age=+this.value;update()">';
     h+='<input type="number" value="'+w.amount+'" placeholder="$/an" onchange="withdraw['+i+'].amount=+this.value;update()">';
-    h+='<button class="del" onclick="withdraw.splice('+i+',1);update()">✕</button>';
-    h+='</div>';
-    h+='<div class="entry-info">À '+w.age+' ans · '+Math.round(w.amount).toLocaleString('fr-CA')+'\u202f$ (one-shot)</div>';
-    h+='</div>';
+    h+='<button class="del" onclick="withdraw.splice('+i+',1);update()">✕</button></div>';
+    h+='<div class="entry-info">À '+w.age+' ans · '+Math.round(w.amount).toLocaleString('fr-CA')+'\u202f$ (one-shot)</div></div>';
   });
   document.getElementById('withdrawList').innerHTML=h;
 }
 
-function badgeRRQ(age){
-  if(age<65) return '<span class="badge badge-orange">Pénalité '+(-(65-age)*5.4).toFixed(1)+'\u202f%</span>';
-  if(age>65) return '<span class="badge badge-green">Bonif. +'+(Math.min(age-65,7)*4.2).toFixed(1)+'\u202f%</span>';
-  return '<span class="badge badge-green">Référence</span>';
-}
-function badgeSV(age){
-  if(age>65) return '<span class="badge badge-green">+'+((age-65)*7.2).toFixed(1)+'\u202f%</span>';
-  return '<span class="badge badge-green">Référence</span>';
-}
+function badgeRRQ(a){ return a<65?'<span class="badge badge-orange">Pénalité '+(-(65-a)*5.4).toFixed(1)+'%</span>':a>65?'<span class="badge badge-green">Bonif. +'+(Math.min(a-65,7)*4.2).toFixed(1)+'%</span>':'<span class="badge badge-green">Référence</span>'; }
+function badgeSV(a){ return a>65?'<span class="badge badge-green">+'+((a-65)*7.2).toFixed(1)+'%</span>':'<span class="badge badge-green">Référence</span>'; }
 
+// ── Main update ───────────────────────────────────────────
 function update(){
-  var ib=+document.getElementById('initBal').value;
-  var sa=+document.getElementById('startAge').value;
-  var ar=+document.getElementById('ageRRQ').value;
-  var as=+document.getElementById('ageSV').value;
-  var asg=+document.getElementById('ageSRG').value;
+  var ib=+document.getElementById('initBal').value,
+      sa=+document.getElementById('startAge').value,
+      ar=+document.getElementById('ageRRQ').value,
+      as=+document.getElementById('ageSV').value,
+      asg=+document.getElementById('ageSRG').value;
 
   document.getElementById('d1').textContent=ib.toLocaleString('fr-CA')+'\u202f$';
   document.getElementById('d2').textContent=sa;
@@ -386,37 +489,33 @@ function update(){
   buildContribs();
   buildWithdraws();
 
-  var res=simulate();
+  SIM = simulate();
   var tc=0,tw=0,tt=0,tb=0;
-  res.forEach(function(r){tc+=r.c;tw+=r.w;tt+=r.t;tb+=r.ben;});
-  var fb=res[res.length-1].bal;
-  document.getElementById('s1').textContent=fmt(tc);
-  document.getElementById('s2').textContent=fmt(tw);
-  document.getElementById('s3').textContent=fmt(tt);
-  document.getElementById('s4').textContent=fmt(tb);
-  document.getElementById('s5').textContent=fmt(fb);
+  SIM.forEach(function(r){tc+=r.c;tw+=r.w;tt+=r.t;tb+=r.ben;});
+  document.getElementById('s1').textContent=fmtCAD(tc);
+  document.getElementById('s2').textContent=fmtCAD(tw);
+  document.getElementById('s3').textContent=fmtCAD(tt);
+  document.getElementById('s4').textContent=fmtCAD(tb);
+  document.getElementById('s5').textContent=fmtCAD(SIM[SIM.length-1].bal);
 
-  // Info labels
-  var rMin=(Math.min.apply(null,res.map(function(r){return r.rate;}))*100).toFixed(1);
-  var rMax=(Math.max.apply(null,res.map(function(r){return r.rate;}))*100).toFixed(1);
+  var rMin=(Math.min.apply(null,SIM.map(function(r){return r.rate;}))*100).toFixed(1);
+  var rMax=(Math.max.apply(null,SIM.map(function(r){return r.rate;}))*100).toFixed(1);
   document.getElementById('rateInfo').textContent='Taux eff. '+rMin+'%–'+rMax+'%';
 
-  var ar2=+document.getElementById('ageRRQ').value;
-  var rrqBase=Math.min(+document.getElementById('avgSalary').value*0.25,15888);
-  document.getElementById('lblRRQ').textContent='Dès '+ar2+' ans · ~'+Math.round(rrqBase/12).toLocaleString('fr-CA')+'\u202f$/mois base';
+  var rrqMo=Math.round(Math.min(+document.getElementById('avgSalary').value*0.25,15888)/12);
+  document.getElementById('lblRRQ').textContent='Dès '+ar+' ans · ~'+rrqMo.toLocaleString('fr-CA')+'\u202f$/mois base';
   document.getElementById('lblSV').textContent='SV dès '+as+' ans · SRG dès '+asg+' ans';
 
-  drawLine('chart1',res.map(function(r){return{v:r.bal,label:r.age};}), 'rgb(9,87,151)');
-  drawLine('chart2',res.map(function(r){return{v:r.rrq,label:r.age};}), '#1E7E34');
-  drawLine('chart3',res.map(function(r){return{v:r.sv+r.srg,label:r.age};}), '#1E7E34');
-  drawLine('chart4',res.map(function(r){return{v:r.t,label:r.age};}), '#C45600');
+  var ages=getAges();
+  drawChart('chart1',getSeries1(),ages,null);
+  drawChart('chart2',getSeries2(),ages,null);
+  drawChart('chart3',getSeries3(),ages,null);
+  drawChart('chart4',getSeries4(),ages,null);
 
   var h='';
-  for(var i=0;i<res.length;i+=2){
-    var x=res[i];
-    h+='<tr><td>'+x.age+'</td>';
-    h+='<td>'+(x.rate*100).toFixed(1)+'%</td>';
-    h+='<td>'+fmtK(x.bal)+'</td>';
+  for(var i=0;i<SIM.length;i+=2){
+    var x=SIM[i];
+    h+='<tr><td>'+x.age+'</td><td>'+(x.rate*100).toFixed(1)+'%</td><td>'+fmtK(x.bal)+'</td>';
     h+='<td>'+Math.round(x.rrq).toLocaleString('fr-CA')+'</td>';
     h+='<td>'+Math.round(x.sv).toLocaleString('fr-CA')+'</td>';
     h+='<td>'+Math.round(x.srg).toLocaleString('fr-CA')+'</td>';
@@ -432,8 +531,16 @@ function addWithdraw(){ withdraw.push({id:nextW++,age:65,amount:30000}); update(
 ['initBal','startAge','avgSalary','ageRRQ','ageSV','ageSRG'].forEach(function(id){
   document.getElementById(id).addEventListener('input',update);
 });
-window.addEventListener('resize',update);
-update();
+
+// Setup hover after first render
+window.addEventListener('resize',function(){ update(); });
+window.addEventListener('load',function(){
+  setupHover('chart1',getSeries1);
+  setupHover('chart2',getSeries2);
+  setupHover('chart3',getSeries3);
+  setupHover('chart4',getSeries4);
+  update();
+});
 </script>
 </body>
 </html>
