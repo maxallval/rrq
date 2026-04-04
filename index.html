@@ -208,8 +208,8 @@
                   <div style={{flex:1,minWidth:220}}>
                     <div style={{fontSize:12,color:C.gris,marginBottom:8,fontWeight:700,textTransform:"uppercase",letterSpacing:0.5}}>Mode d'investissement</div>
                     <div style={{display:"flex",gap:8,marginBottom:12}}>
-                      <button onClick={()=>setFiscalite("celi")}  style={btnStyle(fiscalite==="celi")}>CÉLI (brut)</button>
-                      <button onClick={()=>setFiscalite("impot")} style={btnStyle(fiscalite==="impot")}>Avec impôt</button>
+                      <button onClick={()=>setFiscalite("celi")}  style={btnStyle(fiscalite==="celi")}>Brut</button>
+                      <button onClick={()=>setFiscalite("impot")} style={btnStyle(fiscalite==="impot")}>Net</button>
                     </div>
                     {fiscalite==="celi" && (
                       <div style={{fontSize:12,color:C.gris,lineHeight:1.6,background:C.bleuPale,borderRadius:3,padding:"8px 10px"}}>
@@ -292,8 +292,8 @@
               <div style={{background:"#F5F0FF",border:`1px solid ${C.violet}44`,borderLeft:`4px solid ${C.violet}`,borderRadius:3,padding:"10px 14px",marginBottom:10,fontSize:13,lineHeight:1.6}}>
                 <b style={{color:C.violet}}>💡 Seuil critique — 60 ans + investissement</b>
                 {fiscalite==="celi"
-                  ? <span> : à partir de <b>{seuilAffiche} %</b> annuel (brut, CÉLI), le scénario 60 ans + invest. n'est jamais rattrapé par aucun autre, peu importe l'âge.</span>
-                  : <span> : avec un taux marginal de {tauxImpot} %, le seuil monte à <b>~{seuilAffiche} %</b> annuel. Seul <b>{fmtCAD(investi)}/mois</b> est réellement investi après impôt.</span>
+                  ? <span> : à partir de <b>{seuilAffiche} %</b> annuel (brut), le scénario 60 ans + invest. n'est jamais rattrapé par aucun autre, peu importe l'âge.</span>
+                  : <span> : avec un taux marginal de {tauxImpot} %, le seuil monte à <b>~{seuilAffiche} %</b> annuel. Seul <b>{fmtCAD(investi)}/mois</b> est réellement investi (net).</span>
                 }
               </div>
               {/* Points de bascule */}
@@ -322,7 +322,7 @@
                 {tab==="graphique" ? (
                   <div>
                     <div style={{fontSize:12,color:C.gris,marginBottom:8,paddingLeft:8}}>
-                      Cumul total reçu · mode : <b>{fiscalite==="celi"?"CÉLI (brut)":`Avec impôt ${tauxImpot} %`}</b>
+                      Cumul total reçu · mode : <b>{fiscalite==="celi"?"Brut":`Net — impôt ${tauxImpot} %`}</b>
                     </div>
                     <ResponsiveContainer width="100%" height={420}>
                       <LineChart data={data} margin={{top:5,right:16,left:0,bottom:5}}>
