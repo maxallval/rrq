@@ -222,17 +222,17 @@
               ))}
             </div>
 
-            <div style={{ background: QC.blanc, border: `1px solid ${QC.bordure}`, borderTop: "none", borderRadius: "0 0 4px 4px", padding: tab === "graphique" ? "20px 12px 12px" : 0, overflow: "hidden" }}>
+            <div style={{ background: QC.blanc, border: `1px solid ${QC.bordure}`, borderTop: "none", borderRadius: "0 0 4px 4px", padding: tab === "graphique" ? "16px 0 8px" : 0, overflow: "hidden" }}>
               {tab === "graphique" ? (
                 <>
-                  <div style={{ fontSize: 13, color: QC.gris, marginBottom: 12, paddingLeft: 8 }}>
+                  <div style={{ fontSize: 13, color: QC.gris, marginBottom: 8, paddingLeft: 12 }}>
                     Cumul total reçu selon l'âge de début de la rente (en dollars constants)
                   </div>
-                  <ResponsiveContainer width="100%" height={360}>
-                    <LineChart data={data} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
+                  <ResponsiveContainer width="100%" height={380}>
+                    <LineChart data={data} margin={{ top: 5, right: 8, left: 0, bottom: 5 }}>
                       <CartesianGrid stroke={QC.grisClair} strokeDasharray="3 3" />
                       <XAxis dataKey="age" stroke={QC.gris} tick={{ fontSize: 12 }} label={{ value: "Âge", position: "insideBottomRight", offset: -10, fill: QC.gris, fontSize: 12 }} />
-                      <YAxis tickFormatter={fmtK} stroke={QC.gris} tick={{ fontSize: 11 }} width={72} />
+                      <YAxis tickFormatter={fmtK} stroke={QC.gris} tick={{ fontSize: 10 }} width={58} />
                       <Tooltip content={<CustomTooltip />} />
                       <Legend wrapperStyle={{ fontSize: 13, paddingTop: 10 }} />
                       {be6065 && <ReferenceLine x={be6065} stroke={QC.bleu} strokeDasharray="5 3" label={{ value: `${be6065}a`, fill: QC.bleu, fontSize: 10 }} />}
