@@ -1,738 +1,1118 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RetirePlan QC</title>
-  <style>
-    /* Réinitialisation de base pour correspondre au design system */
-    body {
-      margin: 0;
-      padding: 0;
-      background-color: #F0F4F8;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-    }
-    * {
-      box-sizing: border-box;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RetirePlan QC</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/prop-types@15/prop-types.min.js"></script>
+<script src="https://unpkg.com/recharts@2.12.7/umd/Recharts.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+/* ── Reset ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body, #root { height: 100%; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+       font-size: 14px; color: #0F172A; background: #F1F5F9; }
+input, select, button { font-family: inherit; }
+button { cursor: pointer; }
+input[type="range"] { width: 100%; cursor: pointer; accent-color: #2563EB; }
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
 
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  
-  <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  
-  <script crossorigin src="https://unpkg.com/recharts@2.12.0/umd/Recharts.js"></script>
+/* ── Layout ────────────────────────────────────────── */
+.app    { display: flex; flex-direction: column; height: 100%; }
+.topbar { background: #0F172A; height: 50px; display: flex; align-items: center;
+          padding: 0 20px; gap: 4px; flex-shrink: 0; overflow-x: auto; }
+.main   { flex: 1; overflow-y: auto; padding: 20px;
+          display: flex; flex-direction: column; gap: 16px; }
+
+/* ── Nav ───────────────────────────────────────────── */
+.logo       { font-size: 16px; font-weight: 800; color: #fff; letter-spacing: -.5px;
+              margin-right: 12px; white-space: nowrap; }
+.logo span  { color: #0D9488; font-size: 12px; font-weight: 600; letter-spacing: 0; }
+.tab-btn    { padding: 5px 13px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600;
+              background: transparent; color: rgba(255,255,255,.45); white-space: nowrap; }
+.tab-btn.on { background: rgba(255,255,255,.14); color: #fff; }
+.tag        { margin-left: auto; font-size: 10px; color: rgba(255,255,255,.35); white-space: nowrap; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner    { display: inline-block; width: 10px; height: 10px; margin-right: 5px;
+              border: 2px solid rgba(255,255,255,.25); border-top-color: #F59E0B;
+              border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; }
+
+/* ── Cards ─────────────────────────────────────────── */
+.card       { background: #fff; border-radius: 12px;
+              box-shadow: 0 1px 3px rgba(0,0,0,.07), 0 4px 16px rgba(0,0,0,.04); }
+.card-pad   { padding: 18px; }
+.card-head  { padding: 12px 18px; border-bottom: 1px solid #F1F5F9;
+              font-size: 13px; font-weight: 700;
+              display: flex; justify-content: space-between; align-items: center; }
+.divider    { border: none; border-top: 1px solid #F1F5F9; margin: 6px 0; }
+
+/* ── KPI ───────────────────────────────────────────── */
+.kpi-row    { display: flex; gap: 12px; flex-wrap: wrap; }
+.kpi        { background: #fff; border-radius: 12px;
+              box-shadow: 0 1px 3px rgba(0,0,0,.07), 0 4px 16px rgba(0,0,0,.04);
+              flex: 1 1 140px; padding: 14px 16px; }
+.kpi-lbl    { font-size: 10px; font-weight: 700; color: #64748B;
+              text-transform: uppercase; letter-spacing: .5px; margin-bottom: 5px; }
+.kpi-val    { font-size: 22px; font-weight: 800; line-height: 1.1; margin-bottom: 3px; }
+.kpi-sub    { font-size: 10px; color: #64748B; }
+
+/* ── Section ───────────────────────────────────────── */
+.sec-title  { font-size: 16px; font-weight: 700; }
+
+/* ── Forms ─────────────────────────────────────────── */
+.field      { display: flex; flex-direction: column; gap: 4px; }
+.field-lbl  { font-size: 10px; font-weight: 700; color: #64748B;
+              text-transform: uppercase; letter-spacing: .4px; }
+.field-hint { font-size: 10px; color: #94A3B8; }
+.input      { padding: 8px 11px; border: 2px solid #E2E8F0; border-radius: 8px;
+              font-size: 13px; font-weight: 700; color: #0F172A; outline: none;
+              transition: border-color .15s; width: 100%; background: #fff; }
+.input:focus { border-color: #2563EB; }
+.select     { padding: 8px 10px; border: 2px solid #E2E8F0; border-radius: 8px;
+              font-size: 13px; font-weight: 600; color: #0F172A; background: #fff;
+              outline: none; width: 100%; }
+.irow       { display: flex; align-items: stretch; border: 2px solid #E2E8F0;
+              border-radius: 8px; overflow: hidden; background: #fff; }
+.irow:focus-within { border-color: #2563EB; }
+.irow .pfx  { padding: 0 10px; background: #F8FAFC; border-right: 1px solid #E2E8F0;
+              font-size: 12px; color: #64748B; display: flex; align-items: center; }
+.irow .sfx  { padding: 0 10px; font-size: 12px; color: #64748B; display: flex; align-items: center; }
+.irow input { flex: 1; padding: 8px 10px; border: none; outline: none; font-size: 13px;
+              font-weight: 700; color: #0F172A; background: transparent; min-width: 0; }
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.g4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; }
+
+/* ── Buttons ───────────────────────────────────────── */
+.btn      { padding: 8px 18px; border-radius: 9px; border: none; font-size: 13px; font-weight: 700; }
+.btn:hover { opacity: .88; }
+.btn-sm   { padding: 5px 12px; font-size: 12px; border-radius: 7px; }
+.btn-primary { background: #2563EB; color: #fff; }
+.btn-ghost   { background: transparent; border: 2px solid #E2E8F0; color: #64748B; }
+.btn-danger  { background: #FEF2F2; color: #EF4444; border: 1px solid #FEE2E2; }
+.btn-icon    { padding: 5px 9px; font-size: 13px; border-radius: 7px;
+               border: 1px solid #E2E8F0; background: #fff; }
+
+/* ── Segment ───────────────────────────────────────── */
+.seg      { display: flex; background: #F1F5F9; border-radius: 9px; padding: 3px; gap: 2px; }
+.seg-btn  { flex: 1; padding: 7px 10px; border: none; border-radius: 7px; font-size: 12px;
+            font-weight: 600; background: transparent; color: #64748B; transition: all .15s; }
+.seg-btn.on { background: #fff; color: #0F172A; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+
+/* ── Risk picker ───────────────────────────────────── */
+.risk-btns { display: flex; gap: 8px; }
+.risk-btn  { flex: 1; padding: 10px 8px; border-radius: 9px; border: 2px solid #E2E8F0;
+             background: #fff; font-size: 12px; font-weight: 700;
+             display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.risk-btn small { font-size: 10px; font-weight: 400; opacity: .7; }
+
+/* ── Account cards ─────────────────────────────────── */
+.acct-grid    { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 12px; }
+.acct-card    { background: #fff; border-radius: 13px;
+                box-shadow: 0 1px 3px rgba(0,0,0,.07), 0 4px 16px rgba(0,0,0,.04); overflow: hidden; }
+.acct-stripe  { height: 4px; }
+.acct-body    { padding: 14px; }
+.acct-hdr     { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.acct-title   { display: flex; align-items: center; gap: 9px; }
+.acct-actions { display: flex; gap: 5px; }
+.acct-stats   { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+.acct-stat    { background: #F8FAFC; border-radius: 8px; padding: 7px 10px; }
+.stat-lbl     { font-size: 9px; font-weight: 700; color: #94A3B8; text-transform: uppercase;
+                letter-spacing: .4px; margin-bottom: 2px; }
+.stat-val     { font-size: 13px; font-weight: 700; }
+.acct-badge   { padding: 5px 10px; border-radius: 7px; font-size: 10px; font-weight: 700; }
+
+/* ── Modal ─────────────────────────────────────────── */
+.overlay    { position: fixed; inset: 0; background: rgba(15,23,42,.65); z-index: 999;
+              display: flex; align-items: center; justify-content: center; padding: 16px; }
+.modal      { background: #fff; border-radius: 16px; width: 100%; max-width: 520px;
+              max-height: 92vh; overflow-y: auto;
+              box-shadow: 0 24px 64px rgba(0,0,0,.25); }
+.modal-head { padding: 14px 18px; display: flex; justify-content: space-between; align-items: center;
+              border-bottom: 1px solid #F1F5F9; font-size: 15px; font-weight: 700; }
+.modal-body { padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+.modal-foot { padding: 13px 18px; border-top: 1px solid #F1F5F9;
+              display: flex; justify-content: flex-end; gap: 8px; }
+.modal-x    { border: none; background: none; font-size: 22px; color: #94A3B8; line-height: 1; }
+
+/* ── Withdrawal row ────────────────────────────────── */
+.w-row { display: flex; flex-wrap: wrap; gap: 9px; align-items: flex-end;
+         padding: 12px; border: 1px solid #E2E8F0; border-radius: 10px;
+         margin-bottom: 8px; background: #FAFBFC; }
+
+/* ── Alerts ────────────────────────────────────────── */
+.alert        { padding: 10px 14px; border-radius: 9px; font-size: 12px; line-height: 1.6;
+                display: flex; gap: 8px; align-items: flex-start; }
+.alert-info   { background: #EFF6FF; border-left: 3px solid #2563EB; }
+.alert-warn   { background: #FFFBEB; border-left: 3px solid #F59E0B; }
+.alert-danger { background: #FEF2F2; border-left: 3px solid #EF4444; }
+
+/* ── Info boxes ────────────────────────────────────── */
+.info-box  { padding: 10px 14px; border-radius: 9px; font-size: 11px; line-height: 1.65; }
+.info-blue { background: #EFF6FF; color: #2563EB; }
+.info-muted{ background: #F8FAFC; color: #64748B; }
+
+/* ── Chart legend ──────────────────────────────────── */
+.legend      { display: flex; gap: 14px; flex-wrap: wrap; padding: 8px 18px 12px;
+               font-size: 11px; color: #64748B; }
+.li          { display: flex; align-items: center; gap: 5px; }
+.ll          { width: 20px; height: 2.5px; border-radius: 2px; flex-shrink: 0; }
+.la          { width: 14px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+
+/* ── Gauge ─────────────────────────────────────────── */
+.gauge { text-align: center; }
+
+/* ── Range ─────────────────────────────────────────── */
+.rl { display: flex; justify-content: space-between; font-size: 10px; color: #94A3B8; margin-top: 2px; }
+
+/* ── One-time row ──────────────────────────────────── */
+.ot-row { display: flex; gap: 8px; align-items: flex-end; margin-bottom: 6px; }
+</style>
 </head>
 <body>
-  <div id="root"></div>
+<div id="root"></div>
+<script type="text/babel">
+/* ── Destructure globals ─────────────────────────────────────────────────── */
+const { useState, useMemo, useEffect } = React;
+const { ComposedChart, Area, Line, XAxis, YAxis,
+        CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } = Recharts;
 
-  <script type="text/babel">
-    const { useState, useMemo, useEffect, useCallback } = React;
-    const { ComposedChart, AreaChart, Area, LineChart, Line, XAxis, YAxis,
-            CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } = Recharts;
+/* ── Config ──────────────────────────────────────────────────────────────── */
+const CLR = {
+  navy:'#0F172A', blue:'#2563EB', teal:'#0D9488', green:'#10B981',
+  amber:'#F59E0B', red:'#EF4444', purple:'#7C3AED', muted:'#64748B',
+};
 
-    // ── DESIGN SYSTEM ────────────────────────────────────────
-    const C = {
-      bg:'#F0F4F8', card:'#FFFFFF', navy:'#0F172A', blue:'#2563EB',
-      teal:'#0D9488', green:'#10B981', amber:'#F59E0B', red:'#EF4444',
-      purple:'#7C3AED', muted:'#64748B', border:'#E2E8F0',
-      sh:'0 1px 3px rgba(0,0,0,.08),0 4px 16px rgba(0,0,0,.04)',
-      shHover:'0 4px 12px rgba(0,0,0,.12)',
-    };
+const ACCT_TYPES = {
+  REER:   { label:'REER',           icon:'🏦', color:'#2563EB', tax:'Déductible · Imposable au retrait' },
+  CELI:   { label:'CÉLI',           icon:'🌱', color:'#10B981', tax:'Retraits libres d\'impôt' },
+  NONREG: { label:'Non enregistré', icon:'📈', color:'#F59E0B', tax:'50 % des gains en capital imposables' },
+  IMMO:   { label:'Immobilier',     icon:'🏠', color:'#7C3AED', tax:'Valeur nette estimée' },
+  AUTRE:  { label:'Autre actif',    icon:'💼', color:'#64748B', tax:'Actif personnalisé' },
+};
 
-    // ── CONSTANTS ────────────────────────────────────────────
-    const ACCT_DEF = {
-      REER:   {label:'REER',           icon:'🏦', color:'#2563EB', tax:'Déductible · Imposable au retrait'},
-      CELI:   {label:'CÉLI',           icon:'🌱', color:'#10B981', tax:'Libre d\'impôt'},
-      NONREG: {label:'Non enregistré', icon:'📈', color:'#F59E0B', tax:'Gains en capital imposables'},
-      IMMO:   {label:'Immobilier',     icon:'🏠', color:'#7C3AED', tax:'Valeur nette estimée'},
-      AUTRE:  {label:'Autre actif',    icon:'💼', color:'#64748B', tax:'Actif personnalisé'},
-    };
+const RISK = {
+  low:    { label:'Faible',  vol:.05, color:'#10B981' },
+  medium: { label:'Modéré',  vol:.12, color:'#F59E0B' },
+  high:   { label:'Élevé',   vol:.20, color:'#EF4444' },
+};
 
-    const RISKS = {
-      low:   {label:'Faible',  vol:.05, color:C.green},
-      medium:{label:'Modéré',  vol:.12, color:C.amber},
-      high:  {label:'Élevé',   vol:.20, color:C.red},
-    };
+const STRAT = {
+  'celi-first': { label:'CÉLI d\'abord',  order:['CELI','NONREG','REER','IMMO','AUTRE'] },
+  'reer-first': { label:'REER d\'abord',  order:['REER','NONREG','CELI','IMMO','AUTRE'] },
+  'balanced':   { label:'Proportionnel',  order:null },
+};
 
-    const STRATS = {
-      'celi-first': {label:'CÉLI d\'abord',   order:['CELI','NONREG','REER','IMMO','AUTRE']},
-      'reer-first': {label:'REER d\'abord',   order:['REER','NONREG','CELI','IMMO','AUTRE']},
-      'balanced':   {label:'Proportionnel',   order:null},
-    };
+const uid = () => Math.random().toString(36).slice(2,8);
 
-    const uid = () => Math.random().toString(36).slice(2,8);
+/* ── Helpers ─────────────────────────────────────────────────────────────── */
+const fmtK = v => {
+  if (!isFinite(v) || isNaN(v)) return '—';
+  const a = Math.abs(v);
+  if (a >= 1e6) return (v/1e6).toFixed(1) + 'M$';
+  if (a >= 1e3) return (v/1e3).toFixed(0) + 'k$';
+  return Math.round(v) + '$';
+};
 
-    const DEF_ACCOUNTS = [
-      {id:uid(),name:'REER',   type:'REER',   balance:50000, contribAmt:10000,contribFreq:'annual',contribStart:25,contribEnd:65,oneTime:[],rate:6,risk:'medium'},
-      {id:uid(),name:'CÉLI',   type:'CELI',   balance:20000, contribAmt:6000, contribFreq:'annual',contribStart:25,contribEnd:65,oneTime:[],rate:5,risk:'low'},
-    ];
-    const DEF_WITHDRAWALS = [{id:uid(),startAge:65,endAge:100,amount:45000,type:'fixed'}];
-    const DEF_PARAMS = {ageFrom:25,ageTo:95,inflation:2.5,salary:80000,ageRRQ:65,ageSV:65,ageSRG:60,strategy:'celi-first'};
+/* ── Financial math ──────────────────────────────────────────────────────── */
+const randNorm = () => {
+  let u = 0, v = 0;
+  while (!u) u = Math.random();
+  while (!v) v = Math.random();
+  return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+};
 
-    // ── MATH ────────────────────────────────────────────────
-    function randNorm(){
-      let u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();
-      return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);
+const calcRRQ = (age, startAge, salary) => {
+  if (age < startAge) return 0;
+  let b = Math.min(salary * 0.25, 15888);
+  const d = startAge - 65;
+  if (d < 0) b *= (1 + d * 0.054);
+  else if (d > 0) b *= (1 + Math.min(d, 7) * 0.042);
+  return b;
+};
+
+const calcSV = (age, startAge) => {
+  if (age < startAge) return 0;
+  return 8000 * (1 + 0.072 * Math.max(0, startAge - 65));
+};
+
+const calcSRG = (age, svAge, srgAge, income, sv) => {
+  if (age < svAge || age < srgAge) return 0;
+  return Math.max(0, 12000 - Math.max(0, income - sv) * 0.5);
+};
+
+const calcTax = income => {
+  if (income <= 0) return 0;
+  const fb = [55867, 111733, 173205], fr = [.15, .205, .26, .33];
+  const qb = [49275, 98540, 119910],  qr = [.15, .20, .2575, .2975];
+  let tax = 0, p = 0;
+  for (let i = 0; i < 4; i++) {
+    const lim = i < fb.length ? fb[i] : income + 1;
+    tax += Math.max(0, Math.min(income, lim) - p) * fr[i];
+    p = lim; if (income <= lim) break;
+  }
+  p = 0;
+  for (let i = 0; i < 4; i++) {
+    const lim = i < qb.length ? qb[i] : income + 1;
+    tax += Math.max(0, Math.min(income, lim) - p) * qr[i];
+    p = lim; if (income <= lim) break;
+  }
+  return Math.max(0, tax - 0.30 * 15705);
+};
+
+/* ── Simulation ──────────────────────────────────────────────────────────── */
+function buildOrder(strategy, accounts) {
+  const order = STRAT[strategy]?.order;
+  if (!order) return accounts.map(a => a.id);
+  const byType = {};
+  accounts.forEach(a => (byType[a.type] = byType[a.type] || []).push(a.id));
+  const ids = [];
+  order.forEach(t => (byType[t] || []).forEach(id => ids.push(id)));
+  accounts.forEach(a => { if (!ids.includes(a.id)) ids.push(a.id); });
+  return ids;
+}
+
+function runSim(accounts, withdrawals, params, shocks) {
+  if (!accounts.length) return [];
+  const { ageFrom, ageTo, salary, ageRRQ, ageSV, ageSRG, strategy } = params;
+  const bal = {};
+  accounts.forEach(a => (bal[a.id] = a.balance));
+  const pids = buildOrder(strategy, accounts);
+  const rows = [];
+
+  for (let age = ageFrom; age <= ageTo; age++) {
+    const yr = age - ageFrom;
+
+    // Growth
+    accounts.forEach(a => {
+      const shock = shocks ? (shocks[a.id] ? shocks[a.id][yr] || 0 : 0) : 0;
+      bal[a.id] = Math.max(0, bal[a.id] * (1 + a.rate / 100 + shock));
+    });
+    // Recurring contribs
+    accounts.forEach(a => {
+      if (age < a.contribStart || age > a.contribEnd) return;
+      bal[a.id] += a.contribFreq === 'monthly' ? a.contribAmt * 12 : a.contribAmt;
+    });
+    // One-time
+    accounts.forEach(a => (a.oneTime || []).forEach(ot => {
+      if (ot.age === age) bal[a.id] += ot.amount;
+    }));
+
+    const totalBefore = Object.values(bal).reduce((s, v) => s + v, 0);
+
+    // Government
+    const rrq = calcRRQ(age, ageRRQ, salary);
+    const sv  = calcSV(age, ageSV);
+    const srg = calcSRG(age, ageSV, ageSRG, 0, sv);
+    const gov = rrq + sv + srg;
+
+    // Withdrawals
+    let needed = 0;
+    withdrawals.forEach(w => {
+      if (age < w.startAge || age > w.endAge) return;
+      needed += w.type === 'fixed' ? w.amount : totalBefore * (w.amount / 100);
+    });
+
+    // Decumulation
+    let fromPort = Math.max(0, needed - gov);
+    if (STRAT[strategy]?.order) {
+      pids.forEach(id => {
+        if (fromPort <= 0) return;
+        const take = Math.min(bal[id] || 0, fromPort);
+        bal[id] -= take; fromPort -= take;
+      });
+    } else {
+      const total = Object.values(bal).reduce((s, v) => s + v, 0) || 1;
+      accounts.forEach(a => {
+        bal[a.id] = Math.max(0, bal[a.id] - (bal[a.id] / total) * fromPort);
+      });
     }
-    function fmtK(v,d=0){
-      if(!isFinite(v)||isNaN(v))return'—';
-      if(Math.abs(v)>=1e6)return(v/1e6).toFixed(1)+'M$';
-      if(Math.abs(v)>=1000)return(v/1000).toFixed(d)+'k$';
-      return Math.round(v)+'$';
-    }
-    function fmtCAD(v){return Math.round(v).toLocaleString('fr-CA')+' $';}
 
-    function calcRRQ(age,aR,sal){
-      if(age<aR)return 0;
-      let b=Math.min(sal*.25,15888),d=aR-65;
-      if(d<0)b*=(1+d*.054);else if(d>0)b*=(1+Math.min(d,7)*.042);
-      return b;
-    }
-    function calcSV(age,aSV){
-      if(age<aSV)return 0;
-      return 8000*(1+.072*Math.max(0,aSV-65));
-    }
-    function calcSRG(age,aSV,aSRG,inc,sv){
-      if(age<aSV||age<aSRG)return 0;
-      return Math.max(0,12000-Math.max(0,inc-sv)*.5);
-    }
-    function calcTax(inc){
-      if(inc<=0)return 0;
-      const f=[55867,111733,173205],fr=[.15,.205,.26,.33];
-      const q=[49275,98540,119910],qr=[.15,.20,.2575,.2975];
-      let t=0,p=0;
-      for(let i=0;i<4;i++){const l=i<f.length?f[i]:inc+1,x=Math.min(inc,l)-p;t+=Math.max(0,x)*fr[i];p=l;if(inc<=l)break;}
-      p=0;
-      for(let i=0;i<4;i++){const l=i<q.length?q[i]:inc+1,x=Math.min(inc,l)-p;t+=Math.max(0,x)*qr[i];p=l;if(inc<=l)break;}
-      return Math.max(0,t-.3*15705);
-    }
+    const totalBal = Math.round(Object.values(bal).reduce((s, v) => s + v, 0));
+    const tax = Math.round(calcTax(Math.max(0, needed - gov)));
 
-    // ── SIMULATION ──────────────────────────────────────────
-    function getPriorityIds(strategy,accounts){
-      const order=STRATS[strategy]?.order;
-      if(!order)return accounts.map(a=>a.id);
-      const byType={};
-      accounts.forEach(a=>{if(!byType[a.type])byType[a.type]=[];byType[a.type].push(a.id);});
-      const ids=[];
-      order.forEach(t=>{if(byType[t])ids.push(...byType[t]);});
-      accounts.forEach(a=>{if(!ids.includes(a.id))ids.push(a.id);});
-      return ids;
-    }
+    rows.push({ age, totalBalance: totalBal, rrq, sv, srg, gov,
+                withdrawal: needed, tax, net: Math.round(needed + gov - tax) });
 
-    function runSim(accounts,withdrawals,params,shocks=null){
-      if(!accounts.length)return[];
-      const {ageFrom,ageTo,salary,ageRRQ,ageSV,ageSRG,strategy}=params;
-      const bals={};accounts.forEach(a=>bals[a.id]=a.balance);
-      const pids=getPriorityIds(strategy,accounts);
-      const results=[];
-
-      for(let age=ageFrom;age<=ageTo;age++){
-        const yr=age-ageFrom;
-        // Growth
-        accounts.forEach(a=>{
-          const r=(a.rate/100)+(shocks?(shocks[a.id]?.[yr]??0):0);
-          bals[a.id]=Math.max(0,bals[a.id]*(1+r));
-        });
-        // Recurring contribs
-        accounts.forEach(a=>{
-          if(age<a.contribStart||age>a.contribEnd)return;
-          bals[a.id]+=(a.contribFreq==='monthly'?a.contribAmt*12:a.contribAmt);
-        });
-        // One-time contribs
-        accounts.forEach(a=>(a.oneTime||[]).forEach(ot=>{if(ot.age===age)bals[a.id]+=ot.amount;}));
-
-        const rrq=calcRRQ(age,ageRRQ,salary);
-        const sv=calcSV(age,ageSV);
-        const srg=calcSRG(age,ageSV,ageSRG,0,sv);
-        const gov=rrq+sv+srg;
-        const total=Object.values(bals).reduce((s,v)=>s+v,0);
-
-        let needed=0;
-        withdrawals.forEach(w=>{
-          if(age<w.startAge||age>w.endAge)return;
-          needed+=w.type==='fixed'?w.amount:total*(w.amount/100);
-        });
-
-        let fromPort=Math.max(0,needed-gov);
-        if(STRATS[strategy]?.order){
-          for(const id of pids){if(fromPort<=0)break;const t=Math.min(bals[id]||0,fromPort);bals[id]-=t;fromPort-=t;}
-        } else {
-          const tt=Object.values(bals).reduce((s,v)=>s+v,0)||1;
-          accounts.forEach(a=>{const sh=(bals[a.id]/tt)*fromPort;bals[a.id]=Math.max(0,bals[a.id]-sh);});
-        }
-
-        const totalBal=Object.values(bals).reduce((s,v)=>s+v,0);
-        const tax=needed>gov?calcTax(Math.max(0,needed-gov)):0;
-        results.push({age,totalBalance:Math.round(totalBal),gov,rrq,sv,srg,withdrawal:needed,tax:Math.round(tax),net:Math.round(needed+gov-tax),balances:{...bals}});
-        if(totalBal<=0){for(let a2=age+1;a2<=ageTo;a2++)results.push({age:a2,totalBalance:0,gov,rrq,sv,srg,withdrawal:needed,tax:0,net:0,balances:{}});break;}
+    if (totalBal <= 0) {
+      for (let a2 = age + 1; a2 <= ageTo; a2++) {
+        rows.push({ age: a2, totalBalance: 0, rrq, sv, srg, gov,
+                    withdrawal: needed, tax: 0, net: 0 });
       }
-      return results;
+      break;
     }
+  }
+  return rows;
+}
 
-    function runMC(accounts,withdrawals,params,N=180){
-      if(!accounts.length)return null;
-      const runs=[];let ok=0;
-      for(let i=0;i<N;i++){
-        const sh={};
-        accounts.forEach(a=>{
-          const vol=RISKS[a.risk]?.vol||.12;sh[a.id]={};
-          for(let y=0;y<=(params.ageTo-params.ageFrom+1);y++)sh[a.id][y]=randNorm()*vol;
-        });
-        const res=runSim(accounts,withdrawals,params,sh);
-        runs.push(res);
-        if((res[res.length-1]?.totalBalance||0)>0)ok++;
+function runMC(accounts, withdrawals, params, N = 200) {
+  if (!accounts.length) return null;
+  const runs = [];
+  let ok = 0;
+
+  for (let i = 0; i < N; i++) {
+    const shocks = {};
+    accounts.forEach(a => {
+      const vol = RISK[a.risk]?.vol || .12;
+      shocks[a.id] = {};
+      for (let y = 0; y <= params.ageTo - params.ageFrom + 1; y++) {
+        shocks[a.id][y] = randNorm() * vol;
       }
-      const len=runs[0]?.length||0;
-      const chartData=[];
-      for(let i=0;i<len;i++){
-        const vals=runs.map(r=>r[i]?.totalBalance||0).sort((a,b)=>a-b);
-        const p=(f)=>Math.max(0,vals[Math.floor(N*f)]||0);
-        const p10=p(.10),p25=p(.25),p50=p(.50),p75=p(.75),p90=p(.90);
-        chartData.push({age:runs[0][i].age,p10,p25,p50,p75,p90,
-          b1:Math.max(0,p25-p10),b2:Math.max(0,p75-p25),b3:Math.max(0,p90-p75)});
-      }
-      return {chartData,successRate:Math.round(ok/N*100),N};
-    }
+    });
+    const res = runSim(accounts, withdrawals, params, shocks);
+    runs.push(res);
+    if ((res[res.length - 1]?.totalBalance || 0) > 0) ok++;
+  }
 
-    function getSuggestions(sim,params,accounts,mc){
-      const s=[];if(!sim.length)return s;
-      const sr=mc?.successRate??100;
-      const hasRRQ=accounts.some(a=>a.type==='REER');
-      const hasCELI=accounts.some(a=>a.type==='CELI');
-      const avgRate=accounts.reduce((s,a)=>s+a.rate,0)/Math.max(accounts.length,1);
-      if(sr<70)s.push({lvl:'danger', icon:'🚨', txt:`Probabilité de succès à ${sr} %. Augmenter les contributions de 10–15 % ou réduire les retraits planifiés.`});
-      else if(sr<85)s.push({lvl:'warning',icon:'⚠️', txt:`Probabilité ${sr} %. Ajouter 5 000 $/an dans le CÉLI améliorerait considérablement ta retraite.`});
-      if(!hasCELI)s.push({lvl:'info',   icon:'🌱', txt:'Aucun CÉLI détecté. Un CÉLI est fiscalement optimal : les retraits sont totalement libres d\'impôt.'});
-      if(params.ageRRQ<65)s.push({lvl:'info',icon:'🕐',txt:`RRQ à ${params.ageRRQ} ans = pénalité permanente de ${((65-params.ageRRQ)*5.4).toFixed(0)} %. Attendre 65 ans, ou idéalement 70 ans (+42 %).`});
-      if(avgRate<4&&accounts.length)s.push({lvl:'info',icon:'📈',txt:`Rendement moyen de ${avgRate.toFixed(1)} %/an. Des FNB diversifiés ciblent historiquement 6–8 % sur le long terme.`});
-      return s.slice(0,3);
-    }
+  const len = runs[0]?.length || 0;
+  const chartData = [];
+  for (let i = 0; i < len; i++) {
+    const vals = runs.map(r => r[i]?.totalBalance || 0).sort((a, b) => a - b);
+    const p = f => Math.max(0, vals[Math.floor(N * f)] || 0);
+    const [p10, p25, p50, p75, p90] = [.10,.25,.50,.75,.90].map(p);
+    chartData.push({
+      age: runs[0][i].age, p10, p50, p90,
+      b0: p10,
+      b1: Math.max(0, p25 - p10),
+      b2: Math.max(0, p75 - p25),
+      b3: Math.max(0, p90 - p75),
+    });
+  }
 
-    // ── MICRO COMPONENTS ─────────────────────────────────────
-    const Lbl = ({children}) => <div style={{fontSize:10,fontWeight:700,color:C.muted,textTransform:'uppercase',letterSpacing:.5,marginBottom:4}}>{children}</div>;
+  return { chartData, successRate: Math.round(ok / N * 100), N };
+}
 
-    function KPI({label,value,sub,color}){
-      return(
-        <div style={{background:C.card,borderRadius:12,padding:'15px 18px',boxShadow:C.sh,flex:1,minWidth:130}}>
-          <Lbl>{label}</Lbl>
-          <div style={{fontSize:22,fontWeight:800,color:color||C.navy,lineHeight:1.1,marginBottom:4}}>{value}</div>
-          {sub&&<div style={{fontSize:11,color:C.muted}}>{sub}</div>}
+function getSuggestions(sim, params, accounts, mc) {
+  const tips = [];
+  const sr = mc ? mc.successRate : 100;
+  const avgRate = accounts.length
+    ? accounts.reduce((s, a) => s + a.rate, 0) / accounts.length : 0;
+
+  if (sr < 70)
+    tips.push({ level:'danger', icon:'🚨',
+      text: `Probabilité de succès à ${sr}%. Augmentez les contributions ou réduisez les retraits.` });
+  else if (sr < 85)
+    tips.push({ level:'warn', icon:'⚠️',
+      text: `Probabilité ${sr}%. Ajouter 5 000$/an dans le CÉLI améliorerait votre retraite.` });
+
+  if (!accounts.some(a => a.type === 'CELI'))
+    tips.push({ level:'info', icon:'🌱',
+      text: 'Aucun CÉLI détecté. Les retraits y sont totalement libres d\'impôt.' });
+
+  if (params.ageRRQ < 65)
+    tips.push({ level:'info', icon:'🕐',
+      text: `RRQ à ${params.ageRRQ} ans = pénalité de ${((65 - params.ageRRQ) * 5.4).toFixed(0)}%. Attendre 70 ans ajoute 42%.` });
+
+  if (accounts.length && avgRate < 4)
+    tips.push({ level:'info', icon:'📈',
+      text: `Rendement moyen ${avgRate.toFixed(1)}%/an. Des FNB diversifiés ciblent 6–8% sur 20+ ans.` });
+
+  return tips.slice(0, 3);
+}
+
+/* ── Default data ────────────────────────────────────────────────────────── */
+const DEF_ACCOUNTS = [
+  { id:uid(), name:'REER', type:'REER', balance:50000,
+    contribAmt:10000, contribFreq:'annual', contribStart:25, contribEnd:65,
+    oneTime:[], rate:6, risk:'medium' },
+  { id:uid(), name:'CÉLI', type:'CELI', balance:20000,
+    contribAmt:6000,  contribFreq:'annual', contribStart:25, contribEnd:65,
+    oneTime:[], rate:5, risk:'low' },
+];
+const DEF_WITHDRAWALS = [{ id:uid(), startAge:65, endAge:100, amount:45000, type:'fixed' }];
+const DEF_PARAMS = {
+  ageFrom:25, ageTo:95, salary:80000,
+  ageRRQ:65, ageSV:65, ageSRG:60, strategy:'celi-first',
+};
+
+/* ── Micro components ────────────────────────────────────────────────────── */
+function KPI({ label, value, sub, color }) {
+  return (
+    <div className="kpi">
+      <div className="kpi-lbl">{label}</div>
+      <div className="kpi-val" style={{ color: color || CLR.navy }}>{value}</div>
+      {sub && <div className="kpi-sub">{sub}</div>}
+    </div>
+  );
+}
+
+function Field({ label, hint, children }) {
+  return (
+    <div className="field">
+      {label && <div className="field-lbl">{label}</div>}
+      {children}
+      {hint && <div className="field-hint">{hint}</div>}
+    </div>
+  );
+}
+
+function NumInput({ value, onChange, prefix, suffix, min, max, step = 1 }) {
+  return (
+    <div className="irow">
+      {prefix && <span className="pfx">{prefix}</span>}
+      <input type="number" value={value} min={min} max={max} step={step}
+        onChange={e => onChange(+e.target.value)} />
+      {suffix && <span className="sfx">{suffix}</span>}
+    </div>
+  );
+}
+
+function Gauge({ pct }) {
+  const color = pct >= 80 ? CLR.green : pct >= 65 ? CLR.amber : CLR.red;
+  const arc   = Math.min(1, pct / 100) * 157;
+  const lbl   = pct >= 80 ? 'Excellent' : pct >= 70 ? 'Bon' : pct >= 60 ? 'À améliorer' : 'Risqué';
+  return (
+    <div className="gauge">
+      <svg width="140" height="82" viewBox="0 0 140 82">
+        <path d="M18,70 A56,56,0,0,1,122,70" stroke="#E2E8F0" strokeWidth="12" fill="none" strokeLinecap="round"/>
+        <path d="M18,70 A56,56,0,0,1,122,70" stroke={color} strokeWidth="12" fill="none"
+          strokeLinecap="round" strokeDasharray={`${arc} 210`}/>
+        <text x="70" y="68" textAnchor="middle" fontSize="22" fontWeight="800" fill={color}>{pct}%</text>
+        <text x="70" y="80" textAnchor="middle" fontSize="11" fill={CLR.muted}>{lbl}</text>
+      </svg>
+    </div>
+  );
+}
+
+function ChartTip({ active, payload, label }) {
+  if (!active || !payload || !payload.length) return null;
+  const get = key => { const p = payload.find(x => x.dataKey === key); return p ? p.value : null; };
+  const entries = [
+    { key:'base', lbl:'Base',     color: CLR.blue   },
+    { key:'p50',  lbl:'Médiane',  color: CLR.purple  },
+    { key:'p10',  lbl:'P10',      color: CLR.red     },
+    { key:'p90',  lbl:'P90',      color: CLR.green   },
+  ].filter(e => get(e.key) != null);
+  return (
+    <div style={{ background:'#fff', border:'1px solid #E2E8F0', borderRadius:10,
+                  padding:'10px 14px', fontSize:12, boxShadow:'0 4px 16px rgba(0,0,0,.1)', minWidth:150 }}>
+      <div style={{ fontWeight:700, fontSize:13, color:CLR.navy, marginBottom:6,
+                    paddingBottom:5, borderBottom:'1px solid #F1F5F9' }}>{label} ans</div>
+      {entries.map(({ key, lbl, color }) => (
+        <div key={key} style={{ display:'flex', justifyContent:'space-between', gap:14, marginBottom:3 }}>
+          <span style={{ color:CLR.muted }}>{lbl}</span>
+          <b style={{ color }}>{fmtK(get(key))}</b>
         </div>
-      );
-    }
+      ))}
+    </div>
+  );
+}
 
-    function Gauge({pct}){
-      const color=pct>=80?C.green:pct>=65?C.amber:C.red;
-      const lbl=pct>=80?'Excellent':pct>=70?'Bon':pct>=60?'À améliorer':'Risqué';
-      const arc=Math.min(1,pct/100)*157;
-      return(
-        <div style={{textAlign:'center'}}>
-          <svg width="130" height="76" viewBox="0 0 130 76">
-            <path d="M14,66 A52,52,0,0,1,116,66" stroke={C.border} strokeWidth="11" fill="none" strokeLinecap="round"/>
-            <path d="M14,66 A52,52,0,0,1,116,66" stroke={color} strokeWidth="11" fill="none" strokeLinecap="round" strokeDasharray={`${arc} 200`}/>
-            <text x="65" y="64" textAnchor="middle" fontSize="22" fontWeight="800" fill={color}>{pct}%</text>
-            <text x="65" y="76" textAnchor="middle" fontSize="11" fill={C.muted}>{lbl}</text>
-          </svg>
+/* ── Account Modal ───────────────────────────────────────────────────────── */
+function AcctModal({ acct, onSave, onClose }) {
+  const [f, setF] = useState({ ...acct });
+  const set = (k, v) => setF(p => ({ ...p, [k]: v }));
+  const def = ACCT_TYPES[f.type] || ACCT_TYPES.AUTRE;
+
+  const addOneTime = () => set('oneTime', [...(f.oneTime || []), { id:uid(), age:35, amount:10000 }]);
+  const updOneTime = (i, k, v) => {
+    const arr = [...(f.oneTime || [])];
+    arr[i] = { ...arr[i], [k]: v };
+    set('oneTime', arr);
+  };
+  const delOneTime = i => set('oneTime', (f.oneTime || []).filter((_, j) => j !== i));
+
+  return (
+    <div className="overlay" onClick={e => e.target === e.currentTarget && onClose()}>
+      <div className="modal">
+        <div style={{ height:5, background:def.color, borderRadius:'16px 16px 0 0' }}/>
+        <div className="modal-head">
+          <span>{def.icon}&nbsp; Configurer le placement</span>
+          <button className="modal-x" onClick={onClose}>×</button>
         </div>
-      );
-    }
+        <div className="modal-body">
 
-    function Tip({active,payload,label}){
-      if(!active||!payload?.length)return null;
-      const items=payload.filter(p=>!['b1','b2','b3','p10','base'].includes(p.dataKey)||p.dataKey==='base');
-      const base=payload.find(p=>p.dataKey==='base');
-      const p10r=payload.find(p=>p.dataKey==='p10');
-      const p50r=payload.find(p=>p.dataKey==='p50');
-      const p90r=payload.find(p=>p.dataKey==='p90')||(payload.find(p=>p.dataKey==='b3'));
-      return(
-        <div style={{background:C.card,border:`1px solid ${C.border}`,borderRadius:10,padding:'11px 15px',fontSize:12,boxShadow:C.sh,minWidth:160}}>
-          <div style={{fontWeight:700,color:C.navy,marginBottom:7,fontSize:13,paddingBottom:5,borderBottom:`1px solid ${C.border}`}}>{label} ans</div>
-          {base&&<div style={{display:'flex',justifyContent:'space-between',gap:14,marginBottom:3}}><span style={{color:C.muted}}>Base</span><b style={{color:C.blue}}>{fmtK(base.value)}</b></div>}
-          {p10r&&<div style={{display:'flex',justifyContent:'space-between',gap:14,marginBottom:3}}><span style={{color:C.muted}}>P10</span><b style={{color:C.red}}>{fmtK(p10r.value)}</b></div>}
-          {p50r&&<div style={{display:'flex',justifyContent:'space-between',gap:14,marginBottom:3}}><span style={{color:C.muted}}>Médiane</span><b style={{color:C.blue}}>{fmtK(p50r.value)}</b></div>}
-        </div>
-      );
-    }
-
-    function Input({label,value,onChange,type='number',min,max,step=1,suffix,prefix}){
-      return(
-        <div>
-          {label&&<Lbl>{label}</Lbl>}
-          <div style={{display:'flex',alignItems:'center',border:`2px solid ${C.border}`,borderRadius:8,overflow:'hidden',background:C.card}}>
-            {prefix&&<span style={{padding:'0 8px',color:C.muted,fontSize:12,background:C.bg,borderRight:`1px solid ${C.border}`,alignSelf:'stretch',display:'flex',alignItems:'center'}}>{prefix}</span>}
-            <input type={type} value={value} onChange={e=>onChange(type==='number'?+e.target.value:e.target.value)} min={min} max={max} step={step}
-              style={{flex:1,padding:'8px 10px',border:'none',outline:'none',fontSize:13,fontWeight:700,color:C.navy,background:'transparent'}}/>
-            {suffix&&<span style={{padding:'0 8px',color:C.muted,fontSize:12}}>{suffix}</span>}
+          <div className="g2">
+            <Field label="Nom">
+              <input className="input" type="text" value={f.name}
+                onChange={e => set('name', e.target.value)}/>
+            </Field>
+            <Field label="Type">
+              <select className="select" value={f.type} onChange={e => set('type', e.target.value)}>
+                {Object.entries(ACCT_TYPES).map(([k, v]) =>
+                  <option key={k} value={k}>{v.icon} {v.label}</option>
+                )}
+              </select>
+            </Field>
           </div>
-        </div>
-      );
-    }
 
-    function Seg({options,value,onChange}){
-      return(
-        <div style={{display:'flex',background:C.bg,borderRadius:8,padding:3,gap:2}}>
-          {options.map(o=>(
-            <button key={o.value} onClick={()=>onChange(o.value)} style={{
-              flex:1,padding:'6px 10px',border:'none',borderRadius:6,cursor:'pointer',fontSize:12,fontWeight:600,
-              background:value===o.value?C.card:'transparent',
-              color:value===o.value?C.navy:C.muted,
-              boxShadow:value===o.value?C.sh:'none',transition:'all .15s',
-            }}>{o.label}</button>
-          ))}
-        </div>
-      );
-    }
-
-    // ── ACCOUNT MODAL ────────────────────────────────────────
-    function AccountModal({acct,onSave,onClose}){
-      const [f,setF]=useState({...acct});
-      const set=(k,v)=>setF(p=>({...p,[k]:v}));
-      const addOT=()=>set('oneTime',[...(f.oneTime||[]),{id:uid(),age:35,amount:10000}]);
-      const updOT=(i,k,v)=>{const a=[...(f.oneTime||[])];a[i]={...a[i],[k]:v};set('oneTime',a);};
-      const delOT=i=>set('oneTime',(f.oneTime||[]).filter((_,j)=>j!==i));
-      const def=ACCT_DEF[f.type]||ACCT_DEF.AUTRE;
-
-      return(
-        <div style={{position:'fixed',inset:0,background:'rgba(15,23,42,.6)',display:'flex',alignItems:'center',justifyContent:'center',zIndex:1000,padding:20}}>
-          <div style={{background:C.card,borderRadius:16,width:'100%',maxWidth:500,maxHeight:'92vh',overflow:'auto',boxShadow:'0 24px 64px rgba(0,0,0,.25)'}}>
-            <div style={{height:5,background:def.color,borderRadius:'16px 16px 0 0'}}/>
-            <div style={{padding:'16px 20px',display:'flex',justifyContent:'space-between',alignItems:'center',borderBottom:`1px solid ${C.border}`}}>
-              <div style={{fontWeight:700,fontSize:15,display:'flex',alignItems:'center',gap:8}}><span style={{fontSize:20}}>{def.icon}</span>Configurer le placement</div>
-              <button onClick={onClose} style={{border:'none',background:'none',fontSize:22,cursor:'pointer',color:C.muted,lineHeight:1}}>×</button>
-            </div>
-            <div style={{padding:20,display:'flex',flexDirection:'column',gap:14}}>
-              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
-                <Input label="Nom" type="text" value={f.name} onChange={v=>set('name',v)}/>
-                <div>
-                  <Lbl>Type de compte</Lbl>
-                  <select value={f.type} onChange={e=>set('type',e.target.value)} style={{width:'100%',padding:'9px 10px',border:`2px solid ${C.border}`,borderRadius:8,fontSize:13,fontWeight:600,color:C.navy}}>
-                    {Object.entries(ACCT_DEF).map(([k,v])=><option key={k} value={k}>{v.icon} {v.label}</option>)}
-                  </select>
-                </div>
-              </div>
-              <div style={{padding:'10px 12px',background:`${def.color}12`,borderRadius:8,fontSize:11,color:def.color,fontWeight:600}}>{def.tax}</div>
-              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
-                <Input label="Solde actuel ($)" value={f.balance} onChange={v=>set('balance',v)} min={0}/>
-                <Input label="Rendement (%/an)" value={f.rate} onChange={v=>set('rate',v)} min={0} max={20} step={0.5} suffix="%"/>
-              </div>
-
-              <div>
-                <Lbl>Niveau de risque (volatilité Monte Carlo)</Lbl>
-                <div style={{display:'flex',gap:8}}>
-                  {Object.entries(RISKS).map(([k,v])=>(
-                    <button key={k} onClick={()=>set('risk',k)} style={{
-                      flex:1,padding:'9px 6px',border:`2px solid ${f.risk===k?v.color:C.border}`,
-                      borderRadius:8,background:f.risk===k?`${v.color}12`:'#fff',
-                      color:f.risk===k?v.color:C.muted,fontWeight:700,fontSize:12,cursor:'pointer',
-                      display:'flex',flexDirection:'column',alignItems:'center',gap:2,
-                    }}>
-                      <span>{v.label}</span><span style={{fontSize:10,fontWeight:400,opacity:.7}}>σ={Math.round(v.vol*100)}%/an</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div style={{borderTop:`1px solid ${C.border}`,paddingTop:12}}>
-                <Lbl>Contributions récurrentes</Lbl>
-                <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr',gap:8}}>
-                  <div>
-                    <div style={{fontSize:10,color:C.muted,marginBottom:2}}>Montant</div>
-                    <input type="number" value={f.contribAmt} onChange={e=>set('contribAmt',+e.target.value)} style={{width:'100%',padding:'7px 8px',border:`2px solid ${C.border}`,borderRadius:8,fontSize:13,fontWeight:700}}/>
-                  </div>
-                  <div>
-                    <div style={{fontSize:10,color:C.muted,marginBottom:2}}>Fréq.</div>
-                    <select value={f.contribFreq} onChange={e=>set('contribFreq',e.target.value)} style={{width:'100%',padding:'7px 6px',border:`2px solid ${C.border}`,borderRadius:8,fontSize:12}}>
-                      <option value="annual">Annuel</option>
-                      <option value="monthly">Mensuel</option>
-                    </select>
-                  </div>
-                  <div>
-                    <div style={{fontSize:10,color:C.muted,marginBottom:2}}>De (âge)</div>
-                    <input type="number" value={f.contribStart} onChange={e=>set('contribStart',+e.target.value)} style={{width:'100%',padding:'7px 8px',border:`2px solid ${C.border}`,borderRadius:8,fontSize:13,fontWeight:700}}/>
-                  </div>
-                  <div>
-                    <div style={{fontSize:10,color:C.muted,marginBottom:2}}>À (âge)</div>
-                    <input type="number" value={f.contribEnd} onChange={e=>set('contribEnd',+e.target.value)} style={{width:'100%',padding:'7px 8px',border:`2px solid ${C.border}`,borderRadius:8,fontSize:13,fontWeight:700}}/>
-                  </div>
-                </div>
-              </div>
-
-              <div style={{borderTop:`1px solid ${C.border}`,paddingTop:12}}>
-                <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:8}}>
-                  <Lbl>Contributions ponctuelles</Lbl>
-                  <button onClick={addOT} style={{padding:'4px 10px',border:`1px solid ${def.color}`,borderRadius:6,background:`${def.color}10`,color:def.color,cursor:'pointer',fontSize:11,fontWeight:700}}>+ Ajouter</button>
-                </div>
-                {(f.oneTime||[]).length===0&&<div style={{fontSize:11,color:C.muted,fontStyle:'italic',padding:'6px 0'}}>Ex: héritage à 40 ans, bonus, vente d'actif…</div>}
-                {(f.oneTime||[]).map((ot,i)=>(
-                  <div key={i} style={{display:'flex',gap:8,marginBottom:6,alignItems:'flex-end'}}>
-                    <div style={{flex:'0 0 80px'}}>
-                      <div style={{fontSize:10,color:C.muted,marginBottom:2}}>Âge</div>
-                      <input type="number" value={ot.age} onChange={e=>updOT(i,'age',+e.target.value)} style={{width:'100%',padding:'6px 7px',border:`1px solid ${C.border}`,borderRadius:7,fontSize:13,fontWeight:700}}/>
-                    </div>
-                    <div style={{flex:1}}>
-                      <div style={{fontSize:10,color:C.muted,marginBottom:2}}>Montant ($)</div>
-                      <input type="number" value={ot.amount} onChange={e=>updOT(i,'amount',+e.target.value)} style={{width:'100%',padding:'6px 7px',border:`1px solid ${C.border}`,borderRadius:7,fontSize:13,fontWeight:700}}/>
-                    </div>
-                    <button onClick={()=>delOT(i)} style={{padding:'6px 9px',border:'none',background:'#FEF2F2',color:C.red,borderRadius:7,cursor:'pointer'}}>✕</button>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div style={{padding:'14px 20px',borderTop:`1px solid ${C.border}`,display:'flex',justifyContent:'flex-end',gap:8}}>
-              <button onClick={onClose} style={{padding:'8px 16px',border:`1px solid ${C.border}`,borderRadius:8,background:C.card,cursor:'pointer',fontWeight:600,color:C.muted}}>Annuler</button>
-              <button onClick={()=>onSave(f)} style={{padding:'8px 20px',background:C.blue,color:'#fff',border:'none',borderRadius:8,cursor:'pointer',fontWeight:700,fontSize:13}}>Enregistrer</button>
-            </div>
+          <div className="info-box"
+            style={{ background:`${def.color}12`, color:def.color, fontWeight:600 }}>
+            {def.tax}
           </div>
-        </div>
-      );
-    }
 
-    // ── APP ─────────────────────────────────────────────────
-    function App() {
-      const [accounts,setAccounts]=useState(DEF_ACCOUNTS);
-      const [withdrawals,setWithdrawals]=useState(DEF_WITHDRAWALS);
-      const [params,setParams]=useState(DEF_PARAMS);
-      const [tab,setTab]=useState('dashboard');
-      const [mc,setMc]=useState(null);
-      const [mcRunning,setMcRunning]=useState(false);
-      const [editAcct,setEditAcct]=useState(null);
+          <div className="g2">
+            <Field label="Solde actuel">
+              <NumInput value={f.balance} onChange={v => set('balance', v)} prefix="$" min={0}/>
+            </Field>
+            <Field label="Rendement attendu">
+              <NumInput value={f.rate} onChange={v => set('rate', v)} suffix="%" min={0} max={20} step={0.5}/>
+            </Field>
+          </div>
 
-      const sim=useMemo(()=>runSim(accounts,withdrawals,params),[accounts,withdrawals,params]);
-
-      useEffect(()=>{
-        setMcRunning(true);
-        const t=setTimeout(()=>{setMc(runMC(accounts,withdrawals,params));setMcRunning(false);},350);
-        return()=>clearTimeout(t);
-      },[accounts,withdrawals,params]);
-
-      const suggestions=useMemo(()=>getSuggestions(sim,params,accounts,mc),[sim,params,accounts,mc]);
-      const setP=(k,v)=>setParams(p=>({...p,[k]:v}));
-      const last=sim[sim.length-1]||{totalBalance:0};
-      const retIdx=sim.findIndex(r=>r.age>=(withdrawals[0]?.startAge||65));
-      const retRow=sim[retIdx]||{};
-      const monthNet=retRow.net?Math.round(retRow.net/12):0;
-
-      // Chart: merge sim base + MC percentiles
-      const chartData=useMemo(()=>{
-        return sim.map((r,i)=>{
-          const m=mc?.chartData?.[i]||{};
-          return{age:r.age,base:r.totalBalance,p10:m.p10,b1:Math.max(0,(m.p25||0)-(m.p10||0)),b2:Math.max(0,(m.p75||0)-(m.p25||0)),b3:Math.max(0,(m.p90||0)-(m.p75||0)),p50:m.p50,p90:m.p90};
-        });
-      },[sim,mc]);
-
-      const TABS=[
-        {id:'dashboard',icon:'📊',label:'Tableau de bord'},
-        {id:'accounts', icon:'💰',label:'Placements'},
-        {id:'withdrawals',icon:'📉',label:'Retraits'},
-        {id:'params',   icon:'⚙️',label:'Paramètres'},
-        {id:'analysis', icon:'🧠',label:'Analyse MC'},
-      ];
-
-      const retAge=withdrawals[0]?.startAge||65;
-
-      return(
-        <div style={{height:'100vh',display:'flex',flexDirection:'column',background:C.bg,fontFamily:'-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif',fontSize:14,color:C.navy,overflow:'hidden'}}>
-          {/* ── HEADER ── */}
-          <div style={{background:C.navy,padding:'0 20px',display:'flex',alignItems:'center',gap:8,height:50,flexShrink:0}}>
-            <span style={{fontSize:17,fontWeight:800,color:'#fff',letterSpacing:-.5,marginRight:8}}>RetirePlan <span style={{color:C.teal,fontSize:12,fontWeight:600,letterSpacing:0}}>QC</span></span>
-            <div style={{display:'flex',gap:2,flex:1}}>
-              {TABS.map(t=>(
-                <button key={t.id} onClick={()=>setTab(t.id)} style={{
-                  padding:'5px 13px',borderRadius:6,border:'none',cursor:'pointer',fontSize:12,fontWeight:600,
-                  background:tab===t.id?'rgba(255,255,255,.14)':'transparent',
-                  color:tab===t.id?'#fff':'rgba(255,255,255,.5)',transition:'all .15s',whiteSpace:'nowrap',
-                }}>{t.icon} {t.label}</button>
+          <Field label="Niveau de risque (volatilité Monte Carlo)">
+            <div className="risk-btns">
+              {Object.entries(RISK).map(([k, v]) => (
+                <button key={k} className="risk-btn" onClick={() => set('risk', k)}
+                  style={{
+                    borderColor: f.risk === k ? v.color : '#E2E8F0',
+                    background:  f.risk === k ? `${v.color}12` : '#fff',
+                    color:       f.risk === k ? v.color : CLR.muted,
+                  }}>
+                  {v.label}
+                  <small>σ = {Math.round(v.vol * 100)}%/an</small>
+                </button>
               ))}
             </div>
-            {mcRunning&&<span style={{fontSize:10,color:C.amber,animation:'pulse 1s infinite'}}>⟳ Monte Carlo…</span>}
-            <span style={{fontSize:10,color:'rgba(255,255,255,.35)',marginLeft:8}}>{accounts.length} compte{accounts.length!==1?'s':''}</span>
-          </div>
+          </Field>
 
-          <div style={{flex:1,overflow:'auto',padding:'18px 20px',display:'flex',flexDirection:'column',gap:16}}>
+          <hr className="divider"/>
 
-            {/* ── DASHBOARD ── */}
-            {tab==='dashboard'&&(<>
-              {/* KPIs */}
-              <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
-                <KPI label="Solde final projeté" value={fmtK(last.totalBalance)} sub={`À ${params.ageTo} ans (scénario base)`} color={C.blue}/>
-                <KPI label="Probabilité de succès" value={mc?`${mc.successRate}%`:'…'} sub={`N=${mc?.N||180} simulations Monte Carlo`} color={mc?.successRate>=80?C.green:mc?.successRate>=65?C.amber:C.red}/>
-                <KPI label="Solde à la retraite" value={fmtK(retRow.totalBalance)} sub={`À ${retAge} ans — avant décaissement`} color={C.teal}/>
-                <KPI label="Revenu net / mois" value={monthNet>0?fmtK(monthNet):'—'} sub="Retraits + RRQ + SV − impôts" color={C.purple}/>
+          <Field label="Contributions récurrentes">
+            <div className="g4">
+              <div>
+                <div className="field-lbl" style={{ marginBottom:4 }}>Montant</div>
+                <input className="input" type="number" value={f.contribAmt}
+                  onChange={e => set('contribAmt', +e.target.value)}/>
               </div>
-
-              {/* Main chart */}
-              <div style={{background:C.card,borderRadius:14,boxShadow:C.sh,padding:'14px 6px 10px',flex:'0 0 auto'}}>
-                <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',padding:'0 16px 10px'}}>
-                  <div>
-                    <div style={{fontWeight:700,fontSize:14}}>Évolution du portefeuille</div>
-                    <div style={{fontSize:11,color:C.muted,marginTop:2}}>Bandes Monte Carlo P10→P90 · Ligne: scénario de base</div>
-                  </div>
-                  <div style={{display:'flex',gap:10,fontSize:10,color:C.muted,flexWrap:'wrap',justifyContent:'flex-end'}}>
-                    {[['Base',C.blue,false],[' P25–P75',C.blue+'66',true],[' P10–P90',C.blue+'33',true]].map(([l,c,box])=>(
-                      <div key={l} style={{display:'flex',alignItems:'center',gap:3}}>
-                        {box?<span style={{width:14,height:9,background:c,borderRadius:2,display:'inline-block'}}/>:<span style={{width:18,height:2.5,background:c,borderRadius:1,display:'inline-block'}}/>}
-                        {l}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <ResponsiveContainer width="100%" height={255}>
-                  <ComposedChart data={chartData} margin={{top:0,right:14,left:0,bottom:0}}>
-                    <defs>
-                      <linearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor={C.blue} stopOpacity={.45}/>
-                        <stop offset="95%" stopColor={C.blue} stopOpacity={.02}/>
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid stroke="#F1F5F9" strokeDasharray="3 3"/>
-                    <XAxis dataKey="age" stroke={C.muted} tick={{fontSize:10}} label={{value:'Âge',position:'insideBottomRight',offset:-8,fill:C.muted,fontSize:10}}/>
-                    <YAxis tickFormatter={fmtK} stroke={C.muted} tick={{fontSize:9}} width={46}/>
-                    <Tooltip content={<Tip/>}/>
-                    <ReferenceLine x={retAge} stroke={C.teal} strokeDasharray="5 3" label={{value:'Retraite',fill:C.teal,fontSize:10,position:'insideTopLeft'}}/>
-                    {mc&&<Area stackId="mc" type="monotone" dataKey="p10" stroke="none" fill="transparent" dot={false}/>}
-                    {mc&&<Area stackId="mc" type="monotone" dataKey="b1"  stroke="none" fill={`${C.blue}20`} dot={false}/>}
-                    {mc&&<Area stackId="mc" type="monotone" dataKey="b2"  stroke="none" fill={`${C.blue}35`} dot={false}/>}
-                    {mc&&<Area stackId="mc" type="monotone" dataKey="b3"  stroke="none" fill={`${C.blue}20`} dot={false}/>}
-                    {mc&&<Line type="monotone" dataKey="p50" stroke={`${C.blue}90`} strokeWidth={1.5} dot={false} strokeDasharray="5 3" name="Médiane"/>}
-                    <Area type="monotone" dataKey="base" stroke={C.blue} strokeWidth={2.5} fill="url(#grad)" name="Base" dot={false}/>
-                  </ComposedChart>
-                </ResponsiveContainer>
+              <div>
+                <div className="field-lbl" style={{ marginBottom:4 }}>De (âge)</div>
+                <input className="input" type="number" value={f.contribStart}
+                  onChange={e => set('contribStart', +e.target.value)}/>
               </div>
-
-              {/* Suggestions */}
-              {suggestions.length>0&&(
-                <div style={{background:C.card,borderRadius:14,boxShadow:C.sh,padding:16}}>
-                  <div style={{fontWeight:700,fontSize:13,marginBottom:10}}>💡 Suggestions intelligentes</div>
-                  <div style={{display:'flex',flexDirection:'column',gap:7}}>
-                    {suggestions.map((s,i)=>(
-                      <div key={i} style={{
-                        padding:'10px 14px',borderRadius:9,fontSize:12,lineHeight:1.5,
-                        background:s.lvl==='danger'?'#FEF2F2':s.lvl==='warning'?'#FFFBEB':'#EFF6FF',
-                        borderLeft:`3px solid ${s.lvl==='danger'?C.red:s.lvl==='warning'?C.amber:C.blue}`,
-                      }}><span style={{marginRight:6}}>{s.icon}</span>{s.txt}</div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </>)}
-
-            {/* ── PLACEMENTS ── */}
-            {tab==='accounts'&&(<>
-              <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-                <div style={{fontWeight:700,fontSize:16}}>Mes placements <span style={{color:C.muted,fontSize:13,fontWeight:400}}>({accounts.length} compte{accounts.length!==1?'s':''})</span></div>
-                <button onClick={()=>setEditAcct({id:uid(),name:'Nouveau',type:'CELI',balance:0,contribAmt:5000,contribFreq:'annual',contribStart:params.ageFrom,contribEnd:params.ageFrom+40,oneTime:[],rate:5,risk:'medium',_new:true})} style={{padding:'8px 16px',background:C.blue,color:'#fff',border:'none',borderRadius:9,cursor:'pointer',fontWeight:700,fontSize:13}}>+ Ajouter un placement</button>
+              <div>
+                <div className="field-lbl" style={{ marginBottom:4 }}>À (âge)</div>
+                <input className="input" type="number" value={f.contribEnd}
+                  onChange={e => set('contribEnd', +e.target.value)}/>
               </div>
-              <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))',gap:12}}>
-                {accounts.map(a=>{
-                  const def=ACCT_DEF[a.type]||ACCT_DEF.AUTRE;
-                  const annualContrib=a.contribFreq==='monthly'?a.contribAmt*12:a.contribAmt;
-                  const riskDef=RISKS[a.risk]||RISKS.medium;
-                  return(
-                    <div key={a.id} style={{background:C.card,borderRadius:13,boxShadow:C.sh,overflow:'hidden',transition:'box-shadow .2s'}}>
-                      <div style={{height:4,background:`linear-gradient(90deg,${def.color},${def.color}88)`}}/>
-                      <div style={{padding:15}}>
-                        <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:12}}>
-                          <div style={{display:'flex',alignItems:'center',gap:9}}>
-                            <span style={{fontSize:26}}>{def.icon}</span>
-                            <div>
-                              <div style={{fontWeight:700,fontSize:14}}>{a.name}</div>
-                              <div style={{fontSize:11,color:C.muted}}>{def.label}</div>
-                            </div>
-                          </div>
-                          <div style={{display:'flex',gap:5}}>
-                            <button onClick={()=>setEditAcct({...a})} style={{padding:'4px 9px',border:`1px solid ${C.border}`,borderRadius:7,background:C.card,cursor:'pointer',fontSize:12}}>✏️</button>
-                            <button onClick={()=>setAccounts(p=>p.filter(x=>x.id!==a.id))} style={{padding:'4px 9px',border:'1px solid #FEE2E2',borderRadius:7,background:'#FEF2F2',cursor:'pointer',fontSize:12,color:C.red}}>✕</button>
-                          </div>
-                        </div>
-                        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:7,marginBottom:10}}>
-                          {[
-                            {l:'Solde actuel',   v:fmtK(a.balance,1)},
-                            {l:'Contrib./an',    v:fmtK(annualContrib)},
-                            {l:'Rendement',      v:`${a.rate}%/an`},
-                            {l:'Risque',         v:riskDef.label},
-                          ].map(({l,v})=>(
-                            <div key={l} style={{background:C.bg,borderRadius:7,padding:'7px 10px'}}>
-                              <div style={{fontSize:9,color:C.muted,textTransform:'uppercase',letterSpacing:.4,fontWeight:700,marginBottom:2}}>{l}</div>
-                              <div style={{fontWeight:700,fontSize:13,color:C.navy}}>{v}</div>
-                            </div>
-                          ))}
-                        </div>
-                        {a.oneTime?.length>0&&<div style={{fontSize:11,color:C.muted,marginBottom:8}}>🎯 {a.oneTime.length} contribution{a.oneTime.length>1?'s':''} ponctuelle{a.oneTime.length>1?'s':''}</div>}
-                        <div style={{padding:'6px 10px',background:`${def.color}12`,borderRadius:7,fontSize:10,color:def.color,fontWeight:700}}>{def.tax}</div>
-                      </div>
-                    </div>
-                  );
-                })}
+              <div>
+                <div className="field-lbl" style={{ marginBottom:4 }}>Fréq.</div>
+                <select className="select" value={f.contribFreq}
+                  onChange={e => set('contribFreq', e.target.value)}>
+                  <option value="annual">Ann.</option>
+                  <option value="monthly">Mens.</option>
+                </select>
               </div>
-              {editAcct&&<AccountModal acct={editAcct} onSave={a=>{
-                setAccounts(p=>a._new?[...p,{...a,_new:undefined}]:p.map(x=>x.id===a.id?a:x));
-                setEditAcct(null);
-              }} onClose={()=>setEditAcct(null)}/>}
-            </>)}
+            </div>
+          </Field>
 
-            {/* ── RETRAITS ── */}
-            {tab==='withdrawals'&&(
-              <div style={{maxWidth:680,display:'flex',flexDirection:'column',gap:14}}>
-                <div style={{fontWeight:700,fontSize:16}}>Stratégie de décaissement</div>
+          <hr className="divider"/>
 
-                <div style={{background:C.card,borderRadius:14,boxShadow:C.sh,padding:16}}>
-                  <div style={{fontWeight:600,fontSize:13,marginBottom:10}}>Priorité de retrait</div>
-                  <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
-                    {Object.entries(STRATS).map(([k,v])=>(
-                      <button key={k} onClick={()=>setP('strategy',k)} style={{
-                        padding:'9px 18px',borderRadius:9,border:`2px solid ${params.strategy===k?C.blue:C.border}`,
-                        background:params.strategy===k?`${C.blue}10`:C.card,
-                        color:params.strategy===k?C.blue:C.muted,cursor:'pointer',fontWeight:700,fontSize:12,transition:'all .15s',
-                      }}>{v.label}</button>
-                    ))}
-                  </div>
-                  <div style={{marginTop:10,fontSize:11,color:C.muted,lineHeight:1.6,padding:'8px 12px',background:C.bg,borderRadius:8}}>
-                    {params.strategy==='celi-first'&&'✅ Optimal fiscalement : le CÉLI est retiré en premier (libre d\'impôt), puis le compte non enregistré, puis le REER/FERR qui est imposable.'}
-                    {params.strategy==='reer-first'&&'📋 Utile pour vider le REER avant conversion obligatoire en FERR à 71 ans.'}
-                    {params.strategy==='balanced'&&'⚖️ Retraits proportionnels selon la valeur de chaque compte. Fiscalement sous-optimal mais simple.'}
-                  </div>
+          <div>
+            <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:8 }}>
+              <span className="field-lbl">Contributions ponctuelles</span>
+              <button className="btn btn-sm"
+                style={{ border:`1px solid ${def.color}`, background:`${def.color}10`, color:def.color }}
+                onClick={addOneTime}>
+                + Ajouter
+              </button>
+            </div>
+            {!(f.oneTime && f.oneTime.length) &&
+              <p style={{ fontSize:11, color:CLR.muted, fontStyle:'italic' }}>
+                Ex : héritage, bonus, vente d'actif…
+              </p>}
+            {(f.oneTime || []).map((ot, i) => (
+              <div key={i} className="ot-row">
+                <div className="field" style={{ flex:'0 0 80px' }}>
+                  <div className="field-lbl">Âge</div>
+                  <input className="input" type="number" value={ot.age}
+                    onChange={e => updOneTime(i, 'age', +e.target.value)}/>
                 </div>
-
-                <div style={{background:C.card,borderRadius:14,boxShadow:C.sh,padding:16}}>
-                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
-                    <div style={{fontWeight:600,fontSize:13}}>Retraits planifiés</div>
-                    <button onClick={()=>setWithdrawals(p=>[...p,{id:uid(),startAge:65,endAge:100,amount:30000,type:'fixed'}])} style={{padding:'5px 12px',border:`1px solid ${C.blue}`,borderRadius:7,background:`${C.blue}10`,color:C.blue,cursor:'pointer',fontSize:12,fontWeight:700}}>+ Ajouter</button>
-                  </div>
-                  {withdrawals.map((w,i)=>(
-                    <div key={w.id} style={{border:`1px solid ${C.border}`,borderRadius:9,padding:12,marginBottom:8,display:'flex',flexWrap:'wrap',gap:10,alignItems:'flex-end',background:'#FAFBFC'}}>
-                      {[
-                        {lbl:'De (âge)',k:'startAge',w:70},
-                        {lbl:'À (âge)', k:'endAge',  w:70},
-                        {lbl:'Montant', k:'amount',  w:120},
-                      ].map(f=>(
-                        <div key={f.k}>
-                          <Lbl>{f.lbl}</Lbl>
-                          <input type="number" value={w[f.k]} onChange={e=>{const v=[...withdrawals];v[i]={...w,[f.k]:+e.target.value};setWithdrawals(v);}} style={{width:f.w,padding:'7px 9px',border:`2px solid ${C.border}`,borderRadius:8,fontSize:13,fontWeight:700,color:C.navy}}/>
-                        </div>
-                      ))}
-                      <div>
-                        <Lbl>Type</Lbl>
-                        <select value={w.type} onChange={e=>{const v=[...withdrawals];v[i]={...w,type:e.target.value};setWithdrawals(v);}} style={{padding:'7px 9px',border:`2px solid ${C.border}`,borderRadius:8,fontSize:12,fontWeight:600}}>
-                          <option value="fixed">Fixe $</option>
-                          <option value="percent">% du portef.</option>
-                        </select>
-                      </div>
-                      <button onClick={()=>setWithdrawals(p=>p.filter(x=>x.id!==w.id))} style={{padding:'7px 11px',background:'#FEF2F2',border:'1px solid #FEE2E2',borderRadius:8,color:C.red,cursor:'pointer',fontSize:14}}>✕</button>
-                    </div>
-                  ))}
+                <div className="field" style={{ flex:1 }}>
+                  <div className="field-lbl">Montant ($)</div>
+                  <input className="input" type="number" value={ot.amount}
+                    onChange={e => updOneTime(i, 'amount', +e.target.value)}/>
                 </div>
-
-                <div style={{background:C.card,borderRadius:14,boxShadow:C.sh,padding:16}}>
-                  <div style={{fontWeight:600,fontSize:13,marginBottom:12}}>Prestations gouvernementales (RRQ / SV / SRG)</div>
-                  <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:10}}>
-                    {[{l:'Âge RRQ',k:'ageRRQ',note:'60–72 ans'},{l:'Âge SV',k:'ageSV',note:'65–70 ans'},{l:'Salaire moyen',k:'salary',note:'Pour calcul RRQ'}].map(f=>(
-                      <div key={f.k}>
-                        <Lbl>{f.l}</Lbl>
-                        <input type="number" value={params[f.k]} onChange={e=>setP(f.k,+e.target.value)} style={{width:'100%',padding:'9px 10px',border:`2px solid ${C.border}`,borderRadius:9,fontSize:14,fontWeight:700,color:C.teal}}/>
-                        <div style={{fontSize:10,color:C.muted,marginTop:3}}>{f.note}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <button className="btn btn-sm btn-danger" onClick={() => delOneTime(i)}>✕</button>
               </div>
-            )}
-
-            {/* ── PARAMS ── */}
-            {tab==='params'&&(
-              <div style={{maxWidth:580,display:'flex',flexDirection:'column',gap:14}}>
-                <div style={{fontWeight:700,fontSize:16}}>Paramètres de simulation</div>
-                <div style={{background:C.card,borderRadius:14,boxShadow:C.sh,padding:20,display:'flex',flexDirection:'column',gap:16}}>
-                  <div>
-                    <Lbl>Horizon de simulation · {params.ageFrom} à {params.ageTo} ans</Lbl>
-                    <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
-                      {[{l:'De',k:'ageFrom',min:18,max:64},{l:'À',k:'ageTo',min:65,max:110}].map(f=>(
-                        <div key={f.k}>
-                          <div style={{fontSize:10,color:C.muted,marginBottom:3}}>{f.l}</div>
-                          <input type="range" min={f.min} max={f.max} value={params[f.k]} onChange={e=>setP(f.k,+e.target.value)} style={{width:'100%',accentColor:C.blue}}/>
-                          <div style={{display:'flex',justifyContent:'space-between',fontSize:10,color:C.muted}}><span>{f.min}</span><span style={{fontWeight:700,color:C.navy}}>{params[f.k]} ans</span><span>{f.max}</span></div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div>
-                    <Lbl>Inflation annuelle · {params.inflation.toFixed(1)} %</Lbl>
-                    <input type="range" min={0} max={6} step={0.1} value={params.inflation} onChange={e=>setP('inflation',+e.target.value)} style={{width:'100%',accentColor:C.amber}}/>
-                    <div style={{fontSize:11,color:C.muted,marginTop:3}}>Cible Banque du Canada : 2 % — Note: les calculs sont en nominal. L'inflation érode le pouvoir d'achat réel.</div>
-                  </div>
-                  <Input label="Salaire moyen (pour RRQ)" value={params.salary} onChange={v=>setP('salary',v)} prefix="$" min={0}/>
-                  <div style={{padding:'10px 14px',background:'#EFF6FF',borderRadius:9,fontSize:12,color:C.blue,lineHeight:1.6}}>
-                    <b>Monte Carlo</b> — {mc?.N||180} simulations sont lancées avec des rendements variables (basés sur le niveau de risque de chaque compte). Les bandes P10–P90 représentent la fourchette réaliste des résultats.
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* ── ANALYSE MC ── */}
-            {tab==='analysis'&&(<>
-              <div style={{fontWeight:700,fontSize:16}}>Analyse Monte Carlo</div>
-              <div style={{display:'flex',gap:14,flexWrap:'wrap'}}>
-                <div style={{background:C.card,borderRadius:14,boxShadow:C.sh,padding:20,flex:'0 0 220px'}}>
-                  <Lbl>Probabilité de succès</Lbl>
-                  <Gauge pct={mc?.successRate??0}/>
-                  <div style={{fontSize:11,color:C.muted,textAlign:'center',marginTop:6,lineHeight:1.5}}>Le portefeuille dure jusqu'à {params.ageTo} ans dans {mc?.successRate??'…'} % des simulations</div>
-                </div>
-                <div style={{background:C.card,borderRadius:14,boxShadow:C.sh,padding:20,flex:1,minWidth:220}}>
-                  <Lbl>Valeur du portefeuille à {params.ageTo} ans</Lbl>
-                  {[
-                    {l:'P10 — Pessimiste',  k:'p10',c:C.red},
-                    {l:'P50 — Médiane',     k:'p50',c:C.blue},
-                    {l:'P90 — Optimiste',   k:'p90',c:C.green},
-                    {l:'Base (fixe)',        k:'base',c:C.navy},
-                  ].map(s=>{
-                    const val=s.k==='base'?last.totalBalance:mc?.chartData?.[mc.chartData.length-1]?.[s.k];
-                    return(
-                      <div key={s.k} style={{display:'flex',justifyContent:'space-between',alignItems:'center',padding:'10px 0',borderBottom:`1px solid ${C.border}`}}>
-                        <span style={{fontSize:12,color:s.c,fontWeight:600}}>{s.l}</span>
-                        <span style={{fontWeight:800,fontSize:15,color:s.c}}>{val!=null?fmtK(val):'…'}</span>
-                      </div>
-                    );
-                  })}
-                  <div style={{marginTop:10,fontSize:11,color:C.muted}}>N={mc?.N||180} simulations · Volatilité par niveau de risque</div>
-                </div>
-              </div>
-
-              <div style={{background:C.card,borderRadius:14,boxShadow:C.sh,padding:'14px 6px 8px'}}>
-                <div style={{padding:'0 16px 10px',fontWeight:700,fontSize:13}}>Éventail Monte Carlo — {params.ageFrom} à {params.ageTo} ans</div>
-                <ResponsiveContainer width="100%" height={310}>
-                  <ComposedChart data={chartData} margin={{top:0,right:14,left:0,bottom:0}}>
-                    <CartesianGrid stroke="#F1F5F9" strokeDasharray="3 3"/>
-                    <XAxis dataKey="age" stroke={C.muted} tick={{fontSize:10}}/>
-                    <YAxis tickFormatter={fmtK} stroke={C.muted} tick={{fontSize:9}} width={46}/>
-                    <Tooltip content={<Tip/>}/>
-                    <ReferenceLine x={retAge} stroke={C.teal} strokeDasharray="5 3" label={{value:'Retraite',fill:C.teal,fontSize:10}}/>
-                    {mc&&<Area stackId="mc" type="monotone" dataKey="p10" stroke={`${C.red}80`} strokeWidth={1.5} strokeDasharray="4 3" fill="transparent" dot={false} name="P10 (pessimiste)"/>}
-                    {mc&&<Area stackId="mc" type="monotone" dataKey="b1"  stroke="none" fill={`${C.blue}18`} dot={false}/>}
-                    {mc&&<Area stackId="mc" type="monotone" dataKey="b2"  stroke="none" fill={`${C.blue}30`} dot={false}/>}
-                    {mc&&<Area stackId="mc" type="monotone" dataKey="b3"  stroke="none" fill={`${C.blue}18`} dot={false}/>}
-                    {mc&&<Line type="monotone" dataKey="p50" stroke={C.blue} strokeWidth={1.5} dot={false} strokeDasharray="6 3" name="Médiane (P50)"/>}
-                    <Line type="monotone" dataKey="base" stroke={C.navy} strokeWidth={2.5} dot={false} name="Scénario base"/>
-                  </ComposedChart>
-                </ResponsiveContainer>
-                <div style={{display:'flex',gap:16,padding:'6px 18px 2px',fontSize:10,color:C.muted,flexWrap:'wrap'}}>
-                  {[['Scénario base',C.navy,false],['Médiane P50',C.blue,true],['Zone P25–P75',C.blue+'55',true,true],['P10 (pessimiste)',C.red,true]].map(([l,c,d,box])=>(
-                    <div key={l} style={{display:'flex',alignItems:'center',gap:4}}>
-                      {box?<span style={{width:16,height:9,background:c,borderRadius:2,display:'inline-block'}}/>:<span style={{width:20,height:2.5,background:c,borderRadius:1,display:'inline-block',opacity:d?.5:1}}/>}
-                      {l}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </>)}
+            ))}
           </div>
         </div>
-      );
-    }
+        <div className="modal-foot">
+          <button className="btn btn-ghost" onClick={onClose}>Annuler</button>
+          <button className="btn btn-primary" onClick={() => onSave(f)}>Enregistrer</button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
-    // Initialisation de l'application React 18
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
-  </script>
+/* ── Chart data builder ──────────────────────────────────────────────────── */
+function buildChartData(sim, mc) {
+  return sim.map((r, i) => {
+    const m = (mc && mc.chartData && mc.chartData[i]) ? mc.chartData[i] : {};
+    return {
+      age:  r.age,
+      base: r.totalBalance,
+      p10:  m.p10,
+      p50:  m.p50,
+      p90:  m.p90,
+      b0:   m.p10,
+      b1:   Math.max(0, (m.p25 || 0) - (m.p10 || 0)),
+      b2:   Math.max(0, (m.p75 || 0) - (m.p25 || 0)),
+      b3:   Math.max(0, (m.p90 || 0) - (m.p75 || 0)),
+    };
+  });
+}
+
+/* ── MC bands (shared sub-component) ────────────────────────────────────── */
+function MCBands({ mc }) {
+  if (!mc) return null;
+  return (
+    <>
+      <Area stackId="mc" type="monotone" dataKey="b0" stroke="none" fill="transparent" dot={false}/>
+      <Area stackId="mc" type="monotone" dataKey="b1" stroke="none" fill={`${CLR.blue}18`} dot={false}/>
+      <Area stackId="mc" type="monotone" dataKey="b2" stroke="none" fill={`${CLR.blue}30`} dot={false}/>
+      <Area stackId="mc" type="monotone" dataKey="b3" stroke="none" fill={`${CLR.blue}18`} dot={false}/>
+      <Line type="monotone" dataKey="p50" stroke={CLR.purple}
+        strokeWidth={1.5} dot={false} strokeDasharray="6 3" name="Médiane"/>
+    </>
+  );
+}
+
+/* ── Pages ───────────────────────────────────────────────────────────────── */
+function PageDashboard({ sim, mc, params, accounts, suggestions }) {
+  const last     = sim.length ? sim[sim.length - 1] : { totalBalance:0 };
+  const retAge   = params.ageRRQ;
+  const retIdx   = sim.findIndex(r => r.age >= retAge);
+  const retRow   = retIdx >= 0 ? sim[retIdx] : {};
+  const monthNet = retRow.net ? Math.round(retRow.net / 12) : 0;
+  const chartData = useMemo(() => buildChartData(sim, mc), [sim, mc]);
+
+  return (
+    <>
+      <div className="kpi-row">
+        <KPI label="Solde final projeté"
+          value={fmtK(last.totalBalance)}
+          sub={`Scénario de base à ${params.ageTo} ans`}
+          color={CLR.blue}/>
+        <KPI label="Probabilité de succès"
+          value={mc ? `${mc.successRate}%` : '…'}
+          sub={`${mc ? mc.N : 200} simulations Monte Carlo`}
+          color={!mc ? CLR.muted : mc.successRate >= 80 ? CLR.green : mc.successRate >= 65 ? CLR.amber : CLR.red}/>
+        <KPI label={`Solde à ${retAge} ans`}
+          value={fmtK(retRow.totalBalance)}
+          sub="Avant décaissement"
+          color={CLR.teal}/>
+        <KPI label="Revenu net / mois"
+          value={monthNet > 0 ? fmtK(monthNet) : '—'}
+          sub="Retraits + gouvern. − impôts"
+          color={CLR.purple}/>
+      </div>
+
+      <div className="card">
+        <div className="card-head">
+          <span>Évolution du portefeuille</span>
+          <span style={{ fontSize:11, color:CLR.muted }}>
+            Bandes Monte Carlo P10→P90 · Ligne : scénario de base
+          </span>
+        </div>
+        <div style={{ padding:'12px 4px 0' }}>
+          <ResponsiveContainer width="100%" height={260}>
+            <ComposedChart data={chartData} margin={{ top:4, right:16, left:0, bottom:0 }}>
+              <defs>
+                <linearGradient id="gradBase" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%"   stopColor={CLR.blue} stopOpacity={.35}/>
+                  <stop offset="100%" stopColor={CLR.blue} stopOpacity={.02}/>
+                </linearGradient>
+              </defs>
+              <CartesianGrid stroke="#F1F5F9" strokeDasharray="3 3"/>
+              <XAxis dataKey="age" stroke={CLR.muted} tick={{ fontSize:10 }}
+                label={{ value:'Âge', position:'insideBottomRight', offset:-8, fill:CLR.muted, fontSize:10 }}/>
+              <YAxis tickFormatter={fmtK} stroke={CLR.muted} tick={{ fontSize:9 }} width={46}/>
+              <Tooltip content={<ChartTip/>}/>
+              <ReferenceLine x={retAge} stroke={CLR.teal} strokeDasharray="5 3"
+                label={{ value:'Retraite', fill:CLR.teal, fontSize:10, position:'insideTopLeft' }}/>
+              <MCBands mc={mc}/>
+              <Area type="monotone" dataKey="base" stroke={CLR.blue} strokeWidth={2.5}
+                fill="url(#gradBase)" dot={false} name="Base"/>
+            </ComposedChart>
+          </ResponsiveContainer>
+        </div>
+        <div className="legend">
+          <div className="li"><span className="ll" style={{ background:CLR.blue }}/> Base</div>
+          <div className="li"><span className="ll" style={{ background:CLR.purple, opacity:.7 }}/> Médiane MC</div>
+          <div className="li"><span className="la" style={{ background:`${CLR.blue}30` }}/> Zone P25–P75</div>
+        </div>
+      </div>
+
+      {suggestions.length > 0 && (
+        <div className="card card-pad">
+          <div style={{ fontWeight:700, fontSize:13, marginBottom:10 }}>💡 Suggestions intelligentes</div>
+          <div style={{ display:'flex', flexDirection:'column', gap:8 }}>
+            {suggestions.map((s, i) => (
+              <div key={i}
+                className={`alert ${s.level === 'danger' ? 'alert-danger' : s.level === 'warn' ? 'alert-warn' : 'alert-info'}`}>
+                <span style={{ fontSize:16, flexShrink:0 }}>{s.icon}</span>
+                <span>{s.text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+function PageAccounts({ accounts, setAccounts, params }) {
+  const [editAcct, setEditAcct] = useState(null);
+
+  const save = a => {
+    setAccounts(prev => a._new
+      ? [...prev, { ...a, _new: undefined }]
+      : prev.map(x => x.id === a.id ? a : x)
+    );
+    setEditAcct(null);
+  };
+
+  return (
+    <>
+      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+        <div className="sec-title">
+          Mes placements
+          <span style={{ fontSize:13, fontWeight:400, color:CLR.muted }}>
+            {' '}({accounts.length} compte{accounts.length !== 1 ? 's' : ''})
+          </span>
+        </div>
+        <button className="btn btn-primary" onClick={() => setEditAcct({
+          id:uid(), name:'Nouveau', type:'CELI', balance:0,
+          contribAmt:5000, contribFreq:'annual',
+          contribStart:params.ageFrom, contribEnd:params.ageFrom + 40,
+          oneTime:[], rate:5, risk:'medium', _new:true,
+        })}>
+          + Ajouter un placement
+        </button>
+      </div>
+
+      <div className="acct-grid">
+        {accounts.map(a => {
+          const def  = ACCT_TYPES[a.type] || ACCT_TYPES.AUTRE;
+          const risk = RISK[a.risk] || RISK.medium;
+          const ann  = a.contribFreq === 'monthly' ? a.contribAmt * 12 : a.contribAmt;
+          return (
+            <div key={a.id} className="acct-card">
+              <div className="acct-stripe" style={{ background:def.color }}/>
+              <div className="acct-body">
+                <div className="acct-hdr">
+                  <div className="acct-title">
+                    <span style={{ fontSize:24 }}>{def.icon}</span>
+                    <div>
+                      <div style={{ fontWeight:700, fontSize:14 }}>{a.name}</div>
+                      <div style={{ fontSize:11, color:CLR.muted }}>{def.label}</div>
+                    </div>
+                  </div>
+                  <div className="acct-actions">
+                    <button className="btn-icon" onClick={() => setEditAcct({ ...a })}>✏️</button>
+                    <button className="btn-icon btn-danger btn-sm"
+                      onClick={() => setAccounts(p => p.filter(x => x.id !== a.id))}>✕</button>
+                  </div>
+                </div>
+                <div className="acct-stats">
+                  {[
+                    { lbl:'Solde actuel',  val:fmtK(a.balance, 1) },
+                    { lbl:'Contrib./an',   val:fmtK(ann) },
+                    { lbl:'Rendement',     val:`${a.rate}%/an` },
+                    { lbl:'Risque',        val:risk.label },
+                  ].map(({ lbl, val }) => (
+                    <div key={lbl} className="acct-stat">
+                      <div className="stat-lbl">{lbl}</div>
+                      <div className="stat-val">{val}</div>
+                    </div>
+                  ))}
+                </div>
+                {a.oneTime && a.oneTime.length > 0 &&
+                  <p style={{ fontSize:11, color:CLR.muted, marginBottom:8 }}>
+                    🎯 {a.oneTime.length} contribution{a.oneTime.length > 1 ? 's ponctuelle' : ' ponctuelle'}{a.oneTime.length > 1 ? 's' : ''}
+                  </p>}
+                <div className="acct-badge" style={{ background:`${def.color}12`, color:def.color }}>
+                  {def.tax}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {editAcct && <AcctModal acct={editAcct} onSave={save} onClose={() => setEditAcct(null)}/>}
+    </>
+  );
+}
+
+function PageWithdrawals({ withdrawals, setWithdrawals, params, setParams }) {
+  const setP = (k, v) => setParams(p => ({ ...p, [k]: v }));
+
+  const updateW = (i, k, v) => {
+    const arr = [...withdrawals];
+    arr[i] = { ...arr[i], [k]: v };
+    setWithdrawals(arr);
+  };
+
+  return (
+    <>
+      <div className="sec-title">Stratégie de décaissement</div>
+
+      <div className="card card-pad">
+        <div style={{ fontWeight:600, marginBottom:12 }}>Ordre de priorité des retraits</div>
+        <div className="seg" style={{ maxWidth:440 }}>
+          {Object.entries(STRAT).map(([k, v]) => (
+            <button key={k} className={`seg-btn ${params.strategy === k ? 'on' : ''}`}
+              onClick={() => setP('strategy', k)}>
+              {v.label}
+            </button>
+          ))}
+        </div>
+        <div className="info-box info-muted" style={{ marginTop:12 }}>
+          {params.strategy === 'celi-first' && '✅ Optimal fiscalement : CÉLI (libre d\'impôt) → Non enregistré → REER (imposable au retrait).'}
+          {params.strategy === 'reer-first' && '📋 Vider le REER/FERR en premier, utile avant la conversion obligatoire à 71 ans.'}
+          {params.strategy === 'balanced'   && '⚖️ Retraits proportionnels selon la valeur de chaque compte. Simple, mais sous-optimal fiscalement.'}
+        </div>
+      </div>
+
+      <div className="card card-pad">
+        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:14 }}>
+          <div style={{ fontWeight:600 }}>Retraits planifiés</div>
+          <button className="btn btn-sm"
+            style={{ border:`1px solid ${CLR.blue}`, background:`${CLR.blue}10`, color:CLR.blue }}
+            onClick={() => setWithdrawals(p => [...p, { id:uid(), startAge:65, endAge:100, amount:30000, type:'fixed' }])}>
+            + Ajouter
+          </button>
+        </div>
+        {withdrawals.map((w, i) => (
+          <div key={w.id} className="w-row">
+            {[
+              { lbl:'De (âge)', k:'startAge', width:75 },
+              { lbl:'À (âge)',  k:'endAge',   width:75 },
+              { lbl:'Montant',  k:'amount',   width:120 },
+            ].map(fi => (
+              <div key={fi.k} style={{ flex:`0 0 ${fi.width}px` }}>
+                <div className="field-lbl" style={{ marginBottom:4 }}>{fi.lbl}</div>
+                <input className="input" type="number" value={w[fi.k]}
+                  onChange={e => updateW(i, fi.k, +e.target.value)}/>
+              </div>
+            ))}
+            <div>
+              <div className="field-lbl" style={{ marginBottom:4 }}>Type</div>
+              <select className="select" style={{ width:130 }} value={w.type}
+                onChange={e => updateW(i, 'type', e.target.value)}>
+                <option value="fixed">Montant fixe $</option>
+                <option value="percent">% du portefeuille</option>
+              </select>
+            </div>
+            <button className="btn btn-sm btn-danger" style={{ alignSelf:'flex-end' }}
+              onClick={() => setWithdrawals(p => p.filter(x => x.id !== w.id))}>
+              Supprimer
+            </button>
+          </div>
+        ))}
+      </div>
+
+      <div className="card card-pad">
+        <div style={{ fontWeight:600, marginBottom:14 }}>Prestations gouvernementales (RRQ / SV / SRG)</div>
+        <div className="g3">
+          {[
+            { lbl:'Âge RRQ', k:'ageRRQ', note:'Entre 60 et 72 ans' },
+            { lbl:'Âge SV',  k:'ageSV',  note:'Entre 65 et 70 ans (+7,2%/an)' },
+            { lbl:'Salaire moyen', k:'salary', note:'Base de calcul RRQ' },
+          ].map(fi => (
+            <Field key={fi.k} label={fi.lbl} hint={fi.note}>
+              <input className="input" type="number" value={params[fi.k]}
+                style={{ color:CLR.teal }}
+                onChange={e => setP(fi.k, +e.target.value)}/>
+            </Field>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+}
+
+function PageParams({ params, setParams }) {
+  const setP = (k, v) => setParams(p => ({ ...p, [k]: v }));
+  return (
+    <>
+      <div className="sec-title">Paramètres de simulation</div>
+      <div className="card card-pad" style={{ maxWidth:560, display:'flex', flexDirection:'column', gap:18 }}>
+        <Field label={`Horizon · ${params.ageFrom} à ${params.ageTo} ans`}>
+          <div className="g2" style={{ marginTop:4 }}>
+            {[
+              { l:'Âge de départ', k:'ageFrom', min:18, max:64 },
+              { l:'Âge de fin',    k:'ageTo',   min:50, max:110 },
+            ].map(fi => (
+              <div key={fi.k}>
+                <div style={{ fontSize:11, color:CLR.muted, marginBottom:4 }}>{fi.l}</div>
+                <input type="range" min={fi.min} max={fi.max} value={params[fi.k]}
+                  onChange={e => setP(fi.k, +e.target.value)}/>
+                <div className="rl">
+                  <span>{fi.min}</span>
+                  <b style={{ color:CLR.navy }}>{params[fi.k]} ans</b>
+                  <span>{fi.max}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Field>
+
+        <Field label="Salaire moyen (base de calcul RRQ)">
+          <NumInput value={params.salary} onChange={v => setP('salary', v)} prefix="$" min={0}/>
+        </Field>
+
+        <div className="info-box info-blue">
+          <b>Monte Carlo (N=200)</b> — Chaque simulation applique des chocs annuels aléatoires
+          calibrés sur le risque de chaque compte (Faible σ=5%, Modéré σ=12%, Élevé σ=20%).
+          Les bandes P10–P90 illustrent la fourchette réaliste des résultats.
+        </div>
+      </div>
+    </>
+  );
+}
+
+function PageMonte({ sim, mc, params }) {
+  const last      = sim.length ? sim[sim.length - 1] : { totalBalance:0 };
+  const retAge    = params.ageRRQ || 65;
+  const chartData = useMemo(() => buildChartData(sim, mc), [sim, mc]);
+  const lastMC    = mc && mc.chartData && mc.chartData.length
+    ? mc.chartData[mc.chartData.length - 1] : {};
+
+  return (
+    <>
+      <div className="sec-title">Analyse Monte Carlo</div>
+
+      <div style={{ display:'flex', gap:14, flexWrap:'wrap', alignItems:'flex-start' }}>
+        <div className="card card-pad" style={{ flex:'0 0 220px', textAlign:'center' }}>
+          <div style={{ fontWeight:600, marginBottom:10 }}>Probabilité de succès</div>
+          <Gauge pct={mc ? mc.successRate : 0}/>
+          <div style={{ fontSize:11, color:CLR.muted, marginTop:10, lineHeight:1.6 }}>
+            Portefeuille positif à {params.ageTo} ans dans{' '}
+            <b style={{ color:CLR.navy }}>{mc ? mc.successRate : '…'}%</b>{' '}
+            des {mc ? mc.N : 200} simulations
+          </div>
+        </div>
+
+        <div className="card card-pad" style={{ flex:1, minWidth:200 }}>
+          <div style={{ fontWeight:600, marginBottom:12 }}>Valeur finale à {params.ageTo} ans</div>
+          {[
+            { lbl:'P10 — Pessimiste',   key:'p10',  color:CLR.red    },
+            { lbl:'P50 — Médiane',      key:'p50',  color:CLR.purple },
+            { lbl:'P90 — Optimiste',    key:'p90',  color:CLR.green  },
+            { lbl:'Base (taux fixes)',  key:'base', color:CLR.navy   },
+          ].map(({ lbl, key, color }) => {
+            const val = key === 'base' ? last.totalBalance : lastMC[key];
+            return (
+              <div key={key} style={{ display:'flex', justifyContent:'space-between', alignItems:'center',
+                padding:'10px 0', borderBottom:'1px solid #F1F5F9' }}>
+                <span style={{ fontSize:12, color, fontWeight:600 }}>{lbl}</span>
+                <span style={{ fontWeight:800, fontSize:16, color }}>{val != null ? fmtK(val) : '…'}</span>
+              </div>
+            );
+          })}
+          <p style={{ fontSize:10, color:CLR.muted, marginTop:10 }}>
+            N={mc ? mc.N : 200} simulations · Volatilité calibrée par niveau de risque
+          </p>
+        </div>
+      </div>
+
+      <div className="card">
+        <div className="card-head">
+          <span>Éventail des scénarios · {params.ageFrom}→{params.ageTo} ans</span>
+          <span style={{ fontSize:11, color:CLR.muted }}>N = {mc ? mc.N : 200}</span>
+        </div>
+        <div style={{ padding:'12px 4px 0' }}>
+          <ResponsiveContainer width="100%" height={320}>
+            <ComposedChart data={chartData} margin={{ top:4, right:16, left:0, bottom:0 }}>
+              <CartesianGrid stroke="#F1F5F9" strokeDasharray="3 3"/>
+              <XAxis dataKey="age" stroke={CLR.muted} tick={{ fontSize:10 }}/>
+              <YAxis tickFormatter={fmtK} stroke={CLR.muted} tick={{ fontSize:9 }} width={46}/>
+              <Tooltip content={<ChartTip/>}/>
+              <ReferenceLine x={retAge} stroke={CLR.teal} strokeDasharray="5 3"
+                label={{ value:'Retraite', fill:CLR.teal, fontSize:10 }}/>
+              <MCBands mc={mc}/>
+              {mc && <Line type="monotone" dataKey="p10" stroke={`${CLR.red}80`}
+                strokeWidth={1.5} dot={false} strokeDasharray="4 3" name="P10"/>}
+              <Line type="monotone" dataKey="base" stroke={CLR.navy} strokeWidth={2.5} dot={false} name="Base"/>
+            </ComposedChart>
+          </ResponsiveContainer>
+        </div>
+        <div className="legend">
+          <div className="li"><span className="ll" style={{ background:CLR.navy }}/> Base</div>
+          <div className="li"><span className="ll" style={{ background:CLR.purple, opacity:.8 }}/> Médiane P50</div>
+          <div className="li"><span className="la" style={{ background:`${CLR.blue}30` }}/> Zone P25–P75</div>
+          <div className="li"><span className="ll" style={{ background:CLR.red, opacity:.7 }}/> P10 (pessimiste)</div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+/* ── Root ────────────────────────────────────────────────────────────────── */
+const TABS = [
+  { id:'dashboard',    icon:'📊', label:'Tableau de bord' },
+  { id:'accounts',    icon:'💰', label:'Placements'       },
+  { id:'withdrawals', icon:'📉', label:'Retraits'          },
+  { id:'params',      icon:'⚙️', label:'Paramètres'        },
+  { id:'monte',       icon:'🧠', label:'Monte Carlo'       },
+];
+
+function App() {
+  const [accounts,    setAccounts]    = useState(DEF_ACCOUNTS);
+  const [withdrawals, setWithdrawals] = useState(DEF_WITHDRAWALS);
+  const [params,      setParams]      = useState(DEF_PARAMS);
+  const [tab,         setTab]         = useState('dashboard');
+  const [mc,          setMc]          = useState(null);
+  const [mcRunning,   setMcRunning]   = useState(false);
+
+  const sim = useMemo(
+    () => runSim(accounts, withdrawals, params, null),
+    [accounts, withdrawals, params]
+  );
+
+  useEffect(() => {
+    setMcRunning(true);
+    const t = setTimeout(() => {
+      setMc(runMC(accounts, withdrawals, params));
+      setMcRunning(false);
+    }, 400);
+    return () => clearTimeout(t);
+  }, [accounts, withdrawals, params]);
+
+  const suggestions = useMemo(
+    () => getSuggestions(sim, params, accounts, mc),
+    [sim, params, accounts, mc]
+  );
+
+  return (
+    <div className="app">
+      <nav className="topbar">
+        <div className="logo">RetirePlan <span>QC</span></div>
+        {TABS.map(t => (
+          <button key={t.id}
+            className={`tab-btn ${tab === t.id ? 'on' : ''}`}
+            onClick={() => setTab(t.id)}>
+            {t.icon} {t.label}
+          </button>
+        ))}
+        <div className="tag">
+          {mcRunning
+            ? <><span className="spinner"/>Simulation…</>
+            : `${accounts.length} compte${accounts.length !== 1 ? 's' : ''}`}
+        </div>
+      </nav>
+
+      <main className="main">
+        {tab === 'dashboard'   && <PageDashboard   sim={sim} mc={mc} params={params} accounts={accounts} suggestions={suggestions}/>}
+        {tab === 'accounts'    && <PageAccounts    accounts={accounts} setAccounts={setAccounts} params={params}/>}
+        {tab === 'withdrawals' && <PageWithdrawals withdrawals={withdrawals} setWithdrawals={setWithdrawals} params={params} setParams={setParams}/>}
+        {tab === 'params'      && <PageParams      params={params} setParams={setParams}/>}
+        {tab === 'monte'       && <PageMonte       sim={sim} mc={mc} params={params}/>}
+      </main>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
 </body>
 </html>
