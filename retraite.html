@@ -190,10 +190,12 @@ const RISK = {
   high:   {label:'Élevé',   vol:.20, color:'#dc2626'},
 };
 const STRAT = {
+  'smart':      {label:'REER + CÉLI optimal', order:null, smart:true,
+    desc:"🎯 Retire du REER jusqu'au montant personnel de base (~15 705$) net des revenus gouvernementaux (RRQ/SV/SRG) — aucun impôt net sur ce retrait. Le reste vient du CÉLI, libre d'impôt. Stratégie fiscalement optimale à la retraite."},
   'celi-first': {label:'CÉLI d\'abord', order:['CELI','NONREG','REER','IMMO','AUTRE'],
-    desc:"✅ Optimal fiscalement : CÉLI (libre d'impôt) → Non enregistré → REER (imposable au retrait)."},
+    desc:"✅ Retire d'abord le CÉLI (libre d'impôt), puis le non enregistré, puis le REER (imposable au retrait)."},
   'reer-first': {label:'REER d\'abord', order:['REER','NONREG','CELI','IMMO','AUTRE'],
-    desc:"📋 Vider le REER/FERR en premier, utile avant la conversion obligatoire à 71 ans."},
+    desc:"📋 Vider le REER/FERR en premier — utile avant la conversion obligatoire en FERR à 71 ans."},
   'balanced':   {label:'Proportionnel', order:null,
     desc:"⚖️ Retraits proportionnels selon la valeur de chaque compte. Simple mais sous-optimal fiscalement."},
 };
@@ -229,7 +231,7 @@ const S = {
     {id:uid(),name:'CÉLI',type:'CELI',balance:20000,contribAmt:6000, contribFreq:'annual',contribStart:25,contribEnd:65,oneTime:[],rate:5,risk:'low'},
   ],
   withdrawals: [{id:uid(),startAge:65,endAge:100,amount:45000,type:'fixed'}],
-  params: {ageFrom:25,ageTo:95,salary:80000,ageRRQ:65,ageSV:65,ageSRG:60,strategy:'celi-first'},
+  params: {ageFrom:25,ageTo:95,salary:80000,ageRRQ:65,ageSV:65,ageSRG:60,strategy:'smart'},
   sim:[], mc:null, mcRunning:false, modalAcct:null,
 };
 
@@ -288,8 +290,34 @@ function runSim(accounts,withdrawals,params,shocks){
     const rrq=calcRRQ(age,ageRRQ,salary),sv=calcSV(age,ageSV),srg=calcSRG(age,ageSV,ageSRG,0,sv),gov=rrq+sv+srg;
     let needed=0;withdrawals.forEach(w=>{if(age>=w.startAge&&age<=w.endAge)needed+=w.type==='fixed'?w.amount:tot*(w.amount/100);});
     let fp=Math.max(0,needed-gov);
-    if(STRAT[strategy]&&STRAT[strategy].order){pids.forEach(id=>{if(fp<=0)return;const t=Math.min(bal[id]||0,fp);bal[id]-=t;fp-=t;});}
-    else{const tt=Object.values(bal).reduce((s,v)=>s+v,0)||1;accounts.forEach(a=>{bal[a.id]=Math.max(0,bal[a.id]-(bal[a.id]/tt)*fp);});}
+    if(strategy==='smart'){
+      // Montant personnel de base fédéral + QC (simplifié, identique à calcTax)
+      const BPA=15705;
+      // Ce qu'on peut retirer du REER sans générer d'impôt net :
+      // total revenu = gov + reer_retrait ≤ BPA → reer_retrait ≤ BPA - gov
+      const reerFree=Math.max(0,BPA-gov);
+      let fromReer=Math.min(fp,reerFree),rem=fp;
+      // 1. REER jusqu'au seuil fiscal
+      accounts.filter(a=>a.type==='REER').forEach(a=>{
+        if(fromReer<=0)return;const t=Math.min(bal[a.id]||0,fromReer);bal[a.id]-=t;fromReer-=t;rem-=t;
+      });
+      // 2. CÉLI pour le reste (libre d'impôt)
+      accounts.filter(a=>a.type==='CELI').forEach(a=>{
+        if(rem<=0)return;const t=Math.min(bal[a.id]||0,rem);bal[a.id]-=t;rem-=t;
+      });
+      // 3. Autres comptes (non enr., immo, autre)
+      accounts.filter(a=>a.type!=='REER'&&a.type!=='CELI').forEach(a=>{
+        if(rem<=0)return;const t=Math.min(bal[a.id]||0,rem);bal[a.id]-=t;rem-=t;
+      });
+      // 4. REER au-delà du seuil si les autres comptes sont épuisés
+      accounts.filter(a=>a.type==='REER').forEach(a=>{
+        if(rem<=0)return;const t=Math.min(bal[a.id]||0,rem);bal[a.id]-=t;rem-=t;
+      });
+    } else if(STRAT[strategy]&&STRAT[strategy].order){
+      pids.forEach(id=>{if(fp<=0)return;const t=Math.min(bal[id]||0,fp);bal[id]-=t;fp-=t;});
+    } else {
+      const tt=Object.values(bal).reduce((s,v)=>s+v,0)||1;accounts.forEach(a=>{bal[a.id]=Math.max(0,bal[a.id]-(bal[a.id]/tt)*fp);});
+    }
     const totalBal=Math.round(Object.values(bal).reduce((s,v)=>s+v,0));
     const tax=Math.round(calcTax(Math.max(0,needed-gov)));
     rows.push({age,totalBalance:totalBal,rrq,sv,srg,gov,withdrawal:needed,tax,net:Math.round(needed+gov-tax)});
@@ -514,6 +542,10 @@ function pageAccounts(){
           <div class="acct-stat"><div class="stat-lbl">Contrib./an</div><div class="stat-val">${fmtK(ann)}</div></div>
           <div class="acct-stat"><div class="stat-lbl">Rendement</div><div class="stat-val">${a.rate}%/an</div></div>
           <div class="acct-stat"><div class="stat-lbl">Risque</div><div class="stat-val">${risk.label}</div></div>
+        </div>
+        <div style="font-size:11px;color:${C.gris};margin-bottom:8px;padding:5px 8px;background:${C.fond};border-radius:3px">
+          📅 Contributions&nbsp;: <b>${a.contribStart}→${a.contribEnd} ans</b>
+          &nbsp;·&nbsp;Croissance active jusqu'à la fin de la simulation
         </div>
         ${a.oneTime&&a.oneTime.length?`<div style="font-size:11px;color:${C.gris};margin-bottom:8px">🎯 ${a.oneTime.length} contribution ponctuelle${a.oneTime.length>1?'s':''}</div>`:''}
         <span class="acct-badge" style="background:${def.color}18;color:${def.color}">${def.tax}</span>
