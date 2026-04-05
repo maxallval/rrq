@@ -365,7 +365,7 @@ function drawMainChart(id){
   const sim=S.sim,mc=S.mc,ages=sim.map(r=>r.age),n=sim.length;
   let max=0;sim.forEach(r=>{if(r.totalBalance>max)max=r.totalBalance;});
   if(mc)mc.chartData.forEach(r=>{if(r.p90>max)max=r.p90;});
-  max=niceMax(max);
+  max=Math.min(5000000,niceMax(max));
   ctx.clearRect(0,0,W,H);drawGrid(ctx,pad,iW,iH,max,ages);
   const px=(i,v)=>({x:pad.l+(i/(n-1||1))*iW,y:pad.t+iH-(v/max)*iH});
   if(mc&&mc.chartData.length){
@@ -421,7 +421,7 @@ function drawSmall(id,vals,color){
 }
 
 function refreshCharts(){
-  if(S.tab==='dashboard'){drawMainChart('chartMain');drawSmall('chartRRQ',S.sim.map(r=>r.rrq),C.vert);drawSmall('chartSV',S.sim.map(r=>r.sv+r.srg),C.violet);drawSmall('chartTax',S.sim.map(r=>r.tax),C.orange);}
+  if(S.tab==='dashboard')drawMainChart('chartMain');
   if(S.tab==='monte')drawMainChart('chartMC');
 }
 
@@ -463,7 +463,7 @@ function pageDashboard(){
     ${section('1','Évolution du portefeuille',`
       <div class="card">
         <div class="card-head"><span>${S.params.ageFrom}→${S.params.ageTo} ans · Points tous les 5 ans</span><span style="font-size:11px;color:${C.gris}">Bandes MC P10→P90</span></div>
-        <div style="padding:8px 4px 2px"><canvas id="chartMain" style="height:240px"></canvas></div>
+        <div style="padding:8px 4px 2px"><canvas id="chartMain" style="height:480px"></canvas></div>
         <div class="legend">
           <div class="li"><span class="ll" style="background:${C.bleu}"></span>Base</div>
           <div class="li"><span class="ll" style="background:${C.violet};opacity:.8"></span>Médiane MC</div>
@@ -484,13 +484,7 @@ function pageDashboard(){
           <tbody>${tableRows}</tbody>
         </table>
       </div>`)}
-    ${section('3','Revenus passifs & impôts',`
-      <div class="sm-grid">
-        <div class="card"><div class="card-head">RRQ /an</div><div style="padding:6px 4px 4px"><canvas id="chartRRQ" style="height:90px"></canvas></div></div>
-        <div class="card"><div class="card-head">SV + SRG /an</div><div style="padding:6px 4px 4px"><canvas id="chartSV" style="height:90px"></canvas></div></div>
-        <div class="card"><div class="card-head">Impôts /an</div><div style="padding:6px 4px 4px"><canvas id="chartTax" style="height:90px"></canvas></div></div>
-      </div>`)}
-    ${tips.length?section('4','Suggestions intelligentes',tips.map(t=>`<div class="alert ${t.cls}"><span class="alert-icon">${t.icon}</span><span>${esc(t.text)}</span></div>`).join('')):''}
+    ${tips.length?section('3','Suggestions intelligentes',tips.map(t=>`<div class="alert ${t.cls}"><span class="alert-icon">${t.icon}</span><span>${esc(t.text)}</span></div>`).join('')):''}
   `;
 }
 
