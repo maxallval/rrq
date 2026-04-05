@@ -439,7 +439,9 @@ function pageDashboard(){
   const tips=getSuggestions();
 
   // Table par tranche (tous les 5 ans + milestones clés)
-  const milestoneAges=new Set([S.params.ageFrom,S.params.ageRRQ,S.params.ageSV,S.params.ageTo]);
+  const milestoneAges=new Set([S.params.ageFrom,S.params.ageRRQ,S.params.ageSV,S.params.ageTo,
+    ...S.accounts.flatMap(a=>[a.contribStart,a.contribEnd]),
+    ...S.withdrawals.flatMap(w=>[w.startAge,w.endAge])]);
   const tableRows=S.sim.filter(r=>r.age%5===0||milestoneAges.has(r.age)).map(r=>{
     const isMilestone=milestoneAges.has(r.age);
     const gov=Math.round(r.gov),netMois=r.net?Math.round(r.net/12):0;
@@ -804,7 +806,7 @@ document.addEventListener('input',e=>{
   const el=e.target,a=el.dataset.a;if(!a)return;
   if(a==='param')       {S.params[el.dataset.k]=+el.value;compute();return;}
   if(a==='param-range') {S.params[el.dataset.k]=+el.value;compute();renderMain();return;}
-  if(a==='w-field')     {S.withdrawals[+el.dataset.i][el.dataset.k]=+el.value;compute();renderMain();return;}
+  if(a==='w-field')     {S.withdrawals[+el.dataset.i][el.dataset.k]=+el.value;compute();return;}
   if(a==='w-type')      {S.withdrawals[+el.dataset.i].type=el.value;compute();renderMain();return;}
   if(a==='w-freq')      {S.withdrawals[+el.dataset.i].freq=el.value;compute();renderMain();return;}
   if(a==='w-name')      {S.withdrawals[+el.dataset.i].name=el.value;return;}
