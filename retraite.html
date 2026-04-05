@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>RetirePlan QC</title>
 <style>
-/* ── Reset ───────────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 body{background:#F0F4F8;font-family:Arial,sans-serif;font-size:14px;color:#1A1A1A}
@@ -15,133 +14,143 @@ input[type=range]{width:100%;margin-top:6px;cursor:pointer}
 table{border-collapse:collapse;width:100%}
 a{color:rgb(9,87,151)}
 
-/* ── Layout ──────────────────────────────────── */
+/* Layout */
 .app{display:flex;flex-direction:column;height:100vh}
-.topbar{background:rgb(9,87,151);padding:18px 24px;flex-shrink:0}
-.topbar h1{color:#fff;font-size:20px;font-weight:700;margin-bottom:3px}
+.topbar{background:rgb(9,87,151);padding:16px 24px;flex-shrink:0}
+.topbar h1{color:#fff;font-size:20px;font-weight:700;margin-bottom:2px}
 .topbar p{color:rgba(255,255,255,.75);font-size:12px}
-.or-bar{height:3px;background:rgb(240,150,134);border-radius:2px;margin-top:12px;width:60px}
+.or-bar{height:3px;background:rgb(240,150,134);border-radius:2px;margin-top:10px;width:60px}
 .nav{background:rgb(9,87,151);border-top:1px solid rgba(255,255,255,.15);display:flex;padding:0 24px;overflow-x:auto;flex-shrink:0}
-.tab-btn{padding:10px 16px;border:none;background:transparent;color:rgba(255,255,255,.55);font-size:13px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+.tab-btn{padding:10px 14px;border:none;background:transparent;color:rgba(255,255,255,.55);font-size:13px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
 .tab-btn.on{color:#fff;border-bottom-color:rgb(240,150,134)}
-.main{flex:1;overflow-y:auto;padding:20px 24px;max-width:900px;width:100%;margin:0 auto}
-@media(max-width:620px){.main{padding:14px}}
+.main{flex:1;overflow-y:auto;padding:18px 24px;max-width:940px;width:100%;margin:0 auto}
 
-/* ── Section headers ─────────────────────────── */
-.sec{margin-bottom:22px}
-.sec-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+/* Section headers */
+.sec{margin-bottom:20px}
+.sec-head{display:flex;align-items:center;gap:10px;margin-bottom:11px}
 .sec-num{background:rgb(9,87,151);color:#fff;border-radius:50%;width:24px;height:24px;min-width:24px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
 .sec-title{color:rgb(9,87,151);font-size:15px;font-weight:700}
 .sec-line{flex:1;height:1px;background:rgba(9,87,151,.25)}
 
-/* ── Cards ───────────────────────────────────── */
+/* Cards */
 .card{background:#fff;border:1px solid #CCC;border-radius:4px}
-.card-pad{padding:16px}
-.card-head{padding:10px 16px;border-bottom:1px solid #E0E0E0;font-size:13px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+.card-pad{padding:15px}
+.card-head{padding:9px 15px;border-bottom:1px solid #E0E0E0;font-size:13px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
 
-/* ── KPI strip ───────────────────────────────── */
-.kpi-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
-.kpi{background:#fff;border:1px solid #CCC;border-radius:4px;flex:1 1 130px;padding:12px 14px;border-top:3px solid rgb(9,87,151)}
+/* KPI */
+.kpi-row{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px}
+.kpi{background:#fff;border:1px solid #CCC;border-radius:4px;flex:1 1 120px;padding:11px 13px;border-top:3px solid rgb(9,87,151)}
 .kpi-lbl{font-size:10px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
-.kpi-val{font-size:20px;font-weight:700;color:rgb(9,87,151);margin-bottom:2px}
+.kpi-val{font-size:19px;font-weight:700;color:rgb(9,87,151);margin-bottom:2px}
 .kpi-sub{font-size:10px;color:#888}
 
-/* ── Forms ───────────────────────────────────── */
-.field-lbl{font-size:12px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px;display:block}
-.field-hint{font-size:11px;color:#888;margin-top:3px}
-.inp{width:100%;padding:7px 10px;border:1px solid #CCC;border-radius:3px;font-size:13px;font-weight:700;color:#1A1A1A;outline:none;background:#fff}
+/* Forms */
+.field-lbl{font-size:11px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;display:block}
+.field-hint{font-size:10px;color:#888;margin-top:2px}
+.inp{width:100%;padding:7px 9px;border:1px solid #CCC;border-radius:3px;font-size:13px;font-weight:700;color:#1A1A1A;outline:none;background:#fff}
 .inp:focus{border-color:rgb(9,87,151)}
-.sel{width:100%;padding:7px 9px;border:1px solid #CCC;border-radius:3px;font-size:13px;font-weight:600;color:#1A1A1A;background:#fff;outline:none}
+.sel{width:100%;padding:7px 8px;border:1px solid #CCC;border-radius:3px;font-size:13px;font-weight:600;color:#1A1A1A;background:#fff;outline:none}
 .irow{display:flex;align-items:stretch;border:1px solid #CCC;border-radius:3px;overflow:hidden;background:#fff}
 .irow:focus-within{border-color:rgb(9,87,151)}
-.irow .pfx{padding:0 9px;background:#F0F4F8;border-right:1px solid #E0E0E0;font-size:12px;color:#555;display:flex;align-items:center;flex-shrink:0}
-.irow .sfx{padding:0 9px;font-size:12px;color:#555;display:flex;align-items:center;flex-shrink:0}
+.irow .pfx{padding:0 8px;background:#F0F4F8;border-right:1px solid #E0E0E0;font-size:12px;color:#555;display:flex;align-items:center;flex-shrink:0}
+.irow .sfx{padding:0 8px;font-size:12px;color:#555;display:flex;align-items:center;flex-shrink:0}
 .irow input{flex:1;padding:7px 9px;border:none;outline:none;font-size:13px;font-weight:700;color:#1A1A1A;background:transparent;min-width:0}
-.rl{display:flex;justify-content:space-between;font-size:11px;color:#888;margin-top:3px}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.rl{display:flex;justify-content:space-between;font-size:10px;color:#888;margin-top:2px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px}
 .g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px}
 hr.div{border:none;border-top:1px solid #E0E0E0;margin:8px 0}
 
-/* ── Buttons ─────────────────────────────────── */
-.btn{padding:7px 16px;border-radius:3px;border:none;font-size:13px;font-weight:600}
+/* Buttons */
+.btn{padding:7px 14px;border-radius:3px;border:none;font-size:13px;font-weight:600}
 .btn:hover{opacity:.88}
-.btn-sm{padding:5px 11px;font-size:12px;border-radius:3px}
+.btn-sm{padding:4px 10px;font-size:12px;border-radius:3px}
 .btn-primary{background:rgb(9,87,151);color:#fff;border:1px solid rgb(9,87,151)}
 .btn-ghost{background:#fff;border:1px solid #CCC;color:#555}
 .btn-danger{background:#fff;border:1px solid #fecaca;color:#991b1b}
 .btn-icon{padding:4px 8px;font-size:13px;border-radius:3px;border:1px solid #E0E0E0;background:#fff}
 
-/* ── Segment control ─────────────────────────── */
-.seg{display:flex;gap:6px;flex-wrap:wrap}
-.seg-btn{padding:6px 14px;border-radius:3px;font-size:13px;font-weight:600;border:1px solid #CCC;background:#fff;color:rgb(9,87,151);transition:all .15s}
+/* Segment */
+.seg{display:flex;gap:5px;flex-wrap:wrap}
+.seg-btn{padding:6px 12px;border-radius:3px;font-size:12px;font-weight:600;border:1px solid #CCC;background:#fff;color:rgb(9,87,151)}
 .seg-btn.on{background:rgb(9,87,151);color:#fff;border-color:rgb(9,87,151)}
 
-/* ── Risk picker ─────────────────────────────── */
-.risk-btns{display:flex;gap:8px}
-.risk-btn{flex:1;padding:8px 6px;border-radius:3px;border:1px solid #CCC;background:#fff;font-size:12px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:2px}
+/* Risk */
+.risk-btns{display:flex;gap:7px}
+.risk-btn{flex:1;padding:8px 5px;border-radius:3px;border:1px solid #CCC;background:#fff;font-size:12px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:2px}
 .risk-btn small{font-size:10px;font-weight:400;opacity:.75}
 
-/* ── Account cards ───────────────────────────── */
-.acct-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:10px}
+/* Account cards */
+.acct-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
 .acct-card{background:#fff;border:1px solid #CCC;border-radius:4px;overflow:hidden}
 .acct-stripe{height:4px}
-.acct-body{padding:13px}
-.acct-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.acct-body{padding:12px}
+.acct-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:9px}
 .acct-ttl{display:flex;align-items:center;gap:8px}
 .acct-actions{display:flex;gap:4px}
-.acct-stats{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:9px}
-.acct-stat{background:#F0F4F8;border-radius:3px;padding:6px 9px}
+.acct-stats{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:8px}
+.acct-stat{background:#F0F4F8;border-radius:3px;padding:5px 8px}
 .stat-lbl{font-size:9px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px}
 .stat-val{font-size:13px;font-weight:700;color:#1A1A1A}
-.acct-badge{padding:4px 9px;border-radius:3px;font-size:10px;font-weight:700;display:inline-block}
+.acct-badge{padding:4px 8px;border-radius:3px;font-size:10px;font-weight:700;display:inline-block}
 
-/* ── Withdrawal row ──────────────────────────── */
-.w-row{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end;padding:11px;border:1px solid #E0E0E0;border-radius:3px;margin-bottom:7px;background:#FAFAFA}
+/* Withdrawal cards */
+.w-card{background:#fff;border:1px solid #CCC;border-radius:4px;overflow:hidden;margin-bottom:9px}
+.w-stripe{height:3px;background:rgb(9,87,151)}
+.w-body{padding:12px}
+.w-fields{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end;margin-top:9px}
+.w-field{display:flex;flex-direction:column;gap:3px}
 
-/* ── Alerts ──────────────────────────────────── */
-.alert{padding:9px 13px;border-radius:3px;font-size:12px;line-height:1.6;display:flex;gap:8px;align-items:flex-start;margin-bottom:7px}
+/* Portfolio table */
+.ptable{width:100%;border-collapse:collapse;font-size:12px}
+.ptable thead tr{background:rgb(9,87,151);color:#fff}
+.ptable th{padding:8px 10px;text-align:right;font-size:11px;white-space:nowrap;font-weight:700}
+.ptable th:first-child{text-align:left}
+.ptable td{padding:7px 10px;border-bottom:1px solid #E0E0E0;text-align:right;color:#1A1A1A}
+.ptable td:first-child{text-align:left;font-weight:700;color:rgb(9,87,151)}
+.ptable tr:nth-child(even) td{background:#F7F9FB}
+.ptable tr.milestone td{background:#E6EFF7!important;font-weight:700}
+
+/* Alerts */
+.alert{padding:8px 12px;border-radius:3px;font-size:12px;line-height:1.6;display:flex;gap:8px;align-items:flex-start;margin-bottom:7px}
 .alert-icon{font-size:15px;flex-shrink:0;margin-top:1px}
 .al-info  {background:#E6EFF7;border-left:3px solid rgb(9,87,151)}
 .al-warn  {background:#FFF8F0;border:1px solid rgba(196,86,0,.3);border-left:3px solid #C45600}
 .al-danger{background:#fff0f0;border-left:3px solid #dc2626}
 
-/* ── Info boxes ──────────────────────────────── */
-.info-box{padding:9px 12px;border-radius:3px;font-size:11px;line-height:1.65}
+/* Info boxes */
+.info-box{padding:8px 12px;border-radius:3px;font-size:11px;line-height:1.65}
 .info-blue {background:#E6EFF7;color:#555}
 .info-muted{background:#F0F4F8;color:#555}
 
-/* ── Canvas ──────────────────────────────────── */
+/* Canvas */
 canvas{display:block;width:100%}
 
-/* ── Legend ──────────────────────────────────── */
+/* Legend */
 .legend{display:flex;gap:14px;flex-wrap:wrap;padding:6px 14px 10px;font-size:12px;color:#555}
 .li{display:flex;align-items:center;gap:5px}
 .ll{width:20px;height:2.5px;border-radius:1px;flex-shrink:0;display:inline-block}
 .la{width:13px;height:9px;border-radius:2px;flex-shrink:0;display:inline-block}
 
-/* ── Small grid ──────────────────────────────── */
+/* Small grid */
 .sm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 
-/* ── Modal ───────────────────────────────────── */
+/* Modal */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;display:none;align-items:center;justify-content:center;padding:16px}
 .overlay.open{display:flex}
 .modal{background:#fff;border-radius:4px;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.2)}
 .modal-top{height:4px;background:rgb(9,87,151)}
-.modal-head{padding:13px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #E0E0E0;font-size:15px;font-weight:700}
-.modal-body{padding:16px;display:flex;flex-direction:column;gap:12px}
-.modal-foot{padding:12px 16px;border-top:1px solid #E0E0E0;display:flex;justify-content:flex-end;gap:8px}
+.modal-head{padding:12px 15px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #E0E0E0;font-size:15px;font-weight:700}
+.modal-body{padding:15px;display:flex;flex-direction:column;gap:12px}
+.modal-foot{padding:11px 15px;border-top:1px solid #E0E0E0;display:flex;justify-content:flex-end;gap:8px}
 .modal-x{border:none;background:none;font-size:22px;color:#999;line-height:1}
 
-/* ── One-time row ────────────────────────────── */
+/* One-time row */
 .ot-row{display:flex;gap:8px;align-items:flex-end;margin-bottom:6px}
 
-/* ── Gauge SVG ───────────────────────────────── */
-.gauge{text-align:center}
-
-/* ── Spinner ─────────────────────────────────── */
+/* Spinner */
 @keyframes spin{to{transform:rotate(360deg)}}
-.spin{display:inline-block;width:10px;height:10px;border:2px solid rgba(255,255,255,.3);border-top-color:rgb(240,150,134);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:5px}
+.spin{display:inline-block;width:10px;height:10px;border:2px solid rgba(255,255,255,.3);border-top-color:rgb(240,150,134);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:4px}
 </style>
 </head>
 <body>
@@ -154,170 +163,133 @@ canvas{display:block;width:100%}
   <nav class="nav" id="nav"></nav>
   <main class="main" id="main"></main>
 </div>
-<div class="overlay" id="overlay">
-  <div class="modal" id="modal"></div>
-</div>
+<div class="overlay" id="overlay"><div class="modal" id="modal"></div></div>
 
 <script>
 'use strict';
 
-/* ── COULEURS ────────────────────────────────────────── */
-const C = {
-  bleu:     'rgb(9,87,151)',
-  bleuPale: '#E6EFF7',
-  or:       'rgb(240,150,134)',
-  vert:     '#1E7E34',
-  orange:   '#C45600',
-  violet:   '#6F42C1',
-  gris:     '#555',
-  grisClair:'#E0E0E0',
-  bordure:  '#CCC',
-  fond:     '#F0F4F8',
-  blanc:    '#FFFFFF',
-};
+/* ── COULEURS ─────────────────────────────────────────── */
+const C={bleu:'rgb(9,87,151)',bleuPale:'#E6EFF7',or:'rgb(240,150,134)',
+  vert:'#1E7E34',orange:'#C45600',violet:'#6F42C1',
+  gris:'#555',grisClair:'#E0E0E0',bordure:'#CCC',fond:'#F0F4F8',blanc:'#FFFFFF'};
 
-/* ── CONFIG ──────────────────────────────────────────── */
-const ACCT = {
-  REER:   {label:'REER',           icon:'🏦', color:C.bleu,   tax:"Déductible à la contribution · Imposable au retrait"},
-  CELI:   {label:'CÉLI',           icon:'🌱', color:C.vert,   tax:"Cotisations après impôt · Retraits libres d'impôt"},
-  NONREG: {label:'Non enregistré', icon:'📈', color:C.orange, tax:"50 % des gains en capital imposables"},
-  IMMO:   {label:'Immobilier',     icon:'🏠', color:C.violet, tax:"Valeur nette estimée de la propriété"},
-  AUTRE:  {label:'Autre actif',    icon:'💼', color:C.gris,   tax:"Actif personnalisé"},
+/* ── CONFIG ───────────────────────────────────────────── */
+const ACCT={
+  REER:  {label:'REER',          icon:'🏦',color:C.bleu,  tax:"Déductible · Imposable au retrait"},
+  CELI:  {label:'CÉLI',          icon:'🌱',color:C.vert,  tax:"Retraits libres d'impôt"},
+  NONREG:{label:'Non enregistré',icon:'📈',color:C.orange,tax:"50% des gains en capital imposables"},
+  IMMO:  {label:'Immobilier',    icon:'🏠',color:C.violet,tax:"Valeur nette estimée"},
+  AUTRE: {label:'Autre actif',   icon:'💼',color:C.gris,  tax:"Actif personnalisé"},
 };
-const RISK = {
-  low:    {label:'Faible',  vol:.05, color:C.vert},
-  medium: {label:'Modéré',  vol:.12, color:C.orange},
-  high:   {label:'Élevé',   vol:.20, color:'#dc2626'},
+const RISK={
+  low:   {label:'Faible', vol:.05,color:C.vert},
+  medium:{label:'Modéré', vol:.12,color:C.orange},
+  high:  {label:'Élevé',  vol:.20,color:'#dc2626'},
 };
-const STRAT = {
-  'smart':      {label:'REER + CÉLI optimal', order:null, smart:true,
-    desc:"🎯 Retire du REER jusqu'au montant personnel de base (~15 705$) net des revenus gouvernementaux (RRQ/SV/SRG) — aucun impôt net sur ce retrait. Le reste vient du CÉLI, libre d'impôt. Stratégie fiscalement optimale à la retraite."},
-  'celi-first': {label:'CÉLI d\'abord', order:['CELI','NONREG','REER','IMMO','AUTRE'],
-    desc:"✅ Retire d'abord le CÉLI (libre d'impôt), puis le non enregistré, puis le REER (imposable au retrait)."},
-  'reer-first': {label:'REER d\'abord', order:['REER','NONREG','CELI','IMMO','AUTRE'],
-    desc:"📋 Vider le REER/FERR en premier — utile avant la conversion obligatoire en FERR à 71 ans."},
-  'balanced':   {label:'Proportionnel', order:null,
-    desc:"⚖️ Retraits proportionnels selon la valeur de chaque compte. Simple mais sous-optimal fiscalement."},
+const STRAT={
+  'smart':     {label:'REER + CÉLI optimal',order:null,smart:true,
+    desc:"🎯 Retire du REER jusqu'au montant personnel de base (~15 705$) net des revenus gouvernementaux — aucun impôt net. Le reste vient du CÉLI, libre d'impôt."},
+  'celi-first':{label:'CÉLI d\'abord',order:['CELI','NONREG','REER','IMMO','AUTRE'],
+    desc:"✅ CÉLI (libre d'impôt) → Non enregistré → REER (imposable au retrait)."},
+  'reer-first':{label:'REER d\'abord',order:['REER','NONREG','CELI','IMMO','AUTRE'],
+    desc:"📋 Vider le REER/FERR avant la conversion obligatoire à 71 ans."},
+  'balanced':  {label:'Proportionnel',order:null,
+    desc:"⚖️ Retraits proportionnels selon la valeur de chaque compte."},
 };
-const TABS = [
-  {id:'dashboard',   icon:'📊', label:'Tableau de bord'},
-  {id:'accounts',    icon:'💰', label:'Placements'},
-  {id:'withdrawals', icon:'📉', label:'Retraits'},
-  {id:'params',      icon:'⚙️', label:'Paramètres'},
-  {id:'monte',       icon:'🧠', label:'Monte Carlo'},
+const TABS=[
+  {id:'dashboard',  icon:'📊',label:'Tableau de bord'},
+  {id:'accounts',   icon:'💰',label:'Placements'},
+  {id:'withdrawals',icon:'📉',label:'Retraits'},
+  {id:'params',     icon:'⚙️',label:'Paramètres'},
+  {id:'monte',      icon:'🧠',label:'Monte Carlo'},
 ];
 
 let _uid=0;
-const uid = () => 'u'+(++_uid);
-const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-const $   = id => document.getElementById(id);
-const clone = o => JSON.parse(JSON.stringify(o));
+const uid=()=>'u'+(++_uid);
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const $=id=>document.getElementById(id);
+const clone=o=>JSON.parse(JSON.stringify(o));
 
-/* ── FORMAT ──────────────────────────────────────────── */
-const fmtK = v => {
-  if(!isFinite(v)||isNaN(v)) return '—';
-  const a=Math.abs(v);
-  if(a>=1e6) return (v/1e6).toFixed(1)+'M$';
-  if(a>=1e3) return (v/1e3).toFixed(0)+'k$';
-  return Math.round(v)+'$';
-};
-const fmtCAD = v => Math.round(v).toLocaleString('fr-CA')+'\u202f$';
+/* ── FORMAT ───────────────────────────────────────────── */
+const fmtK=v=>{if(!isFinite(v)||isNaN(v))return'—';const a=Math.abs(v);if(a>=1e6)return(v/1e6).toFixed(1)+'M$';if(a>=1e3)return(v/1e3).toFixed(0)+'k$';return Math.round(v)+'$';};
+const fmtCAD=v=>Math.round(v).toLocaleString('fr-CA')+'\u202f$';
 
-/* ── STATE ───────────────────────────────────────────── */
-const S = {
-  tab: 'dashboard',
-  accounts: [
+/* ── STATE ────────────────────────────────────────────── */
+const S={
+  tab:'dashboard',
+  accounts:[
     {id:uid(),name:'REER',type:'REER',balance:50000,contribAmt:10000,contribFreq:'annual',contribStart:25,contribEnd:65,oneTime:[],rate:6,risk:'medium'},
     {id:uid(),name:'CÉLI',type:'CELI',balance:20000,contribAmt:6000, contribFreq:'annual',contribStart:25,contribEnd:65,oneTime:[],rate:5,risk:'low'},
   ],
-  withdrawals: [{id:uid(),startAge:65,endAge:100,amount:45000,type:'fixed'}],
-  params: {ageFrom:25,ageTo:95,salary:80000,ageRRQ:65,ageSV:65,ageSRG:60,strategy:'smart'},
-  sim:[], mc:null, mcRunning:false, modalAcct:null,
+  withdrawals:[
+    {id:uid(),name:'Retraite',startAge:65,endAge:100,amount:45000,type:'fixed',freq:'annual'},
+  ],
+  params:{ageFrom:25,ageTo:95,salary:80000,ageRRQ:65,ageSV:65,ageSRG:60,strategy:'smart'},
+  sim:[],mc:null,mcRunning:false,modalAcct:null,
 };
 
-/* ── FINANCE ─────────────────────────────────────────── */
-const randNorm = () => {
-  let u=0,v=0;
-  while(!u) u=Math.random(); while(!v) v=Math.random();
-  return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);
-};
-const calcRRQ = (age,aR,sal) => {
-  if(age<aR) return 0;
-  let b=Math.min(sal*.25,15888),d=aR-65;
-  if(d<0) b*=(1+d*.054); else if(d>0) b*=(1+Math.min(d,7)*.042);
-  return b;
-};
-const calcSV  = (age,aS) => age<aS?0:8000*(1+.072*Math.max(0,aS-65));
-const calcSRG = (age,aS,aSG,inc,sv) => (age<aS||age<aSG)?0:Math.max(0,12000-Math.max(0,inc-sv)*.5);
-const calcTax = inc => {
-  if(inc<=0) return 0;
-  const fb=[55867,111733,173205],fr=[.15,.205,.26,.33];
-  const qb=[49275,98540,119910], qr=[.15,.20,.2575,.2975];
+/* ── FINANCE ──────────────────────────────────────────── */
+const randNorm=()=>{let u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);};
+const calcRRQ=(age,aR,sal)=>{if(age<aR)return 0;let b=Math.min(sal*.25,15888),d=aR-65;if(d<0)b*=(1+d*.054);else if(d>0)b*=(1+Math.min(d,7)*.042);return b;};
+const calcSV=(age,aS)=>age<aS?0:8000*(1+.072*Math.max(0,aS-65));
+const calcSRG=(age,aS,aSG,inc,sv)=>(age<aS||age<aSG)?0:Math.max(0,12000-Math.max(0,inc-sv)*.5);
+const calcTax=inc=>{
+  if(inc<=0)return 0;
+  const fb=[55867,111733,173205],fr=[.15,.205,.26,.33],qb=[49275,98540,119910],qr=[.15,.20,.2575,.2975];
   let t=0,p=0;
   for(let i=0;i<4;i++){const l=i<fb.length?fb[i]:inc+1;t+=Math.max(0,Math.min(inc,l)-p)*fr[i];p=l;if(inc<=l)break;}
-  p=0;
-  for(let i=0;i<4;i++){const l=i<qb.length?qb[i]:inc+1;t+=Math.max(0,Math.min(inc,l)-p)*qr[i];p=l;if(inc<=l)break;}
+  p=0;for(let i=0;i<4;i++){const l=i<qb.length?qb[i]:inc+1;t+=Math.max(0,Math.min(inc,l)-p)*qr[i];p=l;if(inc<=l)break;}
   return Math.max(0,t-.30*15705);
 };
 
 function buildOrder(strategy,accounts){
   const order=STRAT[strategy]&&STRAT[strategy].order;
-  if(!order) return accounts.map(a=>a.id);
+  if(!order)return accounts.map(a=>a.id);
   const byT={};accounts.forEach(a=>(byT[a.type]=byT[a.type]||[]).push(a.id));
   const ids=[];order.forEach(t=>(byT[t]||[]).forEach(id=>ids.push(id)));
   accounts.forEach(a=>{if(!ids.includes(a.id))ids.push(a.id);});
   return ids;
 }
 
+/* Retrait annuel réel d'un retrait configuré */
+function wAnnual(w,portfolioTotal){
+  if(w.type==='percent') return portfolioTotal*(w.amount/100);
+  return w.freq==='monthly'?w.amount*12:w.amount;
+}
+
 function runSim(accounts,withdrawals,params,shocks){
-  if(!accounts.length) return [];
-  const {ageFrom,ageTo,salary,ageRRQ,ageSV,ageSRG,strategy}=params;
+  if(!accounts.length)return[];
+  const{ageFrom,ageTo,salary,ageRRQ,ageSV,ageSRG,strategy}=params;
   const bal={};accounts.forEach(a=>(bal[a.id]=a.balance));
   const pids=buildOrder(strategy,accounts);
   const rows=[];
+
   for(let age=ageFrom;age<=ageTo;age++){
     const yr=age-ageFrom;
-    accounts.forEach(a=>{
-      const sh=shocks&&shocks[a.id]?shocks[a.id][yr]||0:0;
-      bal[a.id]=Math.max(0,bal[a.id]*(1+a.rate/100+sh));
-    });
-    accounts.forEach(a=>{
-      if(age<a.contribStart||age>a.contribEnd) return;
-      bal[a.id]+=(a.contribFreq==='monthly'?a.contribAmt*12:a.contribAmt);
-    });
+    accounts.forEach(a=>{const sh=shocks&&shocks[a.id]?shocks[a.id][yr]||0:0;bal[a.id]=Math.max(0,bal[a.id]*(1+a.rate/100+sh));});
+    accounts.forEach(a=>{if(age<a.contribStart||age>a.contribEnd)return;bal[a.id]+=(a.contribFreq==='monthly'?a.contribAmt*12:a.contribAmt);});
     accounts.forEach(a=>(a.oneTime||[]).forEach(ot=>{if(ot.age===age)bal[a.id]+=ot.amount;}));
+
     const tot=Object.values(bal).reduce((s,v)=>s+v,0);
     const rrq=calcRRQ(age,ageRRQ,salary),sv=calcSV(age,ageSV),srg=calcSRG(age,ageSV,ageSRG,0,sv),gov=rrq+sv+srg;
-    let needed=0;withdrawals.forEach(w=>{if(age>=w.startAge&&age<=w.endAge)needed+=w.type==='fixed'?w.amount:tot*(w.amount/100);});
+    let needed=0;
+    withdrawals.forEach(w=>{if(age>=w.startAge&&age<=w.endAge)needed+=wAnnual(w,tot);});
+
+    /* Décaissement */
     let fp=Math.max(0,needed-gov);
     if(strategy==='smart'){
-      // Montant personnel de base fédéral + QC (simplifié, identique à calcTax)
-      const BPA=15705;
-      // Ce qu'on peut retirer du REER sans générer d'impôt net :
-      // total revenu = gov + reer_retrait ≤ BPA → reer_retrait ≤ BPA - gov
-      const reerFree=Math.max(0,BPA-gov);
-      let fromReer=Math.min(fp,reerFree),rem=fp;
-      // 1. REER jusqu'au seuil fiscal
-      accounts.filter(a=>a.type==='REER').forEach(a=>{
-        if(fromReer<=0)return;const t=Math.min(bal[a.id]||0,fromReer);bal[a.id]-=t;fromReer-=t;rem-=t;
-      });
-      // 2. CÉLI pour le reste (libre d'impôt)
-      accounts.filter(a=>a.type==='CELI').forEach(a=>{
-        if(rem<=0)return;const t=Math.min(bal[a.id]||0,rem);bal[a.id]-=t;rem-=t;
-      });
-      // 3. Autres comptes (non enr., immo, autre)
-      accounts.filter(a=>a.type!=='REER'&&a.type!=='CELI').forEach(a=>{
-        if(rem<=0)return;const t=Math.min(bal[a.id]||0,rem);bal[a.id]-=t;rem-=t;
-      });
-      // 4. REER au-delà du seuil si les autres comptes sont épuisés
-      accounts.filter(a=>a.type==='REER').forEach(a=>{
-        if(rem<=0)return;const t=Math.min(bal[a.id]||0,rem);bal[a.id]-=t;rem-=t;
-      });
+      const BPA=15705,reerFree=Math.max(0,BPA-gov);
+      let fromR=Math.min(fp,reerFree),rem=fp;
+      accounts.filter(a=>a.type==='REER').forEach(a=>{if(fromR<=0)return;const t=Math.min(bal[a.id]||0,fromR);bal[a.id]-=t;fromR-=t;rem-=t;});
+      accounts.filter(a=>a.type==='CELI').forEach(a=>{if(rem<=0)return;const t=Math.min(bal[a.id]||0,rem);bal[a.id]-=t;rem-=t;});
+      accounts.filter(a=>a.type!=='REER'&&a.type!=='CELI').forEach(a=>{if(rem<=0)return;const t=Math.min(bal[a.id]||0,rem);bal[a.id]-=t;rem-=t;});
+      accounts.filter(a=>a.type==='REER').forEach(a=>{if(rem<=0)return;const t=Math.min(bal[a.id]||0,rem);bal[a.id]-=t;rem-=t;});
     } else if(STRAT[strategy]&&STRAT[strategy].order){
       pids.forEach(id=>{if(fp<=0)return;const t=Math.min(bal[id]||0,fp);bal[id]-=t;fp-=t;});
     } else {
       const tt=Object.values(bal).reduce((s,v)=>s+v,0)||1;accounts.forEach(a=>{bal[a.id]=Math.max(0,bal[a.id]-(bal[a.id]/tt)*fp);});
     }
+
     const totalBal=Math.round(Object.values(bal).reduce((s,v)=>s+v,0));
     const tax=Math.round(calcTax(Math.max(0,needed-gov)));
     rows.push({age,totalBalance:totalBal,rrq,sv,srg,gov,withdrawal:needed,tax,net:Math.round(needed+gov-tax)});
@@ -327,13 +299,12 @@ function runSim(accounts,withdrawals,params,shocks){
 }
 
 function runMC(accounts,withdrawals,params,N=200){
-  if(!accounts.length) return null;
+  if(!accounts.length)return null;
   const runs=[];let ok=0;
   for(let i=0;i<N;i++){
-    const sh={};
-    accounts.forEach(a=>{const vol=(RISK[a.risk]||RISK.medium).vol;sh[a.id]={};for(let y=0;y<=params.ageTo-params.ageFrom+1;y++)sh[a.id][y]=randNorm()*vol;});
+    const sh={};accounts.forEach(a=>{const vol=(RISK[a.risk]||RISK.medium).vol;sh[a.id]={};for(let y=0;y<=params.ageTo-params.ageFrom+1;y++)sh[a.id][y]=randNorm()*vol;});
     const res=runSim(accounts,withdrawals,params,sh);runs.push(res);
-    if((res[res.length-1]&&res[res.length-1].totalBalance||0)>0) ok++;
+    if((res[res.length-1]&&res[res.length-1].totalBalance||0)>0)ok++;
   }
   const len=runs[0]?runs[0].length:0,cd=[];
   for(let i=0;i<len;i++){
@@ -341,21 +312,21 @@ function runMC(accounts,withdrawals,params,N=200){
     const p=f=>Math.max(0,vals[Math.floor(N*f)]||0);
     cd.push({age:runs[0][i].age,p10:p(.10),p25:p(.25),p50:p(.50),p75:p(.75),p90:p(.90)});
   }
-  return {chartData:cd,successRate:Math.round(ok/N*100),N};
+  return{chartData:cd,successRate:Math.round(ok/N*100),N};
 }
 
 function getSuggestions(){
   const tips=[],sr=S.mc?S.mc.successRate:100;
   const avg=S.accounts.length?S.accounts.reduce((s,a)=>s+a.rate,0)/S.accounts.length:0;
   if(sr<70)  tips.push({cls:'al-danger',icon:'🚨',text:`Probabilité de succès à ${sr}%. Augmentez les contributions ou réduisez les retraits.`});
-  else if(sr<85) tips.push({cls:'al-warn',icon:'⚠️',text:`Probabilité ${sr}%. Ajouter 5 000$/an dans le CÉLI améliorerait votre retraite.`});
-  if(!S.accounts.some(a=>a.type==='CELI')) tips.push({cls:'al-info',icon:'🌱',text:"Aucun CÉLI détecté. Les retraits y sont totalement libres d'impôt."});
-  if(S.params.ageRRQ<65) tips.push({cls:'al-info',icon:'🕐',text:`RRQ à ${S.params.ageRRQ} ans = pénalité de ${((65-S.params.ageRRQ)*5.4).toFixed(0)}%. Attendre 70 ans ajoute 42%.`});
-  if(S.accounts.length&&avg<4) tips.push({cls:'al-info',icon:'📈',text:`Rendement moyen ${avg.toFixed(1)}%/an. Des FNB diversifiés ciblent 6–8% sur 20+ ans.`});
+  else if(sr<85)tips.push({cls:'al-warn',icon:'⚠️',text:`Probabilité ${sr}%. Ajouter 5 000$/an dans le CÉLI améliorerait votre retraite.`});
+  if(!S.accounts.some(a=>a.type==='CELI'))tips.push({cls:'al-info',icon:'🌱',text:"Aucun CÉLI. Les retraits y sont totalement libres d'impôt."});
+  if(S.params.ageRRQ<65)tips.push({cls:'al-info',icon:'🕐',text:`RRQ à ${S.params.ageRRQ} ans = pénalité de ${((65-S.params.ageRRQ)*5.4).toFixed(0)}%. Attendre 70 ans ajoute 42%.`});
+  if(S.accounts.length&&avg<4)tips.push({cls:'al-info',icon:'📈',text:`Rendement moyen ${avg.toFixed(1)}%/an. Des FNB diversifiés ciblent 6–8% sur 20+ ans.`});
   return tips.slice(0,3);
 }
 
-/* ── COMPUTE ─────────────────────────────────────────── */
+/* ── COMPUTE ──────────────────────────────────────────── */
 let mcTimer=null;
 function compute(){
   S.sim=runSim(S.accounts,S.withdrawals,S.params,null);
@@ -363,15 +334,14 @@ function compute(){
   mcTimer=setTimeout(()=>{S.mc=runMC(S.accounts,S.withdrawals,S.params);S.mcRunning=false;updateNav();if(S.tab==='dashboard'||S.tab==='monte')renderMain();else refreshCharts();},380);
 }
 
-/* ── CANVAS CHARTS ───────────────────────────────────── */
+/* ── CANVAS ───────────────────────────────────────────── */
 const niceMax=v=>{if(!v||v<=0)return 1;const m=Math.pow(10,Math.floor(Math.log10(v)));return Math.ceil(v/m)*m;};
 
 function setupCv(id){
   const cv=$(id);if(!cv)return null;
   const dpr=window.devicePixelRatio||1,W=cv.offsetWidth||600,H=cv.offsetHeight||300;
   cv.width=W*dpr;cv.height=H*dpr;cv.style.width=W+'px';cv.style.height=H+'px';
-  const ctx=cv.getContext('2d');ctx.scale(dpr,dpr);
-  return{cv,ctx,W,H};
+  const ctx=cv.getContext('2d');ctx.scale(dpr,dpr);return{cv,ctx,W,H};
 }
 
 function drawGrid(ctx,pad,iW,iH,max,ages){
@@ -379,8 +349,7 @@ function drawGrid(ctx,pad,iW,iH,max,ages){
     const y=pad.t+iH*(1-f);
     ctx.strokeStyle=C.grisClair;ctx.lineWidth=1;ctx.setLineDash([3,3]);
     ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+iW,y);ctx.stroke();ctx.setLineDash([]);
-    ctx.fillStyle=C.gris;ctx.font='9px Arial';ctx.textAlign='right';
-    ctx.fillText(fmtK(max*f),pad.l-4,y+3);
+    ctx.fillStyle=C.gris;ctx.font='9px Arial';ctx.textAlign='right';ctx.fillText(fmtK(max*f),pad.l-4,y+3);
   });
   const n=ages.length,step=n>60?10:n>30?5:n>15?2:1;
   ctx.fillStyle=C.gris;ctx.font='9px Arial';ctx.textAlign='center';
@@ -397,38 +366,41 @@ function drawMainChart(id){
   let max=0;sim.forEach(r=>{if(r.totalBalance>max)max=r.totalBalance;});
   if(mc)mc.chartData.forEach(r=>{if(r.p90>max)max=r.p90;});
   max=niceMax(max);
-  ctx.clearRect(0,0,W,H);
-  drawGrid(ctx,pad,iW,iH,max,ages);
+  ctx.clearRect(0,0,W,H);drawGrid(ctx,pad,iW,iH,max,ages);
   const px=(i,v)=>({x:pad.l+(i/(n-1||1))*iW,y:pad.t+iH-(v/max)*iH});
   if(mc&&mc.chartData.length){
     const D=mc.chartData,nd=D.length,pmc=(i,v)=>({x:pad.l+(i/(nd-1||1))*iW,y:pad.t+iH-(v/max)*iH});
-    // P10–P90
     ctx.beginPath();D.forEach((d,i)=>{const p=pmc(i,d.p10);i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y);});
     for(let i=nd-1;i>=0;i--){const p=pmc(i,D[i].p90);ctx.lineTo(p.x,p.y);}
     ctx.closePath();ctx.fillStyle='rgba(9,87,151,.08)';ctx.fill();
-    // P25–P75
     ctx.beginPath();D.forEach((d,i)=>{const p=pmc(i,d.p25);i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y);});
     for(let i=nd-1;i>=0;i--){const p=pmc(i,D[i].p75);ctx.lineTo(p.x,p.y);}
     ctx.closePath();ctx.fillStyle='rgba(9,87,151,.18)';ctx.fill();
-    // Médiane
     ctx.beginPath();D.forEach((d,i)=>{const p=pmc(i,d.p50);i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y);});
     ctx.strokeStyle=C.violet;ctx.lineWidth=1.5;ctx.setLineDash([6,3]);ctx.stroke();ctx.setLineDash([]);
-    // P10
-    ctx.beginPath();D.forEach((d,i)=>{const p=pmc(i,d.p10);i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y);});
-    ctx.strokeStyle='rgba(196,86,0,.5)';ctx.lineWidth=1.5;ctx.setLineDash([4,3]);ctx.stroke();ctx.setLineDash([]);
   }
-  // Retraite ref
+  // Milestones (every 5y) sur le graphique
+  const step5=5;
+  sim.forEach((r,i)=>{
+    if(r.age%step5!==0||r.totalBalance===0)return;
+    const p=px(i,r.totalBalance);
+    ctx.fillStyle=C.bleu;ctx.font='bold 8px Arial';ctx.textAlign='center';
+    const label=fmtK(r.totalBalance);
+    const yy=p.y-6>pad.t+10?p.y-6:p.y+14;
+    ctx.fillText(label,p.x,yy);
+    ctx.beginPath();ctx.arc(p.x,p.y,3,0,Math.PI*2);ctx.fillStyle=C.bleu;ctx.fill();
+  });
+  // Ref retraite
   const ri=sim.findIndex(r=>r.age>=S.params.ageRRQ);
   if(ri>=0){const rx=pad.l+(ri/(n-1||1))*iW;
     ctx.strokeStyle='rgba(9,87,151,.35)';ctx.lineWidth=1;ctx.setLineDash([5,3]);
     ctx.beginPath();ctx.moveTo(rx,pad.t);ctx.lineTo(rx,pad.t+iH);ctx.stroke();ctx.setLineDash([]);
     ctx.fillStyle=C.bleu;ctx.font='bold 9px Arial';ctx.textAlign='left';ctx.fillText('Retraite',rx+3,pad.t+10);}
-  // Base fill
+  // Base fill + line
   const g=ctx.createLinearGradient(0,pad.t,0,pad.t+iH);
-  g.addColorStop(0,'rgba(9,87,151,.30)');g.addColorStop(1,'rgba(9,87,151,.02)');
+  g.addColorStop(0,'rgba(9,87,151,.28)');g.addColorStop(1,'rgba(9,87,151,.02)');
   ctx.beginPath();sim.forEach((r,i)=>{const p=px(i,r.totalBalance);i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y);});
   ctx.lineTo(px(n-1,0).x,pad.t+iH);ctx.lineTo(pad.l,pad.t+iH);ctx.closePath();ctx.fillStyle=g;ctx.fill();
-  // Base line
   ctx.beginPath();sim.forEach((r,i)=>{const p=px(i,r.totalBalance);i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y);});
   ctx.strokeStyle=C.bleu;ctx.lineWidth=2.5;ctx.stroke();
 }
@@ -439,16 +411,9 @@ function drawSmall(id,vals,color){
   if(iW<=0||iH<=0||!vals.length)return;
   const max=niceMax(Math.max(...vals)||1),n=vals.length;
   ctx.clearRect(0,0,W,H);
-  [0,.5,1].forEach(f=>{
-    const y=pad.t+iH*(1-f);
-    ctx.strokeStyle=C.grisClair;ctx.lineWidth=1;ctx.setLineDash([3,3]);
-    ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+iW,y);ctx.stroke();ctx.setLineDash([]);
-    if(f>0){ctx.fillStyle=C.gris;ctx.font='9px Arial';ctx.textAlign='right';ctx.fillText(fmtK(max*f),pad.l-3,y+3);}
-  });
-  ctx.strokeStyle=C.grisClair;ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,pad.t+iH);ctx.lineTo(pad.l+iW,pad.t+iH);ctx.stroke();
-  const g=ctx.createLinearGradient(0,pad.t,0,pad.t+iH);
-  g.addColorStop(0,color+'44');g.addColorStop(1,color+'08');
+  [0,.5,1].forEach(f=>{const y=pad.t+iH*(1-f);ctx.strokeStyle=C.grisClair;ctx.lineWidth=1;ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+iW,y);ctx.stroke();ctx.setLineDash([]);if(f>0){ctx.fillStyle=C.gris;ctx.font='9px Arial';ctx.textAlign='right';ctx.fillText(fmtK(max*f),pad.l-3,y+3);}});
+  ctx.strokeStyle=C.grisClair;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,pad.t+iH);ctx.lineTo(pad.l+iW,pad.t+iH);ctx.stroke();
+  const g=ctx.createLinearGradient(0,pad.t,0,pad.t+iH);g.addColorStop(0,color+'44');g.addColorStop(1,color+'08');
   ctx.beginPath();vals.forEach((v,i)=>{const x=pad.l+(i/(n-1||1))*iW,y=pad.t+iH-(v/max)*iH;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
   ctx.lineTo(pad.l+iW,pad.t+iH);ctx.lineTo(pad.l,pad.t+iH);ctx.closePath();ctx.fillStyle=g;ctx.fill();
   ctx.beginPath();vals.forEach((v,i)=>{const x=pad.l+(i/(n-1||1))*iW,y=pad.t+iH-(v/max)*iH;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
@@ -456,71 +421,80 @@ function drawSmall(id,vals,color){
 }
 
 function refreshCharts(){
-  if(S.tab==='dashboard'){
-    drawMainChart('chartMain');
-    drawSmall('chartRRQ',S.sim.map(r=>r.rrq),C.vert);
-    drawSmall('chartSV', S.sim.map(r=>r.sv+r.srg),C.violet);
-    drawSmall('chartTax',S.sim.map(r=>r.tax),C.orange);
-  }
-  if(S.tab==='monte') drawMainChart('chartMC');
+  if(S.tab==='dashboard'){drawMainChart('chartMain');drawSmall('chartRRQ',S.sim.map(r=>r.rrq),C.vert);drawSmall('chartSV',S.sim.map(r=>r.sv+r.srg),C.violet);drawSmall('chartTax',S.sim.map(r=>r.tax),C.orange);}
+  if(S.tab==='monte')drawMainChart('chartMC');
 }
 
-/* ── SECTIONS HTML helper ────────────────────────────── */
-const section=(num,title,inner)=>`
-  <div class="sec">
-    <div class="sec-head">
-      <div class="sec-num">${num}</div>
-      <div class="sec-title">${title}</div>
-      <div class="sec-line"></div>
-    </div>
-    ${inner}
-  </div>`;
+/* ── SECTION HELPER ───────────────────────────────────── */
+const section=(num,title,inner)=>`<div class="sec"><div class="sec-head"><div class="sec-num">${num}</div><div class="sec-title">${title}</div><div class="sec-line"></div></div>${inner}</div>`;
 
-/* ── PAGES ───────────────────────────────────────────── */
+/* ── PAGE: DASHBOARD ──────────────────────────────────── */
 function pageDashboard(){
   const last=S.sim.length?S.sim[S.sim.length-1]:{totalBalance:0};
   const ri=S.sim.findIndex(r=>r.age>=S.params.ageRRQ);
   const retR=ri>=0?S.sim[ri]:{};
   const mNet=retR.net?Math.round(retR.net/12):0;
   const sr=S.mc?S.mc.successRate:null;
+  const src=sr===null?C.gris:sr>=80?C.vert:sr>=65?C.orange:'#dc2626';
   const tips=getSuggestions();
 
-  const kpis=`
+  // Table par tranche (tous les 5 ans + milestones clés)
+  const milestoneAges=new Set([S.params.ageFrom,S.params.ageRRQ,S.params.ageSV,S.params.ageTo]);
+  const tableRows=S.sim.filter(r=>r.age%5===0||milestoneAges.has(r.age)).map(r=>{
+    const isMilestone=milestoneAges.has(r.age);
+    const gov=Math.round(r.gov),netMois=r.net?Math.round(r.net/12):0;
+    return`<tr class="${isMilestone?'milestone':''}">
+      <td>${r.age} ans${r.age===S.params.ageRRQ?' ★':''}</td>
+      <td><b style="color:${C.bleu}">${fmtK(r.totalBalance)}</b></td>
+      <td>${r.withdrawal>0?fmtK(r.withdrawal):'—'}</td>
+      <td>${gov>0?fmtK(gov):'—'}</td>
+      <td>${r.tax>0?fmtK(r.tax):'—'}</td>
+      <td>${netMois>0?fmtK(netMois)+'/mois':'—'}</td>
+    </tr>`;
+  }).join('');
+
+  return`
     <div class="kpi-row">
       <div class="kpi"><div class="kpi-lbl">Solde final projeté</div><div class="kpi-val">${fmtK(last.totalBalance)}</div><div class="kpi-sub">Scénario de base à ${S.params.ageTo} ans</div></div>
-      <div class="kpi"><div class="kpi-lbl">Probabilité de succès</div><div class="kpi-val" style="color:${sr===null?C.gris:sr>=80?C.vert:sr>=65?C.orange:'#dc2626'}">${sr!==null?`${sr}%`:'…'}</div><div class="kpi-sub">${S.mc?S.mc.N:200} simulations Monte Carlo</div></div>
+      <div class="kpi"><div class="kpi-lbl">Probabilité de succès</div><div class="kpi-val" style="color:${src}">${sr!==null?`${sr}%`:'…'}</div><div class="kpi-sub">${S.mc?S.mc.N:200} simulations Monte Carlo</div></div>
       <div class="kpi"><div class="kpi-lbl">Solde à ${S.params.ageRRQ} ans</div><div class="kpi-val">${fmtK(retR.totalBalance)}</div><div class="kpi-sub">Avant décaissement</div></div>
       <div class="kpi"><div class="kpi-lbl">Revenu net / mois</div><div class="kpi-val">${mNet>0?fmtK(mNet):'—'}</div><div class="kpi-sub">Retraits + RRQ + SV − impôts</div></div>
-    </div>`;
-
-  const chart=`
-    <div class="card">
-      <div class="card-head"><span>Évolution du portefeuille · ${S.params.ageFrom}→${S.params.ageTo} ans</span><span style="font-size:11px;color:${C.gris}">Bandes MC P10→P90 · Base = taux fixes</span></div>
-      <div style="padding:8px 4px 2px"><canvas id="chartMain" style="height:230px"></canvas></div>
-      <div class="legend">
-        <div class="li"><span class="ll" style="background:${C.bleu}"></span>Base</div>
-        <div class="li"><span class="ll" style="background:${C.violet};opacity:.8"></span>Médiane MC</div>
-        <div class="li"><span class="la" style="background:rgba(9,87,151,.2)"></span>Zone P25–P75</div>
-      </div>
-    </div>`;
-
-  const smalls=`
-    <div class="sm-grid">
-      ${['chartRRQ:RRQ /an','chartSV:SV + SRG /an','chartTax:Impôts /an'].map(s=>{
-        const[id,lbl]=s.split(':');
-        return`<div class="card"><div class="card-head">${lbl}</div><div style="padding:6px 4px 4px"><canvas id="${id}" style="height:95px"></canvas></div></div>`;
-      }).join('')}
-    </div>`;
-
-  const tipBox=tips.length?`
-    <div class="card card-pad">
-      <div style="font-weight:700;font-size:13px;margin-bottom:9px">💡 Suggestions intelligentes</div>
-      ${tips.map(t=>`<div class="alert ${t.cls}"><span class="alert-icon">${t.icon}</span><span>${esc(t.text)}</span></div>`).join('')}
-    </div>`:'';
-
-  return kpis+section('1','Vue d\'ensemble',chart+smalls)+(tipBox?section('2','Suggestions',tipBox):'');
+    </div>
+    ${section('1','Évolution du portefeuille',`
+      <div class="card">
+        <div class="card-head"><span>${S.params.ageFrom}→${S.params.ageTo} ans · Points tous les 5 ans</span><span style="font-size:11px;color:${C.gris}">Bandes MC P10→P90</span></div>
+        <div style="padding:8px 4px 2px"><canvas id="chartMain" style="height:240px"></canvas></div>
+        <div class="legend">
+          <div class="li"><span class="ll" style="background:${C.bleu}"></span>Base</div>
+          <div class="li"><span class="ll" style="background:${C.violet};opacity:.8"></span>Médiane MC</div>
+          <div class="li"><span class="la" style="background:rgba(9,87,151,.2)"></span>Zone P25–P75</div>
+        </div>
+      </div>`)}
+    ${section('2','Portefeuille par tranche d\'âge',`
+      <div class="card">
+        <table class="ptable">
+          <thead><tr>
+            <th>Âge</th>
+            <th>Portefeuille</th>
+            <th>Retrait/an</th>
+            <th>RRQ + SV/an</th>
+            <th>Impôts/an</th>
+            <th>Net</th>
+          </tr></thead>
+          <tbody>${tableRows}</tbody>
+        </table>
+      </div>`)}
+    ${section('3','Revenus passifs & impôts',`
+      <div class="sm-grid">
+        <div class="card"><div class="card-head">RRQ /an</div><div style="padding:6px 4px 4px"><canvas id="chartRRQ" style="height:90px"></canvas></div></div>
+        <div class="card"><div class="card-head">SV + SRG /an</div><div style="padding:6px 4px 4px"><canvas id="chartSV" style="height:90px"></canvas></div></div>
+        <div class="card"><div class="card-head">Impôts /an</div><div style="padding:6px 4px 4px"><canvas id="chartTax" style="height:90px"></canvas></div></div>
+      </div>`)}
+    ${tips.length?section('4','Suggestions intelligentes',tips.map(t=>`<div class="alert ${t.cls}"><span class="alert-icon">${t.icon}</span><span>${esc(t.text)}</span></div>`).join('')):''}
+  `;
 }
 
+/* ── PAGE: ACCOUNTS ───────────────────────────────────── */
 function pageAccounts(){
   const cards=S.accounts.map((a,i)=>{
     const def=ACCT[a.type]||ACCT.AUTRE,risk=RISK[a.risk]||RISK.medium;
@@ -543,69 +517,101 @@ function pageAccounts(){
           <div class="acct-stat"><div class="stat-lbl">Rendement</div><div class="stat-val">${a.rate}%/an</div></div>
           <div class="acct-stat"><div class="stat-lbl">Risque</div><div class="stat-val">${risk.label}</div></div>
         </div>
-        <div style="font-size:11px;color:${C.gris};margin-bottom:8px;padding:5px 8px;background:${C.fond};border-radius:3px">
+        <div style="font-size:11px;color:${C.gris};margin-bottom:7px;padding:4px 7px;background:${C.fond};border-radius:3px">
           📅 Contributions&nbsp;: <b>${a.contribStart}→${a.contribEnd} ans</b>
-          &nbsp;·&nbsp;Croissance active jusqu'à la fin de la simulation
+          &nbsp;·&nbsp; Croissance active jusqu'à la fin de simulation
         </div>
-        ${a.oneTime&&a.oneTime.length?`<div style="font-size:11px;color:${C.gris};margin-bottom:8px">🎯 ${a.oneTime.length} contribution ponctuelle${a.oneTime.length>1?'s':''}</div>`:''}
+        ${a.oneTime&&a.oneTime.length?`<div style="font-size:11px;color:${C.gris};margin-bottom:7px">🎯 ${a.oneTime.length} contribution ponctuelle${a.oneTime.length>1?'s':''}</div>`:''}
         <span class="acct-badge" style="background:${def.color}18;color:${def.color}">${def.tax}</span>
       </div></div>`;
   }).join('');
 
   return`
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:13px">
       <div style="font-size:15px;font-weight:700;color:${C.bleu}">Mes placements <span style="font-size:13px;font-weight:400;color:${C.gris}">(${S.accounts.length} compte${S.accounts.length!==1?'s':''})</span></div>
       <button class="btn btn-primary" data-a="add-acct">+ Ajouter un placement</button>
     </div>
-    <div class="acct-grid">${cards||`<p style="color:${C.gris};font-size:13px">Aucun placement. Cliquez sur « Ajouter ».</p>`}</div>`;
+    <div class="acct-grid">${cards||`<p style="color:${C.gris};font-size:13px">Aucun placement.</p>`}</div>`;
 }
 
+/* ── PAGE: WITHDRAWALS ────────────────────────────────── */
 function pageWithdrawals(){
-  const wRows=S.withdrawals.map((w,i)=>`
-    <div class="w-row">
-      ${['startAge:De (âge):70','endAge:À (âge):70','amount:Montant:115'].map(f=>{
-        const[k,l,wd]=f.split(':');
-        return`<div style="flex:0 0 ${wd}px"><label class="field-lbl" style="margin-bottom:3px">${l}</label>
-          <input class="inp" type="number" value="${w[k]}" data-a="w-field" data-k="${k}" data-i="${i}"></div>`;
-      }).join('')}
-      <div><label class="field-lbl" style="margin-bottom:3px">Type</label>
-        <select class="sel" style="width:125px" data-a="w-type" data-i="${i}">
-          <option value="fixed" ${w.type==='fixed'?'selected':''}>Montant fixe $</option>
-          <option value="percent" ${w.type==='percent'?'selected':''}>% du portefeuille</option>
-        </select>
-      </div>
-      <button class="btn btn-sm btn-danger" data-a="del-w" data-i="${i}" style="align-self:flex-end">Supprimer</button>
-    </div>`).join('');
+  const wCards=S.withdrawals.map((w,i)=>{
+    const amtLabel=w.type==='percent'
+      ?`${w.amount}% du portef.`
+      :(w.freq==='monthly'?`${fmtK(w.amount)}/mois (${fmtK(w.amount*12)}/an)`:fmtK(w.amount)+'/an');
+    return`<div class="w-card">
+      <div class="w-stripe"></div>
+      <div class="w-body">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:9px">
+          <div>
+            <input class="inp" type="text" value="${esc(w.name)}" placeholder="Nom du retrait"
+              style="width:200px;font-size:14px;font-weight:700;border:none;border-bottom:1px solid ${C.grisClair};border-radius:0;padding:0 0 3px 0;background:transparent"
+              data-a="w-name" data-i="${i}">
+            <div style="font-size:11px;color:${C.gris};margin-top:3px">
+              ${w.startAge}→${w.endAge} ans &nbsp;·&nbsp; ${amtLabel}
+            </div>
+          </div>
+          <button class="btn btn-sm btn-danger" data-a="del-w" data-i="${i}">Supprimer</button>
+        </div>
+        <div class="w-fields">
+          <div class="w-field" style="flex:0 0 72px">
+            <label class="field-lbl">De (âge)</label>
+            <input class="inp" type="number" value="${w.startAge}" data-a="w-field" data-k="startAge" data-i="${i}">
+          </div>
+          <div class="w-field" style="flex:0 0 72px">
+            <label class="field-lbl">À (âge)</label>
+            <input class="inp" type="number" value="${w.endAge}" data-a="w-field" data-k="endAge" data-i="${i}">
+          </div>
+          <div class="w-field" style="flex:1;min-width:100px">
+            <label class="field-lbl">Montant</label>
+            <input class="inp" type="number" value="${w.amount}" data-a="w-field" data-k="amount" data-i="${i}">
+          </div>
+          <div class="w-field" style="flex:0 0 130px">
+            <label class="field-lbl">Type</label>
+            <select class="sel" data-a="w-type" data-i="${i}">
+              <option value="fixed"   ${w.type==='fixed'  ?'selected':''}>Montant fixe $</option>
+              <option value="percent" ${w.type==='percent'?'selected':''}>% du portefeuille</option>
+            </select>
+          </div>
+          <div class="w-field" style="flex:0 0 110px">
+            <label class="field-lbl">Fréquence</label>
+            <select class="sel" data-a="w-freq" data-i="${i}" ${w.type==='percent'?'disabled':''}>
+              <option value="annual"  ${w.freq==='annual' ?'selected':''}>Annuel</option>
+              <option value="monthly" ${w.freq==='monthly'?'selected':''}>Mensuel</option>
+            </select>
+          </div>
+        </div>
+      </div></div>`;
+  }).join('');
 
   return section('1','Stratégie de décaissement',`
     <div class="card card-pad" style="margin-bottom:10px">
-      <div style="font-weight:700;margin-bottom:10px;color:${C.gris}">ORDRE DE PRIORITÉ</div>
+      <div class="field-lbl" style="margin-bottom:9px">Ordre de priorité</div>
       <div class="seg" style="margin-bottom:10px">
         ${Object.entries(STRAT).map(([k,v])=>`<button class="seg-btn ${S.params.strategy===k?'on':''}" data-a="strategy" data-v="${k}">${v.label}</button>`).join('')}
       </div>
       <div class="info-box info-muted">${STRAT[S.params.strategy].desc}</div>
     </div>`)
   +section('2','Retraits planifiés',`
-    <div class="card card-pad">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-        <span></span>
-        <button class="btn btn-sm btn-primary" data-a="add-w">+ Ajouter un retrait</button>
-      </div>
-      ${wRows||`<p style="font-size:12px;color:${C.gris};font-style:italic">Aucun retrait planifié.</p>`}
-    </div>`)
+    <div style="display:flex;justify-content:flex-end;margin-bottom:10px">
+      <button class="btn btn-primary btn-sm" data-a="add-w">+ Ajouter un retrait</button>
+    </div>
+    ${wCards||`<p style="font-size:12px;color:${C.gris};font-style:italic">Aucun retrait planifié.</p>`}`)
   +section('3','Prestations gouvernementales (RRQ / SV / SRG)',`
     <div class="card card-pad">
       <div class="g3">
         ${[{l:'Âge RRQ',k:'ageRRQ',hint:'60–72 ans'},{l:'Âge SV/SRG',k:'ageSV',hint:'65–70 ans'},{l:'Salaire moyen',k:'salary',hint:'Base calcul RRQ'}].map(f=>`
-        <div>
-          <label class="field-lbl" style="margin-bottom:4px">${f.l}</label>
-          <input class="inp" type="number" value="${S.params[f.k]}" style="color:${C.bleu}" data-a="param" data-k="${f.k}">
-          <div class="field-hint">${f.hint}</div>
-        </div>`).join('')}
+          <div>
+            <label class="field-lbl" style="margin-bottom:4px">${f.l}</label>
+            <input class="inp" type="number" value="${S.params[f.k]}" style="color:${C.bleu}" data-a="param" data-k="${f.k}">
+            <div class="field-hint">${f.hint}</div>
+          </div>`).join('')}
       </div>
     </div>`);
 }
 
+/* ── PAGE: PARAMS ─────────────────────────────────────── */
 function pageParams(){
   const p=S.params;
   return section('1','Horizon de simulation',`
@@ -614,11 +620,11 @@ function pageParams(){
         <label class="field-lbl" style="margin-bottom:8px;display:block">Horizon · ${p.ageFrom} à ${p.ageTo} ans</label>
         <div class="g2">
           ${[['ageFrom','Âge de départ',18,64],['ageTo','Âge de fin',50,110]].map(([k,l,min,max])=>`
-          <div>
-            <div style="font-size:11px;color:${C.gris};margin-bottom:4px">${l}</div>
-            <input type="range" min="${min}" max="${max}" value="${p[k]}" data-a="param-range" data-k="${k}" style="accent-color:${C.bleu}">
-            <div class="rl"><span>${min}</span><b style="color:#1A1A1A">${p[k]} ans</b><span>${max}</span></div>
-          </div>`).join('')}
+            <div>
+              <div style="font-size:11px;color:${C.gris};margin-bottom:4px">${l}</div>
+              <input type="range" min="${min}" max="${max}" value="${p[k]}" data-a="param-range" data-k="${k}" style="accent-color:${C.bleu}">
+              <div class="rl"><span>${min}</span><b style="color:#1A1A1A">${p[k]} ans</b><span>${max}</span></div>
+            </div>`).join('')}
         </div>
       </div>
       <div>
@@ -629,14 +635,14 @@ function pageParams(){
   +section('2','Méthodologie Monte Carlo',`
     <div class="card card-pad" style="max-width:540px">
       <div class="info-box info-blue">
-        <b>N = 200 simulations</b> — Chaque simulation applique des chocs annuels aléatoires
-        calibrés sur le niveau de risque de chaque placement :<br>
+        <b>N = 200 simulations</b> — Chaque simulation applique des chocs annuels aléatoires calibrés sur le niveau de risque de chaque placement :<br>
         Faible σ = 5 % · Modéré σ = 12 % · Élevé σ = 20 %.<br>
         Les bandes P10–P90 illustrent la fourchette réaliste des résultats projetés.
       </div>
     </div>`);
 }
 
+/* ── PAGE: MONTE CARLO ────────────────────────────────── */
 function pageMonte(){
   const last=S.sim.length?S.sim[S.sim.length-1]:{totalBalance:0};
   const mc=S.mc,sr=mc?mc.successRate:0;
@@ -648,7 +654,7 @@ function pageMonte(){
   return section('1','Résultat des simulations',`
     <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start">
       <div class="card card-pad" style="flex:0 0 210px;text-align:center">
-        <div style="font-weight:700;font-size:12px;color:${C.gris};text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">Probabilité de succès</div>
+        <div class="field-lbl" style="margin-bottom:10px">Probabilité de succès</div>
         <svg width="140" height="82" viewBox="0 0 140 82" style="display:block;margin:0 auto">
           <path d="M18,70 A56,56,0,0,1,122,70" stroke="${C.grisClair}" stroke-width="12" fill="none" stroke-linecap="round"/>
           <path d="M18,70 A56,56,0,0,1,122,70" stroke="${col}" stroke-width="12" fill="none" stroke-linecap="round" stroke-dasharray="${arc} 210"/>
@@ -660,13 +666,13 @@ function pageMonte(){
         </div>
       </div>
       <div class="card card-pad" style="flex:1;min-width:180px">
-        <div style="font-weight:700;font-size:12px;color:${C.gris};text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px">Valeur finale à ${S.params.ageTo} ans</div>
+        <div class="field-lbl" style="margin-bottom:10px">Valeur finale à ${S.params.ageTo} ans</div>
         ${[{l:'P10 — Pessimiste',v:lastMC.p10,c:C.orange},{l:'P50 — Médiane',v:lastMC.p50,c:C.violet},{l:'P90 — Optimiste',v:lastMC.p90,c:C.vert},{l:'Base (taux fixes)',v:last.totalBalance,c:C.bleu}].map(r=>`
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid ${C.grisClair}">
-          <span style="font-size:12px;color:${r.c};font-weight:700">${r.l}</span>
-          <span style="font-weight:700;font-size:15px;color:${r.c}">${r.v!=null?fmtK(r.v):'…'}</span>
-        </div>`).join('')}
-        <p style="font-size:11px;color:${C.gris};margin-top:9px">N=${mc?mc.N:200} · Volatilité par niveau de risque</p>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid ${C.grisClair}">
+            <span style="font-size:12px;color:${r.c};font-weight:700">${r.l}</span>
+            <span style="font-weight:700;font-size:15px;color:${r.c}">${r.v!=null?fmtK(r.v):'…'}</span>
+          </div>`).join('')}
+        <p style="font-size:11px;color:${C.gris};margin-top:9px">N=${mc?mc.N:200} · Volatilité calibrée par niveau de risque</p>
       </div>
     </div>`)
   +section('2','Éventail des scénarios',`
@@ -681,16 +687,16 @@ function pageMonte(){
       </div>
     </div>
     <p style="color:${C.gris};font-size:11px;margin-top:8px;border-top:1px solid ${C.bordure};padding-top:10px;line-height:1.7">
-      Simulation à titre informatif — chaque situation est unique. Consultez un planificateur financier agréé.
+      Simulation à titre informatif. Consultez un planificateur financier agréé.
     </p>`);
 }
 
-/* ── MODAL ───────────────────────────────────────────── */
-function openModal(acct){ S.modalAcct=clone(acct); renderModal(); $('overlay').classList.add('open'); }
-function closeModal(){ S.modalAcct=null; $('overlay').classList.remove('open'); }
+/* ── MODAL ────────────────────────────────────────────── */
+function openModal(acct){S.modalAcct=clone(acct);renderModal();$('overlay').classList.add('open');}
+function closeModal(){S.modalAcct=null;$('overlay').classList.remove('open');}
 
 function renderModal(){
-  const a=S.modalAcct; if(!a) return;
+  const a=S.modalAcct;if(!a)return;
   const def=ACCT[a.type]||ACCT.AUTRE;
   const otRows=(a.oneTime||[]).map((ot,i)=>`
     <div class="ot-row">
@@ -703,10 +709,7 @@ function renderModal(){
 
   $('modal').innerHTML=`
     <div class="modal-top" style="background:${def.color}"></div>
-    <div class="modal-head">
-      <span>${def.icon} Configurer le placement</span>
-      <button class="modal-x" data-a="close-modal">×</button>
-    </div>
+    <div class="modal-head"><span>${def.icon} Configurer le placement</span><button class="modal-x" data-a="close-modal">×</button></div>
     <div class="modal-body">
       <div class="g2">
         <div><label class="field-lbl" style="margin-bottom:4px">Nom</label>
@@ -728,21 +731,24 @@ function renderModal(){
           ${Object.entries(RISK).map(([k,v])=>`
             <button class="risk-btn" data-a="ma-risk" data-v="${k}"
               style="border-color:${a.risk===k?v.color:C.bordure};background:${a.risk===k?v.color+'14':C.blanc};color:${a.risk===k?v.color:C.gris}">
-              ${v.label}<small>σ = ${Math.round(v.vol*100)}%</small>
-            </button>`).join('')}
+              ${v.label}<small>σ ${Math.round(v.vol*100)}%</small></button>`).join('')}
         </div>
       </div>
       <hr class="div">
-      <div><label class="field-lbl" style="margin-bottom:6px">Contributions récurrentes</label>
+      <div>
+        <label class="field-lbl" style="margin-bottom:6px">Contributions récurrentes</label>
         <div class="g4">
           <div><div style="font-size:10px;color:${C.gris};margin-bottom:3px">Montant</div><input class="inp" type="number" value="${a.contribAmt}" data-a="ma-camount"></div>
           <div><div style="font-size:10px;color:${C.gris};margin-bottom:3px">De (âge)</div><input class="inp" type="number" value="${a.contribStart}" data-a="ma-cstart"></div>
-          <div><div style="font-size:10px;color:${C.gris};margin-bottom:3px">À (âge)</div><input class="inp" type="number" value="${a.contribEnd}" data-a="ma-cend"></div>
-          <div><div style="font-size:10px;color:${C.gris};margin-bottom:3px">Fréq.</div>
+          <div><div style="font-size:10px;color:${C.gris};margin-bottom:3px">Fin contributions</div><input class="inp" type="number" value="${a.contribEnd}" data-a="ma-cend"></div>
+          <div><div style="font-size:10px;color:${C.gris};margin-bottom:3px">Fréquence</div>
             <select class="sel" data-a="ma-cfreq">
-              <option value="annual"  ${a.contribFreq==='annual' ?'selected':''}>Ann.</option>
-              <option value="monthly" ${a.contribFreq==='monthly'?'selected':''}>Mens.</option>
+              <option value="annual"  ${a.contribFreq==='annual' ?'selected':''}>Annuelle</option>
+              <option value="monthly" ${a.contribFreq==='monthly'?'selected':''}>Mensuelle</option>
             </select></div>
+        </div>
+        <div style="font-size:11px;color:${C.gris};margin-top:6px;padding:5px 8px;background:${C.fond};border-radius:3px">
+          💡 Le solde continue de croître après la fin des contributions — l'arrêt des cotisations ne ferme pas le compte.
         </div>
       </div>
       <hr class="div">
@@ -762,31 +768,27 @@ function renderModal(){
 }
 
 function saveModal(){
-  const a=S.modalAcct; if(!a) return;
+  const a=S.modalAcct;if(!a)return;
   if(a._new){delete a._new;S.accounts.push(a);}
   else{const i=S.accounts.findIndex(x=>x.id===a.id);if(i>=0)S.accounts[i]=a;}
   closeModal();compute();renderMain();
 }
 
-/* ── RENDER ──────────────────────────────────────────── */
+/* ── RENDER ───────────────────────────────────────────── */
 function updateNav(){
   $('nav').innerHTML=TABS.map(t=>`<button class="tab-btn ${S.tab===t.id?'on':''}" data-a="tab" data-v="${t.id}">${t.icon} ${t.label}</button>`).join('')
-    +`<div style="margin-left:auto;display:flex;align-items:center;padding:0 4px;font-size:11px;color:rgba(255,255,255,.55)">
-        ${S.mcRunning?`<span class="spin"></span>Simulation…`:`${S.accounts.length} compte${S.accounts.length!==1?'s':''}`}
-      </div>`;
+    +`<div style="margin-left:auto;display:flex;align-items:center;padding:0 4px;font-size:11px;color:rgba(255,255,255,.55)">${S.mcRunning?`<span class="spin"></span>Simulation…`:`${S.accounts.length} compte${S.accounts.length!==1?'s':''}`}</div>`;
 }
-
 function renderMain(){
   const pages={dashboard:pageDashboard,accounts:pageAccounts,withdrawals:pageWithdrawals,params:pageParams,monte:pageMonte};
   $('main').innerHTML=(pages[S.tab]||pageDashboard)();
   requestAnimationFrame(refreshCharts);
 }
+function render(){updateNav();renderMain();}
 
-function render(){ updateNav(); renderMain(); }
-
-/* ── EVENTS ──────────────────────────────────────────── */
+/* ── EVENTS ───────────────────────────────────────────── */
 document.addEventListener('click',e=>{
-  const el=e.target.closest('[data-a]'); if(!el) return;
+  const el=e.target.closest('[data-a]');if(!el)return;
   const a=el.dataset.a,v=el.dataset.v,i=el.dataset.i!==undefined?+el.dataset.i:null;
   if(a==='tab')        {S.tab=v;render();return;}
   if(a==='close-modal'){closeModal();return;}
@@ -794,10 +796,10 @@ document.addEventListener('click',e=>{
   if(a==='add-acct')   {openModal({id:uid(),name:'Nouveau',type:'CELI',balance:0,contribAmt:5000,contribFreq:'annual',contribStart:S.params.ageFrom,contribEnd:S.params.ageFrom+40,oneTime:[],rate:5,risk:'medium',_new:true});return;}
   if(a==='edit-acct')  {openModal(S.accounts[i]);return;}
   if(a==='del-acct')   {S.accounts.splice(i,1);compute();renderMain();return;}
-  if(a==='add-w')      {S.withdrawals.push({id:uid(),startAge:65,endAge:100,amount:30000,type:'fixed'});renderMain();return;}
+  if(a==='add-w')      {S.withdrawals.push({id:uid(),name:'Retrait',startAge:65,endAge:100,amount:30000,type:'fixed',freq:'annual'});renderMain();return;}
   if(a==='del-w')      {S.withdrawals.splice(i,1);compute();renderMain();return;}
   if(a==='strategy')   {S.params.strategy=v;compute();renderMain();return;}
-  if(!S.modalAcct) return;
+  if(!S.modalAcct)return;
   const ma=S.modalAcct;
   if(a==='ma-risk'){ma.risk=v;renderModal();return;}
   if(a==='add-ot') {ma.oneTime=ma.oneTime||[];ma.oneTime.push({id:uid(),age:35,amount:10000});renderModal();return;}
@@ -805,12 +807,14 @@ document.addEventListener('click',e=>{
 });
 
 document.addEventListener('input',e=>{
-  const el=e.target,a=el.dataset.a; if(!a) return;
-  if(a==='param')      {S.params[el.dataset.k]=+el.value;compute();return;}
-  if(a==='param-range'){S.params[el.dataset.k]=+el.value;compute();renderMain();return;}
-  if(a==='w-field')    {S.withdrawals[+el.dataset.i][el.dataset.k]=+el.value;compute();return;}
-  if(a==='w-type')     {S.withdrawals[+el.dataset.i].type=el.value;compute();return;}
-  if(!S.modalAcct) return;
+  const el=e.target,a=el.dataset.a;if(!a)return;
+  if(a==='param')       {S.params[el.dataset.k]=+el.value;compute();return;}
+  if(a==='param-range') {S.params[el.dataset.k]=+el.value;compute();renderMain();return;}
+  if(a==='w-field')     {S.withdrawals[+el.dataset.i][el.dataset.k]=+el.value;compute();renderMain();return;}
+  if(a==='w-type')      {S.withdrawals[+el.dataset.i].type=el.value;compute();renderMain();return;}
+  if(a==='w-freq')      {S.withdrawals[+el.dataset.i].freq=el.value;compute();renderMain();return;}
+  if(a==='w-name')      {S.withdrawals[+el.dataset.i].name=el.value;return;}
+  if(!S.modalAcct)return;
   const ma=S.modalAcct;
   if(a==='ma-name')   {ma.name=el.value;return;}
   if(a==='ma-type')   {ma.type=el.value;renderModal();return;}
@@ -827,7 +831,7 @@ document.addEventListener('input',e=>{
 $('overlay').addEventListener('click',e=>{if(e.target===$('overlay'))closeModal();});
 window.addEventListener('resize',()=>requestAnimationFrame(refreshCharts));
 
-/* ── INIT ────────────────────────────────────────────── */
+/* ── INIT ─────────────────────────────────────────────── */
 compute();
 render();
 </script>
