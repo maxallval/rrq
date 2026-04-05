@@ -5,159 +5,158 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>RetirePlan QC</title>
 <style>
+/* ── Reset ───────────────────────────── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
 body{background:#F0F4F8;font-family:Arial,sans-serif;font-size:14px;color:#1A1A1A}
 input,select,button{font-family:Arial,sans-serif}
 button{cursor:pointer}
-input[type=range]{width:100%;margin-top:6px;cursor:pointer}
-table{border-collapse:collapse;width:100%}
+input[type=range]{width:100%;margin-top:5px;cursor:pointer}
 a{color:rgb(9,87,151)}
 
-/* Layout */
+/* ── Layout ──────────────────────────── */
 .app{display:flex;flex-direction:column;height:100vh}
-.topbar{background:rgb(9,87,151);padding:16px 24px;flex-shrink:0}
-.topbar h1{color:#fff;font-size:20px;font-weight:700;margin-bottom:2px}
-.topbar p{color:rgba(255,255,255,.75);font-size:12px}
-.or-bar{height:3px;background:rgb(240,150,134);border-radius:2px;margin-top:10px;width:60px}
-.nav{background:rgb(9,87,151);border-top:1px solid rgba(255,255,255,.15);display:flex;padding:0 24px;overflow-x:auto;flex-shrink:0}
-.tab-btn{padding:10px 14px;border:none;background:transparent;color:rgba(255,255,255,.55);font-size:13px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+.topbar{background:rgb(9,87,151);padding:15px 22px;flex-shrink:0}
+.topbar h1{color:#fff;font-size:19px;font-weight:700;margin-bottom:2px}
+.topbar p{color:rgba(255,255,255,.72);font-size:12px}
+.or-bar{height:3px;background:rgb(240,150,134);border-radius:2px;margin-top:10px;width:55px}
+.nav{background:rgb(9,87,151);border-top:1px solid rgba(255,255,255,.15);display:flex;padding:0 22px;overflow-x:auto;flex-shrink:0}
+.tab-btn{padding:9px 13px;border:none;background:transparent;color:rgba(255,255,255,.52);font-size:13px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
 .tab-btn.on{color:#fff;border-bottom-color:rgb(240,150,134)}
-.main{flex:1;overflow-y:auto;padding:18px 24px}
+.main{flex:1;overflow-y:auto;padding:16px 22px}
 
-/* Section headers */
-.sec{margin-bottom:20px}
-.sec-head{display:flex;align-items:center;gap:10px;margin-bottom:11px}
-.sec-num{background:rgb(9,87,151);color:#fff;border-radius:50%;width:24px;height:24px;min-width:24px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
-.sec-title{color:rgb(9,87,151);font-size:15px;font-weight:700}
+/* ── Section headers ─────────────────── */
+.sec{margin-bottom:18px}
+.sec-head{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+.sec-num{background:rgb(9,87,151);color:#fff;border-radius:50%;width:23px;height:23px;min-width:23px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.sec-title{color:rgb(9,87,151);font-size:14px;font-weight:700}
 .sec-line{flex:1;height:1px;background:rgba(9,87,151,.25)}
 
-/* Cards */
+/* ── Cards ───────────────────────────── */
 .card{background:#fff;border:1px solid #CCC;border-radius:4px}
-.card-pad{padding:15px}
-.card-head{padding:9px 15px;border-bottom:1px solid #E0E0E0;font-size:13px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+.cp{padding:14px}
+.ch{padding:8px 14px;border-bottom:1px solid #E0E0E0;font-size:12px;font-weight:700;display:flex;justify-content:space-between;align-items:center;gap:10px}
+hr.dv{border:none;border-top:1px solid #E0E0E0;margin:8px 0}
 
-/* KPI */
-.kpi-row{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px}
-.kpi{background:#fff;border:1px solid #CCC;border-radius:4px;flex:1 1 120px;padding:11px 13px;border-top:3px solid rgb(9,87,151)}
-.kpi-lbl{font-size:10px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
-.kpi-val{font-size:19px;font-weight:700;color:rgb(9,87,151);margin-bottom:2px}
-.kpi-sub{font-size:10px;color:#888}
+/* ── KPI strip ───────────────────────── */
+.kpis{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.kpi{background:#fff;border:1px solid #CCC;border-radius:4px;border-top:3px solid rgb(9,87,151);flex:1 1 120px;padding:10px 13px}
+.kpi-l{font-size:10px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.kpi-v{font-size:18px;font-weight:700;color:rgb(9,87,151);margin-bottom:2px}
+.kpi-s{font-size:10px;color:#888}
 
-/* Forms */
-.field-lbl{font-size:11px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;display:block}
-.field-hint{font-size:10px;color:#888;margin-top:2px}
-.inp{width:100%;padding:7px 9px;border:1px solid #CCC;border-radius:3px;font-size:13px;font-weight:700;color:#1A1A1A;outline:none;background:#fff}
+/* ── Forms ───────────────────────────── */
+.lbl{font-size:11px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;display:block}
+.hint{font-size:10px;color:#888;margin-top:2px}
+.inp{width:100%;padding:6px 9px;border:1px solid #CCC;border-radius:3px;font-size:13px;font-weight:700;color:#1A1A1A;outline:none;background:#fff}
 .inp:focus{border-color:rgb(9,87,151)}
-.sel{width:100%;padding:7px 8px;border:1px solid #CCC;border-radius:3px;font-size:13px;font-weight:600;color:#1A1A1A;background:#fff;outline:none}
+.sel{width:100%;padding:6px 8px;border:1px solid #CCC;border-radius:3px;font-size:13px;font-weight:600;color:#1A1A1A;background:#fff;outline:none}
 .irow{display:flex;align-items:stretch;border:1px solid #CCC;border-radius:3px;overflow:hidden;background:#fff}
 .irow:focus-within{border-color:rgb(9,87,151)}
-.irow .pfx{padding:0 8px;background:#F0F4F8;border-right:1px solid #E0E0E0;font-size:12px;color:#555;display:flex;align-items:center;flex-shrink:0}
-.irow .sfx{padding:0 8px;font-size:12px;color:#555;display:flex;align-items:center;flex-shrink:0}
-.irow input{flex:1;padding:7px 9px;border:none;outline:none;font-size:13px;font-weight:700;color:#1A1A1A;background:transparent;min-width:0}
+.irow .px{padding:0 8px;background:#F0F4F8;border-right:1px solid #E0E0E0;font-size:12px;color:#555;display:flex;align-items:center;flex-shrink:0}
+.irow .sx{padding:0 8px;font-size:12px;color:#555;display:flex;align-items:center;flex-shrink:0}
+.irow input{flex:1;padding:6px 9px;border:none;outline:none;font-size:13px;font-weight:700;color:#1A1A1A;background:transparent;min-width:0}
 .rl{display:flex;justify-content:space-between;font-size:10px;color:#888;margin-top:2px}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
-.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 .g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px}
-hr.div{border:none;border-top:1px solid #E0E0E0;margin:8px 0}
+.g5{display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;gap:7px}
+.chk{display:flex;align-items:center;gap:7px;font-size:13px;cursor:pointer}
+.chk input{width:15px;height:15px;cursor:pointer;accent-color:rgb(9,87,151)}
 
-/* Buttons */
-.btn{padding:7px 14px;border-radius:3px;border:none;font-size:13px;font-weight:600}
-.btn:hover{opacity:.88}
-.btn-sm{padding:4px 10px;font-size:12px;border-radius:3px}
-.btn-primary{background:rgb(9,87,151);color:#fff;border:1px solid rgb(9,87,151)}
-.btn-ghost{background:#fff;border:1px solid #CCC;color:#555}
-.btn-danger{background:#fff;border:1px solid #fecaca;color:#991b1b}
-.btn-icon{padding:4px 8px;font-size:13px;border-radius:3px;border:1px solid #E0E0E0;background:#fff}
+/* ── Buttons ─────────────────────────── */
+.btn{padding:6px 14px;border-radius:3px;border:none;font-size:13px;font-weight:600}
+.btn:hover{opacity:.87}
+.bsm{padding:4px 10px;font-size:12px;border-radius:3px}
+.bpr{background:rgb(9,87,151);color:#fff;border:1px solid rgb(9,87,151)}
+.bgh{background:#fff;border:1px solid #CCC;color:#555}
+.bdg{background:#fff;border:1px solid #fecaca;color:#991b1b}
+.bic{padding:4px 8px;font-size:12px;border-radius:3px;border:1px solid #E0E0E0;background:#fff}
 
-/* Segment */
-.seg{display:flex;gap:5px;flex-wrap:wrap}
-.seg-btn{padding:6px 12px;border-radius:3px;font-size:12px;font-weight:600;border:1px solid #CCC;background:#fff;color:rgb(9,87,151)}
-.seg-btn.on{background:rgb(9,87,151);color:#fff;border-color:rgb(9,87,151)}
+/* ── Segment ──────────────────────────── */
+.seg{display:flex;gap:4px;flex-wrap:wrap}
+.sb{padding:5px 12px;border-radius:3px;font-size:12px;font-weight:600;border:1px solid #CCC;background:#fff;color:rgb(9,87,151)}
+.sb.on{background:rgb(9,87,151);color:#fff;border-color:rgb(9,87,151)}
 
-/* Risk */
-.risk-btns{display:flex;gap:7px}
-.risk-btn{flex:1;padding:8px 5px;border-radius:3px;border:1px solid #CCC;background:#fff;font-size:12px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:2px}
-.risk-btn small{font-size:10px;font-weight:400;opacity:.75}
+/* ── Risk buttons ─────────────────────── */
+.rb{display:flex;gap:7px}
+.rbi{flex:1;padding:8px 5px;border-radius:3px;border:1px solid #CCC;background:#fff;font-size:12px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:2px}
+.rbi small{font-size:10px;font-weight:400;opacity:.72}
 
-/* Account cards */
-.acct-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
-.acct-card{background:#fff;border:1px solid #CCC;border-radius:4px;overflow:hidden}
-.acct-stripe{height:4px}
-.acct-body{padding:12px}
-.acct-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:9px}
-.acct-ttl{display:flex;align-items:center;gap:8px}
-.acct-actions{display:flex;gap:4px}
-.acct-stats{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:8px}
-.acct-stat{background:#F0F4F8;border-radius:3px;padding:5px 8px}
-.stat-lbl{font-size:9px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px}
-.stat-val{font-size:13px;font-weight:700;color:#1A1A1A}
-.acct-badge{padding:4px 8px;border-radius:3px;font-size:10px;font-weight:700;display:inline-block}
+/* ── Account cards ────────────────────── */
+.agrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:9px}
+.acard{background:#fff;border:1px solid #CCC;border-radius:4px;overflow:hidden}
+.ast{height:4px}
+.abd{padding:12px}
+.ahd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:9px}
+.att{display:flex;align-items:center;gap:7px}
+.aac{display:flex;gap:4px}
+.asts{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:8px}
+.astat{background:#F0F4F8;border-radius:3px;padding:5px 8px}
+.slbl{font-size:9px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px}
+.sval{font-size:12px;font-weight:700;color:#1A1A1A}
+.abadge{padding:3px 8px;border-radius:3px;font-size:10px;font-weight:700;display:inline-block;margin-right:3px;margin-bottom:3px}
 
-/* Withdrawal cards */
-.w-card{background:#fff;border:1px solid #CCC;border-radius:4px;overflow:hidden;margin-bottom:9px}
-.w-stripe{height:3px;background:rgb(9,87,151)}
-.w-body{padding:12px}
-.w-fields{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end;margin-top:9px}
-.w-field{display:flex;flex-direction:column;gap:3px}
+/* ── Withdrawal cards ─────────────────── */
+.wcard{background:#fff;border:1px solid #CCC;border-radius:4px;overflow:hidden;margin-bottom:8px}
+.wst{height:3px;background:rgb(9,87,151)}
+.wbd{padding:11px}
+.wflds{display:flex;flex-wrap:wrap;gap:7px;align-items:flex-end;margin-top:9px}
+.wf{display:flex;flex-direction:column;gap:3px}
 
-/* Portfolio table */
-.ptable{width:100%;border-collapse:collapse;font-size:12px}
-.ptable thead tr{background:rgb(9,87,151);color:#fff}
-.ptable th{padding:8px 10px;text-align:right;font-size:11px;white-space:nowrap;font-weight:700}
-.ptable th:first-child{text-align:left}
-.ptable td{padding:7px 10px;border-bottom:1px solid #E0E0E0;text-align:right;color:#1A1A1A}
-.ptable td:first-child{text-align:left;font-weight:700;color:rgb(9,87,151)}
-.ptable tr:nth-child(even) td{background:#F7F9FB}
-.ptable tr.milestone td{background:#E6EFF7!important;font-weight:700}
-
-/* Alerts */
-.alert{padding:8px 12px;border-radius:3px;font-size:12px;line-height:1.6;display:flex;gap:8px;align-items:flex-start;margin-bottom:7px}
-.alert-icon{font-size:15px;flex-shrink:0;margin-top:1px}
+/* ── Alerts ───────────────────────────── */
+.alert{padding:8px 11px;border-radius:3px;font-size:12px;line-height:1.6;display:flex;gap:7px;align-items:flex-start;margin-bottom:6px}
+.ai{font-size:15px;flex-shrink:0;margin-top:1px}
 .al-info  {background:#E6EFF7;border-left:3px solid rgb(9,87,151)}
-.al-warn  {background:#FFF8F0;border:1px solid rgba(196,86,0,.3);border-left:3px solid #C45600}
+.al-warn  {background:#FFF8F0;border:1px solid rgba(196,86,0,.28);border-left:3px solid #C45600}
 .al-danger{background:#fff0f0;border-left:3px solid #dc2626}
+.al-ok    {background:#EDFAF1;border-left:3px solid #1E7E34}
 
-/* Info boxes */
-.info-box{padding:8px 12px;border-radius:3px;font-size:11px;line-height:1.65}
-.info-blue {background:#E6EFF7;color:#555}
-.info-muted{background:#F0F4F8;color:#555}
+/* ── Info boxes ───────────────────────── */
+.ib{padding:8px 11px;border-radius:3px;font-size:11px;line-height:1.65}
+.ib-bl{background:#E6EFF7;color:#444}
+.ib-mu{background:#F0F4F8;color:#555}
+.ib-or{background:#FFF8F0;color:#C45600}
+.ib-gr{background:#EDFAF1;color:#1E7E34}
 
-/* Canvas */
+/* ── Canvas chart ─────────────────────── */
 canvas{display:block;width:100%}
-
-/* Legend */
-.legend{display:flex;gap:14px;flex-wrap:wrap;padding:6px 14px 10px;font-size:12px;color:#555}
-.li{display:flex;align-items:center;gap:5px}
-.ll{width:20px;height:2.5px;border-radius:1px;flex-shrink:0;display:inline-block}
+.legend{display:flex;gap:13px;flex-wrap:wrap;padding:5px 13px 9px;font-size:12px;color:#555}
+.li{display:flex;align-items:center;gap:4px}
+.ll{width:20px;height:2px;border-radius:1px;flex-shrink:0;display:inline-block}
 .la{width:13px;height:9px;border-radius:2px;flex-shrink:0;display:inline-block}
 
-/* Small grid */
-.sm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+/* ── Portfolio table ──────────────────── */
+.ptbl{width:100%;border-collapse:collapse;font-size:12px}
+.ptbl thead tr{background:rgb(9,87,151);color:#fff}
+.ptbl th{padding:7px 10px;text-align:right;font-size:11px;white-space:nowrap;font-weight:700}
+.ptbl th:first-child{text-align:left}
+.ptbl td{padding:6px 10px;border-bottom:1px solid #E0E0E0;text-align:right;color:#1A1A1A}
+.ptbl td:first-child{text-align:left;font-weight:700;color:rgb(9,87,151)}
+.ptbl tr:nth-child(even) td{background:#F7F9FB}
+.ptbl tr.ms td{background:#E6EFF7!important;font-weight:700}
+.ptbl tr.dep td{background:#fff0f0!important;color:#dc2626}
 
-/* Modal */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;display:none;align-items:center;justify-content:center;padding:16px}
+/* ── Modal ────────────────────────────── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;display:none;align-items:center;justify-content:center;padding:14px}
 .overlay.open{display:flex}
-.modal{background:#fff;border-radius:4px;width:100%;max-width:520px;max-height:92vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.2)}
-.modal-top{height:4px;background:rgb(9,87,151)}
-.modal-head{padding:12px 15px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #E0E0E0;font-size:15px;font-weight:700}
-.modal-body{padding:15px;display:flex;flex-direction:column;gap:12px}
-.modal-foot{padding:11px 15px;border-top:1px solid #E0E0E0;display:flex;justify-content:flex-end;gap:8px}
-.modal-x{border:none;background:none;font-size:22px;color:#999;line-height:1}
+.modal{background:#fff;border-radius:4px;width:100%;max-width:560px;max-height:93vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.22)}
+.mh{padding:11px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #E0E0E0;font-size:14px;font-weight:700}
+.mb{padding:14px;display:flex;flex-direction:column;gap:11px}
+.mf{padding:11px 14px;border-top:1px solid #E0E0E0;display:flex;justify-content:flex-end;gap:7px}
+.mx{border:none;background:none;font-size:21px;color:#999;line-height:1}
+.otrow{display:flex;gap:7px;align-items:flex-end;margin-bottom:5px}
 
-/* One-time row */
-.ot-row{display:flex;gap:8px;align-items:flex-end;margin-bottom:6px}
-
-/* Spinner */
+/* ── Spinner ──────────────────────────── */
 @keyframes spin{to{transform:rotate(360deg)}}
-.spin{display:inline-block;width:10px;height:10px;border:2px solid rgba(255,255,255,.3);border-top-color:rgb(240,150,134);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:4px}
+.spin{display:inline-block;width:9px;height:9px;border:2px solid rgba(255,255,255,.28);border-top-color:rgb(240,150,134);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:4px}
 </style>
 </head>
 <body>
 <div class="app">
   <header class="topbar">
     <h1>RetirePlan QC</h1>
-    <p>Placements · Retraits · Monte Carlo · Impôts Québec/Canada</p>
+    <p>Placements · FERR · Inflation · Monte Carlo · Impôts Québec/Canada</p>
     <div class="or-bar"></div>
   </header>
   <nav class="nav" id="nav"></nav>
@@ -168,27 +167,43 @@ canvas{display:block;width:100%}
 <script>
 'use strict';
 
-/* ── COULEURS ─────────────────────────────────────────── */
-const C={bleu:'rgb(9,87,151)',bleuPale:'#E6EFF7',or:'rgb(240,150,134)',
-  vert:'#1E7E34',orange:'#C45600',violet:'#6F42C1',
-  gris:'#555',grisClair:'#E0E0E0',bordure:'#CCC',fond:'#F0F4F8',blanc:'#FFFFFF'};
+/* ══════════════════════════════════════════
+   CONSTANTES
+══════════════════════════════════════════ */
 
-/* ── CONFIG ───────────────────────────────────────────── */
-const ACCT={
+// Taux minimums FERR — table officielle ARC
+const FERR_RATES = {
+  71:.0528,72:.054,73:.0553,74:.0567,75:.0582,76:.0598,77:.0617,78:.0636,79:.0658,80:.0682,
+  81:.0708,82:.0738,83:.0771,84:.0808,85:.0851,86:.0899,87:.0955,88:.1021,89:.1099,90:.1192,
+  91:.1306,92:.1449,93:.1634,94:.1879
+};
+const ferrRate = age => age < 71 ? 0 : (FERR_RATES[Math.min(age,94)] ?? 0.20);
+
+const CELI_PLAFOND   = 7000;
+const REER_PLAFOND   = 31560;
+const REER_PLAFOND_P = 0.18;
+
+const C = {
+  bleu:'rgb(9,87,151)',bleuPale:'#E6EFF7',or:'rgb(240,150,134)',
+  vert:'#1E7E34',orange:'#C45600',violet:'#6F42C1',rouge:'#dc2626',
+  gris:'#555',grisC:'#E0E0E0',bord:'#CCC',fond:'#F0F4F8',blanc:'#FFF',
+};
+
+const ACCT = {
   REER:  {label:'REER',          icon:'🏦',color:C.bleu,  tax:"Déductible · Imposable au retrait"},
   CELI:  {label:'CÉLI',          icon:'🌱',color:C.vert,  tax:"Retraits libres d'impôt"},
   NONREG:{label:'Non enregistré',icon:'📈',color:C.orange,tax:"50% des gains en capital imposables"},
   IMMO:  {label:'Immobilier',    icon:'🏠',color:C.violet,tax:"Valeur nette estimée"},
   AUTRE: {label:'Autre actif',   icon:'💼',color:C.gris,  tax:"Actif personnalisé"},
 };
-const RISK={
+const RISK = {
   low:   {label:'Faible', vol:.05,color:C.vert},
   medium:{label:'Modéré', vol:.12,color:C.orange},
-  high:  {label:'Élevé',  vol:.20,color:'#dc2626'},
+  high:  {label:'Élevé',  vol:.20,color:C.rouge},
 };
-const STRAT={
+const STRAT = {
   'smart':     {label:'REER + CÉLI optimal',order:null,smart:true,
-    desc:"🎯 Retire du REER jusqu'au montant personnel de base (~15 705$) net des revenus gouvernementaux — aucun impôt net. Le reste vient du CÉLI, libre d'impôt."},
+    desc:"🎯 REER jusqu'au montant personnel de base (~15 705$) net des revenus gouvernementaux — aucun impôt net. Le reste du CÉLI, libre d'impôt."},
   'celi-first':{label:'CÉLI d\'abord',order:['CELI','NONREG','REER','IMMO','AUTRE'],
     desc:"✅ CÉLI (libre d'impôt) → Non enregistré → REER (imposable au retrait)."},
   'reer-first':{label:'REER d\'abord',order:['REER','NONREG','CELI','IMMO','AUTRE'],
@@ -196,7 +211,7 @@ const STRAT={
   'balanced':  {label:'Proportionnel',order:null,
     desc:"⚖️ Retraits proportionnels selon la valeur de chaque compte."},
 };
-const TABS=[
+const TABS = [
   {id:'dashboard',  icon:'📊',label:'Tableau de bord'},
   {id:'accounts',   icon:'💰',label:'Placements'},
   {id:'withdrawals',icon:'📉',label:'Retraits'},
@@ -209,33 +224,53 @@ const uid=()=>'u'+(++_uid);
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const $=id=>document.getElementById(id);
 const clone=o=>JSON.parse(JSON.stringify(o));
-
-/* ── FORMAT ───────────────────────────────────────────── */
 const fmtK=v=>{if(!isFinite(v)||isNaN(v))return'—';const a=Math.abs(v);if(a>=1e6)return(v/1e6).toFixed(1)+'M$';if(a>=1e3)return(v/1e3).toFixed(0)+'k$';return Math.round(v)+'$';};
 const fmtCAD=v=>Math.round(v).toLocaleString('fr-CA')+'\u202f$';
 
-/* ── STATE ────────────────────────────────────────────── */
-const S={
+/* ══════════════════════════════════════════
+   STATE
+══════════════════════════════════════════ */
+const S = {
   tab:'dashboard',
   accounts:[
-    {id:uid(),name:'REER',type:'REER',balance:50000,contribAmt:10000,contribFreq:'annual',contribStart:25,contribEnd:65,oneTime:[],rate:6,risk:'medium'},
-    {id:uid(),name:'CÉLI',type:'CELI',balance:20000,contribAmt:6000, contribFreq:'annual',contribStart:25,contribEnd:65,oneTime:[],rate:5,risk:'low'},
+    {id:uid(),name:'REER',type:'REER',balance:50000,
+     contribAmt:10000,contribFreq:'annual',contribStart:25,contribEnd:65,
+     oneTime:[],rate:6,rateDecum:4,risk:'medium'},
+    {id:uid(),name:'CÉLI',type:'CELI',balance:20000,
+     contribAmt:6000,contribFreq:'annual',contribStart:25,contribEnd:65,
+     oneTime:[],rate:5,rateDecum:4,risk:'low'},
   ],
   withdrawals:[
-    {id:uid(),name:'Retraite',startAge:65,endAge:100,amount:45000,type:'fixed',freq:'annual'},
+    {id:uid(),name:'Retraite',startAge:65,endAge:100,
+     amount:45000,type:'fixed',freq:'annual',
+     indexed:true,adaptive:false,adaptiveThreshold:200000,adaptiveReduction:25},
   ],
-  params:{ageFrom:25,ageTo:95,salary:80000,ageRRQ:65,ageSV:65,ageSRG:60,strategy:'smart'},
-  sim:[],mc:null,mcRunning:false,modalAcct:null,
+  params:{
+    ageFrom:25,ageTo:95,salary:80000,
+    ageRRQ:65,ageSV:65,ageSRG:60,
+    strategy:'smart',
+    inflation:2.0,
+    rebalance:false,
+  },
+  // Computed
+  sim:[],mc:null,mcRunning:false,
+  acctBalsAtRetirement:{},depletionAge:null,
+  // Modal
+  modalAcct:null,
 };
 
-/* ── FINANCE ──────────────────────────────────────────── */
+/* ══════════════════════════════════════════
+   FINANCE MATH
+══════════════════════════════════════════ */
 const randNorm=()=>{let u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);};
+
 const calcRRQ=(age,aR,sal)=>{if(age<aR)return 0;let b=Math.min(sal*.25,15888),d=aR-65;if(d<0)b*=(1+d*.054);else if(d>0)b*=(1+Math.min(d,7)*.042);return b;};
 const calcSV=(age,aS)=>age<aS?0:8000*(1+.072*Math.max(0,aS-65));
 const calcSRG=(age,aS,aSG,inc,sv)=>(age<aS||age<aSG)?0:Math.max(0,12000-Math.max(0,inc-sv)*.5);
 const calcTax=inc=>{
   if(inc<=0)return 0;
-  const fb=[55867,111733,173205],fr=[.15,.205,.26,.33],qb=[49275,98540,119910],qr=[.15,.20,.2575,.2975];
+  const fb=[55867,111733,173205],fr=[.15,.205,.26,.33];
+  const qb=[49275,98540,119910], qr=[.15,.20,.2575,.2975];
   let t=0,p=0;
   for(let i=0;i<4;i++){const l=i<fb.length?fb[i]:inc+1;t+=Math.max(0,Math.min(inc,l)-p)*fr[i];p=l;if(inc<=l)break;}
   p=0;for(let i=0;i<4;i++){const l=i<qb.length?qb[i]:inc+1;t+=Math.max(0,Math.min(inc,l)-p)*qr[i];p=l;if(inc<=l)break;}
@@ -243,99 +278,207 @@ const calcTax=inc=>{
 };
 
 function buildOrder(strategy,accounts){
-  const order=STRAT[strategy]&&STRAT[strategy].order;
+  const order=STRAT[strategy]?.order;
   if(!order)return accounts.map(a=>a.id);
   const byT={};accounts.forEach(a=>(byT[a.type]=byT[a.type]||[]).push(a.id));
-  const ids=[];order.forEach(t=>(byT[t]||[]).forEach(id=>ids.push(id)));
+  const ids=[];
+  order.forEach(t=>(byT[t]||[]).forEach(id=>ids.push(id)));
   accounts.forEach(a=>{if(!ids.includes(a.id))ids.push(a.id);});
   return ids;
 }
 
-/* Retrait annuel réel d'un retrait configuré */
-function wAnnual(w,portfolioTotal){
-  if(w.type==='percent') return portfolioTotal*(w.amount/100);
-  return w.freq==='monthly'?w.amount*12:w.amount;
-}
+/* Plafonds REER et CÉLI */
+const reerPlafond=salary=>Math.min(REER_PLAFOND,Math.round(salary*REER_PLAFOND_P));
+const annualContrib=a=>a.contribFreq==='monthly'?a.contribAmt*12:a.contribAmt;
 
-function runSim(accounts,withdrawals,params,shocks){
-  if(!accounts.length)return[];
-  const{ageFrom,ageTo,salary,ageRRQ,ageSV,ageSRG,strategy}=params;
+/* ══════════════════════════════════════════
+   SIMULATION
+══════════════════════════════════════════ */
+function runSim(accounts, withdrawals, params, shocks){
+  if(!accounts.length) return {rows:[], acctBals:{}};
+  const {ageFrom,ageTo,salary,ageRRQ,ageSV,ageSRG,strategy,inflation,rebalance} = params;
   const bal={};accounts.forEach(a=>(bal[a.id]=a.balance));
   const pids=buildOrder(strategy,accounts);
-  const rows=[];
+  const inflRate=(inflation||0)/100;
+  let acctBals={}, rows=[];
+
+  // Montants de base des retraits (avant indexation)
+  const wBase={};
+  withdrawals.forEach(w=>{wBase[w.id]=w.freq==='monthly'?w.amount*12:w.amount;});
 
   for(let age=ageFrom;age<=ageTo;age++){
     const yr=age-ageFrom;
-    accounts.forEach(a=>{const sh=shocks&&shocks[a.id]?shocks[a.id][yr]||0:0;bal[a.id]=Math.max(0,bal[a.id]*(1+a.rate/100+sh));});
-    accounts.forEach(a=>{if(age<a.contribStart||age>a.contribEnd)return;bal[a.id]+=(a.contribFreq==='monthly'?a.contribAmt*12:a.contribAmt);});
+    const isDecum=age>=ageRRQ;
+
+    /* 1. Croissance (taux par phase) */
+    accounts.forEach(a=>{
+      const baseRate=isDecum?(a.rateDecum??a.rate):a.rate;
+      const sh=shocks&&shocks[a.id]?shocks[a.id][yr]||0:0;
+      // Rééquilibrage : légère réduction du taux mais volatilité moindre (appliqué via shock)
+      bal[a.id]=Math.max(0,bal[a.id]*(1+baseRate/100+sh));
+    });
+
+    /* 2. Contributions récurrentes */
+    accounts.forEach(a=>{
+      if(age<a.contribStart||age>a.contribEnd)return;
+      bal[a.id]+=a.contribFreq==='monthly'?a.contribAmt*12:a.contribAmt;
+    });
+
+    /* 3. Contributions ponctuelles */
     accounts.forEach(a=>(a.oneTime||[]).forEach(ot=>{if(ot.age===age)bal[a.id]+=ot.amount;}));
 
-    const tot=Object.values(bal).reduce((s,v)=>s+v,0);
-    const rrq=calcRRQ(age,ageRRQ,salary),sv=calcSV(age,ageSV),srg=calcSRG(age,ageSV,ageSRG,0,sv),gov=rrq+sv+srg;
-    let needed=0;
-    withdrawals.forEach(w=>{if(age>=w.startAge&&age<=w.endAge)needed+=wAnnual(w,tot);});
+    /* 4. Snapshot à la retraite */
+    if(age===ageRRQ) acctBals={...bal};
 
-    /* Décaissement */
-    let fp=Math.max(0,needed-gov);
+    const totalBefore=Object.values(bal).reduce((s,v)=>s+v,0);
+
+    /* 5. Revenus gouvernementaux */
+    const rrq=calcRRQ(age,ageRRQ,salary);
+    const sv=calcSV(age,ageSV);
+    const srg=calcSRG(age,ageSV,ageSRG,0,sv);
+    const gov=rrq+sv+srg;
+
+    /* 6. FERR minimum obligatoire à 71+ (REER → FERR) */
+    let ferrTotal=0;
+    if(age>=71){
+      const fRate=ferrRate(age);
+      accounts.filter(a=>a.type==='REER').forEach(a=>{
+        const minW=bal[a.id]*fRate;
+        bal[a.id]=Math.max(0,bal[a.id]-minW);
+        ferrTotal+=minW;
+      });
+    }
+
+    /* 7. Retraits planifiés (indexation + adaptatif) */
+    let needed=0;
+    withdrawals.forEach(w=>{
+      if(age<w.startAge||age>w.endAge)return;
+      let amt;
+      if(w.type==='percent'){
+        amt=totalBefore*(w.amount/100);
+      } else {
+        let base=wBase[w.id];
+        if(w.indexed) base*=Math.pow(1+inflRate,Math.max(0,age-w.startAge));
+        if(w.adaptive&&totalBefore<(w.adaptiveThreshold||200000))
+          base*=(1-(w.adaptiveReduction||25)/100);
+        amt=base;
+      }
+      needed+=amt;
+    });
+
+    /* 8. Décaissement du portefeuille */
+    const totalAvail=gov+ferrTotal;
+    let fp=Math.max(0,needed-totalAvail);
+
     if(strategy==='smart'){
-      const BPA=15705,reerFree=Math.max(0,BPA-gov);
+      const BPA=15705;
+      const reerFree=Math.max(0,BPA-totalAvail);
       let fromR=Math.min(fp,reerFree),rem=fp;
       accounts.filter(a=>a.type==='REER').forEach(a=>{if(fromR<=0)return;const t=Math.min(bal[a.id]||0,fromR);bal[a.id]-=t;fromR-=t;rem-=t;});
       accounts.filter(a=>a.type==='CELI').forEach(a=>{if(rem<=0)return;const t=Math.min(bal[a.id]||0,rem);bal[a.id]-=t;rem-=t;});
       accounts.filter(a=>a.type!=='REER'&&a.type!=='CELI').forEach(a=>{if(rem<=0)return;const t=Math.min(bal[a.id]||0,rem);bal[a.id]-=t;rem-=t;});
       accounts.filter(a=>a.type==='REER').forEach(a=>{if(rem<=0)return;const t=Math.min(bal[a.id]||0,rem);bal[a.id]-=t;rem-=t;});
-    } else if(STRAT[strategy]&&STRAT[strategy].order){
+    } else if(STRAT[strategy]?.order){
       pids.forEach(id=>{if(fp<=0)return;const t=Math.min(bal[id]||0,fp);bal[id]-=t;fp-=t;});
     } else {
-      const tt=Object.values(bal).reduce((s,v)=>s+v,0)||1;accounts.forEach(a=>{bal[a.id]=Math.max(0,bal[a.id]-(bal[a.id]/tt)*fp);});
+      const tt=Object.values(bal).reduce((s,v)=>s+v,0)||1;
+      accounts.forEach(a=>{bal[a.id]=Math.max(0,bal[a.id]-(bal[a.id]/tt)*fp);});
     }
 
+    /* 9. Impôts (FERR + retraits taxables, simplifié) */
+    const taxBase=Math.max(0,ferrTotal+fp);
+    const tax=Math.round(calcTax(taxBase));
     const totalBal=Math.round(Object.values(bal).reduce((s,v)=>s+v,0));
-    const tax=Math.round(calcTax(Math.max(0,needed-gov)));
-    rows.push({age,totalBalance:totalBal,rrq,sv,srg,gov,withdrawal:needed,tax,net:Math.round(needed+gov-tax)});
-    if(totalBal<=0){for(let a2=age+1;a2<=ageTo;a2++)rows.push({age:a2,totalBalance:0,rrq,sv,srg,gov,withdrawal:needed,tax:0,net:0});break;}
+    const grossIncome=gov+ferrTotal+fp;
+    const netIncome=Math.round(grossIncome-tax);
+
+    rows.push({age,totalBalance:totalBal,rrq,sv,srg,gov,ferr:Math.round(ferrTotal),withdrawal:Math.round(needed),tax,net:netIncome});
+
+    if(totalBal<=0){
+      for(let a2=age+1;a2<=ageTo;a2++)
+        rows.push({age:a2,totalBalance:0,rrq,sv,srg,gov,ferr:0,withdrawal:Math.round(needed),tax:0,net:Math.round(gov)});
+      break;
+    }
   }
-  return rows;
+  return {rows, acctBals};
 }
 
 function runMC(accounts,withdrawals,params,N=200){
   if(!accounts.length)return null;
   const runs=[];let ok=0;
   for(let i=0;i<N;i++){
-    const sh={};accounts.forEach(a=>{const vol=(RISK[a.risk]||RISK.medium).vol;sh[a.id]={};for(let y=0;y<=params.ageTo-params.ageFrom+1;y++)sh[a.id][y]=randNorm()*vol;});
-    const res=runSim(accounts,withdrawals,params,sh);runs.push(res);
-    if((res[res.length-1]&&res[res.length-1].totalBalance||0)>0)ok++;
+    const sh={};
+    accounts.forEach(a=>{
+      const baseVol=(RISK[a.risk]||RISK.medium).vol;
+      // Rééquilibrage réduit la volatilité de 20%
+      const vol=params.rebalance?baseVol*0.80:baseVol;
+      sh[a.id]={};
+      for(let y=0;y<=params.ageTo-params.ageFrom+1;y++) sh[a.id][y]=randNorm()*vol;
+    });
+    const {rows}=runSim(accounts,withdrawals,params,sh);
+    runs.push(rows);
+    if((rows[rows.length-1]?.totalBalance||0)>0)ok++;
   }
-  const len=runs[0]?runs[0].length:0,cd=[];
+  const len=runs[0]?.length||0,cd=[];
   for(let i=0;i<len;i++){
-    const vals=runs.map(r=>r[i]?r[i].totalBalance||0:0).sort((a,b)=>a-b);
+    const vals=runs.map(r=>r[i]?.totalBalance||0).sort((a,b)=>a-b);
     const p=f=>Math.max(0,vals[Math.floor(N*f)]||0);
     cd.push({age:runs[0][i].age,p10:p(.10),p25:p(.25),p50:p(.50),p75:p(.75),p90:p(.90)});
   }
   return{chartData:cd,successRate:Math.round(ok/N*100),N};
 }
 
-function getSuggestions(){
-  const tips=[],sr=S.mc?S.mc.successRate:100;
-  const avg=S.accounts.length?S.accounts.reduce((s,a)=>s+a.rate,0)/S.accounts.length:0;
-  if(sr<70)  tips.push({cls:'al-danger',icon:'🚨',text:`Probabilité de succès à ${sr}%. Augmentez les contributions ou réduisez les retraits.`});
-  else if(sr<85)tips.push({cls:'al-warn',icon:'⚠️',text:`Probabilité ${sr}%. Ajouter 5 000$/an dans le CÉLI améliorerait votre retraite.`});
-  if(!S.accounts.some(a=>a.type==='CELI'))tips.push({cls:'al-info',icon:'🌱',text:"Aucun CÉLI. Les retraits y sont totalement libres d'impôt."});
-  if(S.params.ageRRQ<65)tips.push({cls:'al-info',icon:'🕐',text:`RRQ à ${S.params.ageRRQ} ans = pénalité de ${((65-S.params.ageRRQ)*5.4).toFixed(0)}%. Attendre 70 ans ajoute 42%.`});
-  if(S.accounts.length&&avg<4)tips.push({cls:'al-info',icon:'📈',text:`Rendement moyen ${avg.toFixed(1)}%/an. Des FNB diversifiés ciblent 6–8% sur 20+ ans.`});
-  return tips.slice(0,3);
-}
-
-/* ── COMPUTE ──────────────────────────────────────────── */
+/* ══════════════════════════════════════════
+   COMPUTE
+══════════════════════════════════════════ */
 let mcTimer=null;
 function compute(){
-  S.sim=runSim(S.accounts,S.withdrawals,S.params,null);
+  const {rows,acctBals}=runSim(S.accounts,S.withdrawals,S.params,null);
+  S.sim=rows;
+  S.acctBalsAtRetirement=acctBals;
+  S.depletionAge=rows.find(r=>r.totalBalance<=0)?.age||null;
   clearTimeout(mcTimer);S.mcRunning=true;updateNav();
-  mcTimer=setTimeout(()=>{S.mc=runMC(S.accounts,S.withdrawals,S.params);S.mcRunning=false;updateNav();if(S.tab==='dashboard'||S.tab==='monte')renderMain();else refreshCharts();},380);
+  mcTimer=setTimeout(()=>{
+    S.mc=runMC(S.accounts,S.withdrawals,S.params);
+    S.mcRunning=false;updateNav();
+    if(S.tab==='dashboard'||S.tab==='monte')renderMain();else refreshChart();
+  },400);
 }
 
-/* ── CANVAS ───────────────────────────────────────────── */
+function getSuggestions(){
+  const tips=[],sr=S.mc?S.mc.successRate:100;
+  const avgR=S.accounts.length?S.accounts.reduce((s,a)=>s+a.rate,0)/S.accounts.length:0;
+  if(sr<70)  tips.push({cls:'al-danger',icon:'🚨',text:`Probabilité de succès à ${sr}%. Augmentez les contributions ou réduisez les retraits.`});
+  else if(sr<85)tips.push({cls:'al-warn',icon:'⚠️',text:`Probabilité ${sr}%. Ajouter 5 000$/an dans le CÉLI améliorerait votre retraite.`});
+  if(!S.accounts.some(a=>a.type==='CELI'))tips.push({cls:'al-info',icon:'🌱',text:"Aucun CÉLI. Les retraits y sont totalement libres d'impôt — le véhicule le plus flexible."});
+  if(S.params.ageRRQ<65)tips.push({cls:'al-info',icon:'🕐',text:`RRQ à ${S.params.ageRRQ} ans = pénalité de ${((65-S.params.ageRRQ)*5.4).toFixed(0)}%. Attendre 70 ans ajoute 42%.`});
+  if(S.accounts.length&&avgR<4)tips.push({cls:'al-info',icon:'📈',text:`Rendement moyen ${avgR.toFixed(1)}%/an. Des FNB diversifiés ciblent 6–8% sur 20+ ans.`});
+  if(S.depletionAge)tips.push({cls:'al-danger',icon:'💸',text:`Le portefeuille s'épuise à ${S.depletionAge} ans. Réduire les retraits ou augmenter les contributions.`});
+  if(S.params.ageTo>71&&S.accounts.some(a=>a.type==='REER'))
+    tips.push({cls:'al-info',icon:'🔄',text:"À 71 ans, votre REER se convertit automatiquement en FERR. Des retraits minimums obligatoires s'appliquent (simulés automatiquement)."});
+  return tips.slice(0,4);
+}
+
+function getAccountWarnings(){
+  const reerMax=reerPlafond(S.params.salary);
+  const warns={};
+  S.accounts.forEach(a=>{
+    const ann=annualContrib(a);
+    const w=[];
+    if(a.type==='CELI'&&ann>CELI_PLAFOND) w.push({type:'warn',msg:`Dépasse le plafond CÉLI (${fmtK(CELI_PLAFOND)}/an)`});
+    if(a.type==='REER'&&ann>reerMax)       w.push({type:'warn',msg:`Dépasse votre plafond REER estimé (${fmtK(reerMax)}/an)`});
+    if(a.type==='CELI'&&ann<=CELI_PLAFOND&&ann>0) w.push({type:'ok',msg:`Dans le plafond CÉLI (${fmtK(CELI_PLAFOND)}/an)`});
+    if(a.type==='REER'&&ann<=reerMax&&ann>0)      w.push({type:'ok',msg:`Dans le plafond REER (${fmtK(reerMax)}/an)`});
+    warns[a.id]=w;
+  });
+  return warns;
+}
+
+/* ══════════════════════════════════════════
+   CANVAS CHART
+══════════════════════════════════════════ */
 const niceMax=v=>{if(!v||v<=0)return 1;const m=Math.pow(10,Math.floor(Math.log10(v)));return Math.ceil(v/m)*m;};
+const CAP=5000000;
 
 function setupCv(id){
   const cv=$(id);if(!cv)return null;
@@ -344,422 +487,538 @@ function setupCv(id){
   const ctx=cv.getContext('2d');ctx.scale(dpr,dpr);return{cv,ctx,W,H};
 }
 
-function drawGrid(ctx,pad,iW,iH,max,ages){
+function drawMainChart(id){
+  const s=setupCv(id);if(!s)return;
+  const{ctx,W,H}=s,pad={t:12,r:14,b:22,l:56},iW=W-pad.l-pad.r,iH=H-pad.t-pad.b;
+  if(iW<=0||iH<=0||!S.sim.length)return;
+  const sim=S.sim,mc=S.mc,ages=sim.map(r=>r.age),n=sim.length;
+
+  let max=0;
+  sim.forEach(r=>{if(r.totalBalance>max)max=r.totalBalance;});
+  if(mc)mc.chartData.forEach(r=>{if(r.p90>max)max=r.p90;});
+  max=Math.min(CAP,niceMax(max));
+
+  ctx.clearRect(0,0,W,H);
+
+  // Y grid
   [0,.25,.5,.75,1].forEach(f=>{
     const y=pad.t+iH*(1-f);
-    ctx.strokeStyle=C.grisClair;ctx.lineWidth=1;ctx.setLineDash([3,3]);
+    ctx.strokeStyle=C.grisC;ctx.lineWidth=1;ctx.setLineDash([3,3]);
     ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+iW,y);ctx.stroke();ctx.setLineDash([]);
     ctx.fillStyle=C.gris;ctx.font='9px Arial';ctx.textAlign='right';ctx.fillText(fmtK(max*f),pad.l-4,y+3);
   });
-  const n=ages.length,step=n>60?10:n>30?5:n>15?2:1;
+
+  // X ticks
+  const step=n>60?10:n>30?5:n>15?2:1;
   ctx.fillStyle=C.gris;ctx.font='9px Arial';ctx.textAlign='center';
   ages.forEach((age,i)=>{if(age%step!==0)return;const x=pad.l+(i/(n-1||1))*iW;ctx.fillText(age,x,pad.t+iH+14);});
-  ctx.strokeStyle=C.grisClair;ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,pad.t+iH);ctx.lineTo(pad.l+iW,pad.t+iH);ctx.stroke();
-}
 
-function drawMainChart(id){
-  const s=setupCv(id);if(!s)return;
-  const{ctx,W,H}=s,pad={t:10,r:14,b:22,l:52},iW=W-pad.l-pad.r,iH=H-pad.t-pad.b;
-  if(iW<=0||iH<=0||!S.sim.length)return;
-  const sim=S.sim,mc=S.mc,ages=sim.map(r=>r.age),n=sim.length;
-  let max=0;sim.forEach(r=>{if(r.totalBalance>max)max=r.totalBalance;});
-  if(mc)mc.chartData.forEach(r=>{if(r.p90>max)max=r.p90;});
-  max=Math.min(5000000,niceMax(max));
-  ctx.clearRect(0,0,W,H);drawGrid(ctx,pad,iW,iH,max,ages);
-  const px=(i,v)=>({x:pad.l+(i/(n-1||1))*iW,y:pad.t+iH-(v/max)*iH});
+  // Axes
+  ctx.strokeStyle=C.grisC;ctx.lineWidth=1;ctx.setLineDash([]);
+  ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,pad.t+iH);ctx.lineTo(pad.l+iW,pad.t+iH);ctx.stroke();
+
+  const px=(i,v)=>({x:pad.l+(i/(n-1||1))*iW,y:pad.t+iH-(Math.min(v,max)/max)*iH});
+
+  // MC bands
   if(mc&&mc.chartData.length){
-    const D=mc.chartData,nd=D.length,pmc=(i,v)=>({x:pad.l+(i/(nd-1||1))*iW,y:pad.t+iH-(v/max)*iH});
+    const D=mc.chartData,nd=D.length;
+    const pmc=(i,v)=>({x:pad.l+(i/(nd-1||1))*iW,y:pad.t+iH-(Math.min(v,max)/max)*iH});
     ctx.beginPath();D.forEach((d,i)=>{const p=pmc(i,d.p10);i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y);});
     for(let i=nd-1;i>=0;i--){const p=pmc(i,D[i].p90);ctx.lineTo(p.x,p.y);}
-    ctx.closePath();ctx.fillStyle='rgba(9,87,151,.08)';ctx.fill();
+    ctx.closePath();ctx.fillStyle='rgba(9,87,151,.07)';ctx.fill();
     ctx.beginPath();D.forEach((d,i)=>{const p=pmc(i,d.p25);i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y);});
     for(let i=nd-1;i>=0;i--){const p=pmc(i,D[i].p75);ctx.lineTo(p.x,p.y);}
-    ctx.closePath();ctx.fillStyle='rgba(9,87,151,.18)';ctx.fill();
+    ctx.closePath();ctx.fillStyle='rgba(9,87,151,.17)';ctx.fill();
     ctx.beginPath();D.forEach((d,i)=>{const p=pmc(i,d.p50);i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y);});
     ctx.strokeStyle=C.violet;ctx.lineWidth=1.5;ctx.setLineDash([6,3]);ctx.stroke();ctx.setLineDash([]);
   }
-  // Milestones (every 5y) sur le graphique
-  const step5=5;
+
+  // Points milestones (every 5y)
   sim.forEach((r,i)=>{
-    if(r.age%step5!==0||r.totalBalance===0)return;
+    if(r.age%5!==0||r.totalBalance===0)return;
     const p=px(i,r.totalBalance);
+    ctx.beginPath();ctx.arc(p.x,p.y,3,0,Math.PI*2);ctx.fillStyle=C.bleu;ctx.fill();
     ctx.fillStyle=C.bleu;ctx.font='bold 8px Arial';ctx.textAlign='center';
     const label=fmtK(r.totalBalance);
-    const yy=p.y-6>pad.t+10?p.y-6:p.y+14;
-    ctx.fillText(label,p.x,yy);
-    ctx.beginPath();ctx.arc(p.x,p.y,3,0,Math.PI*2);ctx.fillStyle=C.bleu;ctx.fill();
+    ctx.fillText(label,p.x,p.y-7<pad.t+10?p.y+14:p.y-7);
   });
-  // Ref retraite
+
+  // Ligne retraite
   const ri=sim.findIndex(r=>r.age>=S.params.ageRRQ);
-  if(ri>=0){const rx=pad.l+(ri/(n-1||1))*iW;
+  if(ri>=0){
+    const rx=pad.l+(ri/(n-1||1))*iW;
     ctx.strokeStyle='rgba(9,87,151,.35)';ctx.lineWidth=1;ctx.setLineDash([5,3]);
     ctx.beginPath();ctx.moveTo(rx,pad.t);ctx.lineTo(rx,pad.t+iH);ctx.stroke();ctx.setLineDash([]);
-    ctx.fillStyle=C.bleu;ctx.font='bold 9px Arial';ctx.textAlign='left';ctx.fillText('Retraite',rx+3,pad.t+10);}
-  // Base fill + line
+    ctx.fillStyle=C.bleu;ctx.font='bold 9px Arial';ctx.textAlign='left';ctx.fillText('Retraite',rx+3,pad.t+12);
+  }
+
+  // Ligne épuisement
+  if(S.depletionAge){
+    const di=sim.findIndex(r=>r.age===S.depletionAge);
+    if(di>=0){
+      const dx=pad.l+(di/(n-1||1))*iW;
+      ctx.strokeStyle='rgba(220,38,38,.5)';ctx.lineWidth=1.5;ctx.setLineDash([4,3]);
+      ctx.beginPath();ctx.moveTo(dx,pad.t);ctx.lineTo(dx,pad.t+iH);ctx.stroke();ctx.setLineDash([]);
+      ctx.fillStyle=C.rouge;ctx.font='bold 9px Arial';ctx.textAlign='right';
+      ctx.fillText('Épuisement '+S.depletionAge+'a',dx-3,pad.t+12);
+    }
+  }
+
+  // Base area
   const g=ctx.createLinearGradient(0,pad.t,0,pad.t+iH);
-  g.addColorStop(0,'rgba(9,87,151,.28)');g.addColorStop(1,'rgba(9,87,151,.02)');
+  g.addColorStop(0,'rgba(9,87,151,.27)');g.addColorStop(1,'rgba(9,87,151,.02)');
   ctx.beginPath();sim.forEach((r,i)=>{const p=px(i,r.totalBalance);i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y);});
   ctx.lineTo(px(n-1,0).x,pad.t+iH);ctx.lineTo(pad.l,pad.t+iH);ctx.closePath();ctx.fillStyle=g;ctx.fill();
   ctx.beginPath();sim.forEach((r,i)=>{const p=px(i,r.totalBalance);i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y);});
   ctx.strokeStyle=C.bleu;ctx.lineWidth=2.5;ctx.stroke();
 }
 
-function drawSmall(id,vals,color){
-  const s=setupCv(id);if(!s)return;
-  const{ctx,W,H}=s,pad={t:6,r:8,b:18,l:44},iW=W-pad.l-pad.r,iH=H-pad.t-pad.b;
-  if(iW<=0||iH<=0||!vals.length)return;
-  const max=niceMax(Math.max(...vals)||1),n=vals.length;
-  ctx.clearRect(0,0,W,H);
-  [0,.5,1].forEach(f=>{const y=pad.t+iH*(1-f);ctx.strokeStyle=C.grisClair;ctx.lineWidth=1;ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+iW,y);ctx.stroke();ctx.setLineDash([]);if(f>0){ctx.fillStyle=C.gris;ctx.font='9px Arial';ctx.textAlign='right';ctx.fillText(fmtK(max*f),pad.l-3,y+3);}});
-  ctx.strokeStyle=C.grisClair;ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,pad.t+iH);ctx.lineTo(pad.l+iW,pad.t+iH);ctx.stroke();
-  const g=ctx.createLinearGradient(0,pad.t,0,pad.t+iH);g.addColorStop(0,color+'44');g.addColorStop(1,color+'08');
-  ctx.beginPath();vals.forEach((v,i)=>{const x=pad.l+(i/(n-1||1))*iW,y=pad.t+iH-(v/max)*iH;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
-  ctx.lineTo(pad.l+iW,pad.t+iH);ctx.lineTo(pad.l,pad.t+iH);ctx.closePath();ctx.fillStyle=g;ctx.fill();
-  ctx.beginPath();vals.forEach((v,i)=>{const x=pad.l+(i/(n-1||1))*iW,y=pad.t+iH-(v/max)*iH;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
-  ctx.strokeStyle=color;ctx.lineWidth=2;ctx.stroke();
-}
-
-function refreshCharts(){
+function refreshChart(){
   if(S.tab==='dashboard')drawMainChart('chartMain');
   if(S.tab==='monte')drawMainChart('chartMC');
 }
 
-/* ── SECTION HELPER ───────────────────────────────────── */
-const section=(num,title,inner)=>`<div class="sec"><div class="sec-head"><div class="sec-num">${num}</div><div class="sec-title">${title}</div><div class="sec-line"></div></div>${inner}</div>`;
+/* ══════════════════════════════════════════
+   HELPERS HTML
+══════════════════════════════════════════ */
+const sec=(n,t,inner)=>`<div class="sec"><div class="sec-head"><div class="sec-num">${n}</div><div class="sec-title">${t}</div><div class="sec-line"></div></div>${inner}</div>`;
+const badge=(txt,color)=>`<span class="abadge" style="background:${color}1A;color:${color}">${txt}</span>`;
 
-/* ── PAGE: DASHBOARD ──────────────────────────────────── */
+/* ══════════════════════════════════════════
+   PAGE: DASHBOARD
+══════════════════════════════════════════ */
 function pageDashboard(){
   const last=S.sim.length?S.sim[S.sim.length-1]:{totalBalance:0};
   const ri=S.sim.findIndex(r=>r.age>=S.params.ageRRQ);
-  const retR=ri>=0?S.sim[ri]:{};
+  const retR=ri>=0?S.sim[ri]:{totalBalance:0,net:0};
   const mNet=retR.net?Math.round(retR.net/12):0;
   const sr=S.mc?S.mc.successRate:null;
-  const src=sr===null?C.gris:sr>=80?C.vert:sr>=65?C.orange:'#dc2626';
+  const src=sr===null?C.gris:sr>=80?C.vert:sr>=65?C.orange:C.rouge;
   const tips=getSuggestions();
 
-  // Table par tranche (tous les 5 ans + milestones clés)
-  const milestoneAges=new Set([S.params.ageFrom,S.params.ageRRQ,S.params.ageSV,S.params.ageTo,
+  // Milestones pour le tableau
+  const eventAges=new Set([S.params.ageFrom,S.params.ageRRQ,S.params.ageSV,S.params.ageTo,71,
     ...S.accounts.flatMap(a=>[a.contribStart,a.contribEnd]),
     ...S.withdrawals.flatMap(w=>[w.startAge,w.endAge])]);
-  const tableRows=S.sim.filter(r=>r.age%5===0||milestoneAges.has(r.age)).map(r=>{
-    const isMilestone=milestoneAges.has(r.age);
-    const gov=Math.round(r.gov),netMois=r.net?Math.round(r.net/12):0;
-    return`<tr class="${isMilestone?'milestone':''}">
-      <td>${r.age} ans${r.age===S.params.ageRRQ?' ★':''}</td>
-      <td><b style="color:${C.bleu}">${fmtK(r.totalBalance)}</b></td>
-      <td>${r.withdrawal>0?fmtK(r.withdrawal):'—'}</td>
-      <td>${gov>0?fmtK(gov):'—'}</td>
+  const tableRows=S.sim.filter(r=>r.age%5===0||eventAges.has(r.age)).map(r=>{
+    const isMs=eventAges.has(r.age);
+    const isDep=S.depletionAge&&r.age>=S.depletionAge&&r.totalBalance<=0;
+    const cls=isDep?'dep':isMs?'ms':'';
+    const ferrStr=r.ferr>0?`<span style="font-size:10px;color:${C.orange}">&nbsp;(+FERR)</span>`:'';
+    return`<tr class="${cls}">
+      <td>${r.age} ans${r.age===S.params.ageRRQ?' ★':r.age===71?' 🔄':''}</td>
+      <td><b>${fmtK(r.totalBalance)}</b></td>
+      <td>${r.withdrawal>0?fmtK(r.withdrawal):'—'}${ferrStr}</td>
+      <td>${r.gov>0?fmtK(Math.round(r.gov)):'—'}</td>
+      <td>${r.ferr>0?fmtK(r.ferr):'—'}</td>
       <td>${r.tax>0?fmtK(r.tax):'—'}</td>
-      <td>${netMois>0?fmtK(netMois)+'/mois':'—'}</td>
+      <td>${r.net>0?fmtK(Math.round(r.net/12))+'/mois':'—'}</td>
     </tr>`;
   }).join('');
 
   return`
-    <div class="kpi-row">
-      <div class="kpi"><div class="kpi-lbl">Solde final projeté</div><div class="kpi-val">${fmtK(last.totalBalance)}</div><div class="kpi-sub">Scénario de base à ${S.params.ageTo} ans</div></div>
-      <div class="kpi"><div class="kpi-lbl">Probabilité de succès</div><div class="kpi-val" style="color:${src}">${sr!==null?`${sr}%`:'…'}</div><div class="kpi-sub">${S.mc?S.mc.N:200} simulations Monte Carlo</div></div>
-      <div class="kpi"><div class="kpi-lbl">Solde à ${S.params.ageRRQ} ans</div><div class="kpi-val">${fmtK(retR.totalBalance)}</div><div class="kpi-sub">Avant décaissement</div></div>
-      <div class="kpi"><div class="kpi-lbl">Revenu net / mois</div><div class="kpi-val">${mNet>0?fmtK(mNet):'—'}</div><div class="kpi-sub">Retraits + RRQ + SV − impôts</div></div>
+    <div class="kpis">
+      <div class="kpi"><div class="kpi-l">Solde final projeté</div><div class="kpi-v">${fmtK(last.totalBalance)}</div><div class="kpi-s">Scénario de base à ${S.params.ageTo} ans</div></div>
+      <div class="kpi"><div class="kpi-l">Probabilité de succès</div><div class="kpi-v" style="color:${src}">${sr!==null?`${sr}%`:'…'}</div><div class="kpi-s">${S.mc?S.mc.N:200} simulations Monte Carlo</div></div>
+      <div class="kpi"><div class="kpi-l">Solde à ${S.params.ageRRQ} ans</div><div class="kpi-v">${fmtK(retR.totalBalance)}</div><div class="kpi-s">Avant décaissement</div></div>
+      <div class="kpi"><div class="kpi-l">Revenu net / mois</div><div class="kpi-v">${mNet>0?fmtK(mNet):'—'}</div><div class="kpi-s">Retraits + RRQ + SV + FERR − impôts</div></div>
+      ${S.depletionAge?`<div class="kpi" style="border-top-color:${C.rouge}"><div class="kpi-l" style="color:${C.rouge}">⚠ Âge d'épuisement</div><div class="kpi-v" style="color:${C.rouge}">${S.depletionAge} ans</div><div class="kpi-s">Le portefeuille atteint zéro</div></div>`:''}
     </div>
-    ${section('1','Évolution du portefeuille',`
+    ${sec(1,'Évolution du portefeuille',`
       <div class="card">
-        <div class="card-head"><span>${S.params.ageFrom}→${S.params.ageTo} ans · Points tous les 5 ans</span><span style="font-size:11px;color:${C.gris}">Bandes MC P10→P90</span></div>
-        <div style="padding:8px 4px 2px"><canvas id="chartMain" style="height:480px"></canvas></div>
+        <div class="ch"><span>${S.params.ageFrom}→${S.params.ageTo} ans · Plafonné à 5M$ · Points tous les 5 ans</span><span style="font-size:11px;color:${C.gris}">Bandes MC P10→P90</span></div>
+        <div style="padding:7px 3px 2px"><canvas id="chartMain" style="height:440px"></canvas></div>
         <div class="legend">
           <div class="li"><span class="ll" style="background:${C.bleu}"></span>Base</div>
           <div class="li"><span class="ll" style="background:${C.violet};opacity:.8"></span>Médiane MC</div>
           <div class="li"><span class="la" style="background:rgba(9,87,151,.2)"></span>Zone P25–P75</div>
+          ${S.depletionAge?`<div class="li"><span class="ll" style="background:${C.rouge};opacity:.7"></span>Épuisement</div>`:''}
         </div>
       </div>`)}
-    ${section('2','Portefeuille par tranche d\'âge',`
+    ${sec(2,'Portefeuille par tranche d\'âge',`
       <div class="card">
-        <table class="ptable">
-          <thead><tr>
-            <th>Âge</th>
-            <th>Portefeuille</th>
-            <th>Retrait/an</th>
-            <th>RRQ + SV/an</th>
-            <th>Impôts/an</th>
-            <th>Net</th>
-          </tr></thead>
+        <table class="ptbl">
+          <thead><tr><th>Âge</th><th>Portefeuille</th><th>Retrait/an</th><th>RRQ+SV/an</th><th>FERR/an</th><th>Impôts/an</th><th>Net</th></tr></thead>
           <tbody>${tableRows}</tbody>
         </table>
+        <div style="padding:5px 12px 7px;font-size:10px;color:${C.gris}">★ = Retraite RRQ &nbsp;·&nbsp; 🔄 = Conversion REER→FERR &nbsp;·&nbsp; Lignes bleues = âges clés &nbsp;·&nbsp; Lignes rouges = épuisement</div>
       </div>`)}
-    ${tips.length?section('3','Suggestions intelligentes',tips.map(t=>`<div class="alert ${t.cls}"><span class="alert-icon">${t.icon}</span><span>${esc(t.text)}</span></div>`).join('')):''}
+    ${tips.length?sec(3,'Suggestions intelligentes',`<div>${tips.map(t=>`<div class="alert ${t.cls}"><span class="ai">${t.icon}</span><span>${esc(t.text)}</span></div>`).join('')}</div>`):''}
   `;
 }
 
-/* ── PAGE: ACCOUNTS ───────────────────────────────────── */
+/* ══════════════════════════════════════════
+   PAGE: PLACEMENTS
+══════════════════════════════════════════ */
 function pageAccounts(){
+  const warns=getAccountWarnings();
+  const retAge=S.params.ageRRQ;
+
   const cards=S.accounts.map((a,i)=>{
-    const def=ACCT[a.type]||ACCT.AUTRE,risk=RISK[a.risk]||RISK.medium;
-    const ann=a.contribFreq==='monthly'?a.contribAmt*12:a.contribAmt;
-    return`<div class="acct-card">
-      <div class="acct-stripe" style="background:${def.color}"></div>
-      <div class="acct-body">
-        <div class="acct-hdr">
-          <div class="acct-ttl"><span style="font-size:22px">${def.icon}</span>
-            <div><div style="font-weight:700;font-size:14px">${esc(a.name)}</div><div style="font-size:11px;color:${C.gris}">${def.label}</div></div>
+    const def=ACCT[a.type]||ACCT.AUTRE;
+    const risk=RISK[a.risk]||RISK.medium;
+    const ann=annualContrib(a);
+    const projBal=S.acctBalsAtRetirement[a.id];
+    const ws=warns[a.id]||[];
+    const warnBadge=ws.filter(w=>w.type==='warn').map(w=>`<div class="alert al-warn" style="margin-bottom:4px;padding:5px 9px;font-size:11px"><span>⚠ ${esc(w.msg)}</span></div>`).join('');
+    const hasDecum=a.rateDecum!==undefined&&a.rateDecum!==a.rate;
+    return`<div class="acard">
+      <div class="ast" style="background:${def.color}"></div>
+      <div class="abd">
+        <div class="ahd">
+          <div class="att"><span style="font-size:22px">${def.icon}</span>
+            <div><div style="font-weight:700;font-size:13px">${esc(a.name)}</div><div style="font-size:11px;color:${C.gris}">${def.label}</div></div>
           </div>
-          <div class="acct-actions">
-            <button class="btn-icon" data-a="edit-acct" data-i="${i}">✏️</button>
-            <button class="btn-icon btn-danger btn-sm" data-a="del-acct" data-i="${i}">✕</button>
+          <div class="aac">
+            <button class="bic" data-a="edit-acct" data-i="${i}">✏️</button>
+            <button class="bic bdg bsm" data-a="del-acct" data-i="${i}">✕</button>
           </div>
         </div>
-        <div class="acct-stats">
-          <div class="acct-stat"><div class="stat-lbl">Solde actuel</div><div class="stat-val">${fmtK(a.balance)}</div></div>
-          <div class="acct-stat"><div class="stat-lbl">Contrib./an</div><div class="stat-val">${fmtK(ann)}</div></div>
-          <div class="acct-stat"><div class="stat-lbl">Rendement</div><div class="stat-val">${a.rate}%/an</div></div>
-          <div class="acct-stat"><div class="stat-lbl">Risque</div><div class="stat-val">${risk.label}</div></div>
+        <div class="asts">
+          <div class="astat"><div class="slbl">Solde actuel</div><div class="sval">${fmtK(a.balance)}</div></div>
+          <div class="astat"><div class="slbl">Contrib./an</div><div class="sval">${fmtK(ann)}</div></div>
+          <div class="astat"><div class="slbl">Taux accum.</div><div class="sval">${a.rate}%/an</div></div>
+          <div class="astat"><div class="slbl">Taux décum.</div><div class="sval" style="color:${a.rateDecum<a.rate?C.orange:C.vert}">${a.rateDecum??a.rate}%/an</div></div>
+          <div class="astat"><div class="slbl">Risque MC</div><div class="sval">${risk.label}</div></div>
+          ${projBal!==undefined?`<div class="astat" style="background:#E6EFF7"><div class="slbl">Projeté à ${retAge} ans</div><div class="sval" style="color:${C.bleu}">${fmtK(projBal)}</div></div>`:''}
         </div>
-        <div style="font-size:11px;color:${C.gris};margin-bottom:7px;padding:4px 7px;background:${C.fond};border-radius:3px">
-          📅 Contributions&nbsp;: <b>${a.contribStart}→${a.contribEnd} ans</b>
-          &nbsp;·&nbsp; Croissance active jusqu'à la fin de simulation
+        <div style="margin-bottom:7px;font-size:11px;color:${C.gris};padding:4px 7px;background:${C.fond};border-radius:3px">
+          📅 Contributions : <b>${a.contribStart}→${a.contribEnd} ans</b> · Croissance active jusqu'à la fin de simulation
         </div>
-        ${a.oneTime&&a.oneTime.length?`<div style="font-size:11px;color:${C.gris};margin-bottom:7px">🎯 ${a.oneTime.length} contribution ponctuelle${a.oneTime.length>1?'s':''}</div>`:''}
-        <span class="acct-badge" style="background:${def.color}18;color:${def.color}">${def.tax}</span>
+        ${a.oneTime?.length?`<div style="font-size:11px;color:${C.gris};margin-bottom:6px">🎯 ${a.oneTime.length} contribution${a.oneTime.length>1?'s':''} ponctuelle${a.oneTime.length>1?'s':''}</div>`:''}
+        ${warnBadge}
+        <span class="abadge" style="background:${def.color}1A;color:${def.color}">${def.tax}</span>
+        ${a.type==='REER'&&S.params.ageTo>71?`${badge('FERR à 71 ans',C.orange)}`:''}
       </div></div>`;
   }).join('');
 
   return`
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:13px">
-      <div style="font-size:15px;font-weight:700;color:${C.bleu}">Mes placements <span style="font-size:13px;font-weight:400;color:${C.gris}">(${S.accounts.length} compte${S.accounts.length!==1?'s':''})</span></div>
-      <button class="btn btn-primary" data-a="add-acct">+ Ajouter un placement</button>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div style="font-size:14px;font-weight:700;color:${C.bleu}">Mes placements <span style="font-size:12px;font-weight:400;color:${C.gris}">(${S.accounts.length} compte${S.accounts.length!==1?'s':''})</span></div>
+      <button class="btn bpr" data-a="add-acct">+ Ajouter un placement</button>
     </div>
-    <div class="acct-grid">${cards||`<p style="color:${C.gris};font-size:13px">Aucun placement.</p>`}</div>`;
+    <div class="agrid">${cards||`<p style="color:${C.gris}">Aucun placement.</p>`}</div>`;
 }
 
-/* ── PAGE: WITHDRAWALS ────────────────────────────────── */
+/* ══════════════════════════════════════════
+   PAGE: RETRAITS
+══════════════════════════════════════════ */
 function pageWithdrawals(){
+  const inflStr=`${S.params.inflation}%/an`;
+
   const wCards=S.withdrawals.map((w,i)=>{
-    const amtLabel=w.type==='percent'
-      ?`${w.amount}% du portef.`
-      :(w.freq==='monthly'?`${fmtK(w.amount)}/mois (${fmtK(w.amount*12)}/an)`:fmtK(w.amount)+'/an');
-    return`<div class="w-card">
-      <div class="w-stripe"></div>
-      <div class="w-body">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:9px">
+    const annAmt=w.type==='fixed'?(w.freq==='monthly'?w.amount*12:w.amount):null;
+    const summ=w.type==='percent'
+      ?`${w.amount}% du portef. · ${w.freq==='monthly'?'mensuel':'annuel'}`
+      :w.freq==='monthly'
+        ?`${fmtK(w.amount)}/mois = ${fmtK(w.amount*12)}/an${w.indexed?` + indx. ${inflStr}`:''}`
+        :`${fmtK(w.amount)}/an${w.indexed?` + indx. ${inflStr}`:''}`;
+    return`<div class="wcard">
+      <div class="wst"></div>
+      <div class="wbd">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
           <div>
             <input class="inp" type="text" value="${esc(w.name)}" placeholder="Nom du retrait"
-              style="width:200px;font-size:14px;font-weight:700;border:none;border-bottom:1px solid ${C.grisClair};border-radius:0;padding:0 0 3px 0;background:transparent"
+              style="width:200px;font-size:13px;font-weight:700;border:none;border-bottom:1px solid ${C.grisC};border-radius:0;padding:0 0 2px"
               data-a="w-name" data-i="${i}">
-            <div style="font-size:11px;color:${C.gris};margin-top:3px">
-              ${w.startAge}→${w.endAge} ans &nbsp;·&nbsp; ${amtLabel}
-            </div>
+            <div style="font-size:11px;color:${C.gris};margin-top:3px">${w.startAge}→${w.endAge} ans · ${summ}</div>
           </div>
-          <button class="btn btn-sm btn-danger" data-a="del-w" data-i="${i}">Supprimer</button>
+          <button class="btn bsm bdg" data-a="del-w" data-i="${i}">Supprimer</button>
         </div>
-        <div class="w-fields">
-          <div class="w-field" style="flex:0 0 72px">
-            <label class="field-lbl">De (âge)</label>
-            <input class="inp" type="number" value="${w.startAge}" data-a="w-field" data-k="startAge" data-i="${i}">
-          </div>
-          <div class="w-field" style="flex:0 0 72px">
-            <label class="field-lbl">À (âge)</label>
-            <input class="inp" type="number" value="${w.endAge}" data-a="w-field" data-k="endAge" data-i="${i}">
-          </div>
-          <div class="w-field" style="flex:1;min-width:100px">
-            <label class="field-lbl">Montant</label>
-            <input class="inp" type="number" value="${w.amount}" data-a="w-field" data-k="amount" data-i="${i}">
-          </div>
-          <div class="w-field" style="flex:0 0 130px">
-            <label class="field-lbl">Type</label>
+        <div class="wflds">
+          <div class="wf" style="flex:0 0 68px"><label class="lbl">De (âge)</label><input class="inp" type="number" value="${w.startAge}" data-a="w-field" data-k="startAge" data-i="${i}"></div>
+          <div class="wf" style="flex:0 0 68px"><label class="lbl">À (âge)</label><input class="inp" type="number" value="${w.endAge}" data-a="w-field" data-k="endAge" data-i="${i}"></div>
+          <div class="wf" style="flex:1;min-width:90px"><label class="lbl">Montant</label><input class="inp" type="number" value="${w.amount}" data-a="w-field" data-k="amount" data-i="${i}"></div>
+          <div class="wf" style="flex:0 0 118px">
+            <label class="lbl">Type</label>
             <select class="sel" data-a="w-type" data-i="${i}">
               <option value="fixed"   ${w.type==='fixed'  ?'selected':''}>Montant fixe $</option>
               <option value="percent" ${w.type==='percent'?'selected':''}>% du portefeuille</option>
             </select>
           </div>
-          <div class="w-field" style="flex:0 0 110px">
-            <label class="field-lbl">Fréquence</label>
+          <div class="wf" style="flex:0 0 100px">
+            <label class="lbl">Fréquence</label>
             <select class="sel" data-a="w-freq" data-i="${i}" ${w.type==='percent'?'disabled':''}>
               <option value="annual"  ${w.freq==='annual' ?'selected':''}>Annuel</option>
               <option value="monthly" ${w.freq==='monthly'?'selected':''}>Mensuel</option>
             </select>
           </div>
         </div>
+        <!-- Options avancées -->
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:9px;padding-top:9px;border-top:1px solid ${C.grisC}">
+          <label class="chk">
+            <input type="checkbox" ${w.indexed?'checked':''} data-a="w-indexed" data-i="${i}">
+            <span>Indexé à l'inflation (${inflStr})</span>
+          </label>
+          <label class="chk">
+            <input type="checkbox" ${w.adaptive?'checked':''} data-a="w-adaptive" data-i="${i}">
+            <span>Retrait adaptatif</span>
+          </label>
+        </div>
+        ${w.adaptive?`
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;align-items:flex-end">
+          <div class="wf" style="flex:1;min-width:140px">
+            <label class="lbl">Seuil déclencheur ($)</label>
+            <input class="inp" type="number" value="${w.adaptiveThreshold||200000}" data-a="w-threshold" data-i="${i}">
+          </div>
+          <div class="wf" style="flex:0 0 130px">
+            <label class="lbl">Réduction (%)</label>
+            <div class="irow"><input type="number" value="${w.adaptiveReduction||25}" min="1" max="90" data-a="w-reduction" data-i="${i}"><span class="sx">%</span></div>
+          </div>
+          <div class="ib ib-or" style="flex:1;font-size:11px">Si le portef. descend sous le seuil, le retrait est réduit de ${w.adaptiveReduction||25}%.</div>
+        </div>`:''}
       </div></div>`;
   }).join('');
 
-  return section('1','Stratégie de décaissement',`
-    <div class="card card-pad" style="margin-bottom:10px">
-      <div class="field-lbl" style="margin-bottom:9px">Ordre de priorité</div>
-      <div class="seg" style="margin-bottom:10px">
-        ${Object.entries(STRAT).map(([k,v])=>`<button class="seg-btn ${S.params.strategy===k?'on':''}" data-a="strategy" data-v="${k}">${v.label}</button>`).join('')}
+  return sec(1,'Stratégie de décaissement',`
+      <div class="card cp" style="margin-bottom:10px">
+        <div class="lbl" style="margin-bottom:8px">Ordre de priorité</div>
+        <div class="seg" style="margin-bottom:10px">
+          ${Object.entries(STRAT).map(([k,v])=>`<button class="sb ${S.params.strategy===k?'on':''}" data-a="strategy" data-v="${k}">${v.label}</button>`).join('')}
+        </div>
+        <div class="ib ib-mu">${STRAT[S.params.strategy].desc}</div>
+      </div>`)
+    +sec(2,'Retraits planifiés',`
+      <div style="display:flex;justify-content:flex-end;margin-bottom:9px">
+        <button class="btn bpr bsm" data-a="add-w">+ Ajouter un retrait</button>
       </div>
-      <div class="info-box info-muted">${STRAT[S.params.strategy].desc}</div>
-    </div>`)
-  +section('2','Retraits planifiés',`
-    <div style="display:flex;justify-content:flex-end;margin-bottom:10px">
-      <button class="btn btn-primary btn-sm" data-a="add-w">+ Ajouter un retrait</button>
-    </div>
-    ${wCards||`<p style="font-size:12px;color:${C.gris};font-style:italic">Aucun retrait planifié.</p>`}`)
-  +section('3','Prestations gouvernementales (RRQ / SV / SRG)',`
-    <div class="card card-pad">
-      <div class="g3">
-        ${[{l:'Âge RRQ',k:'ageRRQ',hint:'60–72 ans'},{l:'Âge SV/SRG',k:'ageSV',hint:'65–70 ans'},{l:'Salaire moyen',k:'salary',hint:'Base calcul RRQ'}].map(f=>`
-          <div>
-            <label class="field-lbl" style="margin-bottom:4px">${f.l}</label>
-            <input class="inp" type="number" value="${S.params[f.k]}" style="color:${C.bleu}" data-a="param" data-k="${f.k}">
-            <div class="field-hint">${f.hint}</div>
-          </div>`).join('')}
-      </div>
-    </div>`);
-}
-
-/* ── PAGE: PARAMS ─────────────────────────────────────── */
-function pageParams(){
-  const p=S.params;
-  return section('1','Horizon de simulation',`
-    <div class="card card-pad" style="max-width:540px">
-      <div style="margin-bottom:14px">
-        <label class="field-lbl" style="margin-bottom:8px;display:block">Horizon · ${p.ageFrom} à ${p.ageTo} ans</label>
-        <div class="g2">
-          ${[['ageFrom','Âge de départ',18,64],['ageTo','Âge de fin',50,110]].map(([k,l,min,max])=>`
+      ${wCards||`<p style="font-size:12px;color:${C.gris};font-style:italic">Aucun retrait planifié.</p>`}`)
+    +sec(3,'Prestations gouvernementales',`
+      <div class="card cp">
+        <div class="g3">
+          ${[{l:'Âge RRQ',k:'ageRRQ',hint:'60–72 ans'},{l:'Âge SV/SRG',k:'ageSV',hint:'65–70 ans'},{l:'Salaire moyen',k:'salary',hint:'Base calcul RRQ'}].map(f=>`
             <div>
-              <div style="font-size:11px;color:${C.gris};margin-bottom:4px">${l}</div>
-              <input type="range" min="${min}" max="${max}" value="${p[k]}" data-a="param-range" data-k="${k}" style="accent-color:${C.bleu}">
-              <div class="rl"><span>${min}</span><b style="color:#1A1A1A">${p[k]} ans</b><span>${max}</span></div>
+              <label class="lbl" style="margin-bottom:4px">${f.l}</label>
+              <input class="inp" type="number" value="${S.params[f.k]}" style="color:${C.bleu}" data-a="param" data-k="${f.k}">
+              <div class="hint">${f.hint}</div>
             </div>`).join('')}
         </div>
-      </div>
-      <div>
-        <label class="field-lbl" style="margin-bottom:4px">Salaire moyen (base de calcul RRQ)</label>
-        <div class="irow"><span class="pfx">$</span><input type="number" value="${p.salary}" data-a="param" data-k="salary"></div>
-      </div>
-    </div>`)
-  +section('2','Méthodologie Monte Carlo',`
-    <div class="card card-pad" style="max-width:540px">
-      <div class="info-box info-blue">
-        <b>N = 200 simulations</b> — Chaque simulation applique des chocs annuels aléatoires calibrés sur le niveau de risque de chaque placement :<br>
-        Faible σ = 5 % · Modéré σ = 12 % · Élevé σ = 20 %.<br>
-        Les bandes P10–P90 illustrent la fourchette réaliste des résultats projetés.
-      </div>
-    </div>`);
+      </div>`)
+    +sec(4,'Conversion REER → FERR (71 ans)',`
+      <div class="card cp">
+        <div class="ib ib-bl" style="margin-bottom:10px">
+          À 71 ans, la loi oblige la conversion du REER en FERR (Fonds enregistré de revenu de retraite).
+          Des retraits minimums annuels obligatoires s'appliquent — <b>simulés automatiquement</b> selon la table officielle de l'ARC.
+        </div>
+        <div class="g3" style="font-size:11px;font-weight:600;color:${C.gris}">
+          <div>71 ans → 5,28% · 75 ans → 5,82% · 80 ans → 6,82%</div>
+          <div>85 ans → 8,51% · 90 ans → 11,92% · 94 ans → 18,79%</div>
+          <div style="color:${C.orange}">95 ans et + → 20,00% (plafond)</div>
+        </div>
+      </div>`);
 }
 
-/* ── PAGE: MONTE CARLO ────────────────────────────────── */
+/* ══════════════════════════════════════════
+   PAGE: PARAMÈTRES
+══════════════════════════════════════════ */
+function pageParams(){
+  const p=S.params;
+  return sec(1,'Horizon de simulation',`
+      <div class="card cp" style="max-width:580px">
+        <div style="margin-bottom:13px">
+          <label class="lbl" style="margin-bottom:7px;display:block">Horizon · ${p.ageFrom} à ${p.ageTo} ans</label>
+          <div class="g2">
+            ${[['ageFrom','Âge de départ',18,64],['ageTo','Âge de fin',50,110]].map(([k,l,min,max])=>`
+              <div>
+                <div style="font-size:11px;color:${C.gris};margin-bottom:4px">${l}</div>
+                <input type="range" min="${min}" max="${max}" value="${p[k]}" data-a="param-range" data-k="${k}" style="accent-color:${C.bleu}">
+                <div class="rl"><span>${min}</span><b style="color:#1A1A1A">${p[k]} ans</b><span>${max}</span></div>
+              </div>`).join('')}
+          </div>
+        </div>
+        <div>
+          <label class="lbl" style="margin-bottom:4px">Salaire moyen (base calcul RRQ)</label>
+          <div class="irow"><span class="px">$</span><input type="number" value="${p.salary}" data-a="param" data-k="salary"></div>
+        </div>
+      </div>`)
+    +sec(2,'Économie & Inflation',`
+      <div class="card cp" style="max-width:580px">
+        <div style="margin-bottom:12px">
+          <label class="lbl" style="margin-bottom:6px;display:block">Inflation annuelle · <b>${p.inflation}%</b></label>
+          <input type="range" min="0" max="6" step="0.25" value="${p.inflation}" data-a="param-range" data-k="inflation" style="accent-color:${C.orange}">
+          <div class="rl"><span>0%</span><span style="color:${C.orange}">Cible BdC 2%</span><span>6%</span></div>
+          <div class="hint" style="margin-top:5px">Appliquée aux retraits coché «Indexé à l'inflation» et aux taux de rendement réels (informatif).</div>
+        </div>
+        <div class="ib ib-mu">
+          Taux de rendement réels approximatifs = taux nominal − inflation. Ex : 6% nominal − 2% inflation = 4% réel.
+        </div>
+      </div>`)
+    +sec(3,'Rééquilibrage',`
+      <div class="card cp" style="max-width:580px">
+        <label class="chk" style="margin-bottom:10px">
+          <input type="checkbox" ${p.rebalance?'checked':''} data-a="param-check" data-k="rebalance">
+          <span style="font-weight:700">Rééquilibrage annuel actif</span>
+        </label>
+        <div class="ib ${p.rebalance?'ib-gr':'ib-mu'}">
+          ${p.rebalance
+            ?'✅ Rééquilibrage activé — la volatilité Monte Carlo est réduite de 20% (moins de dispersion des scénarios). Reflet d\'un portefeuille diversifié rééquilibré régulièrement.'
+            :'Désactivé. Activer le rééquilibrage réduit la volatilité simulée, ce qui resserre les bandes P10–P90 en Monte Carlo.'}
+        </div>
+      </div>`)
+    +sec(4,'Plafonds de cotisation 2024',`
+      <div class="card cp" style="max-width:580px">
+        <div class="g2">
+          <div>
+            <div class="lbl" style="margin-bottom:5px">CÉLI</div>
+            <div style="font-size:18px;font-weight:700;color:${C.vert}">${fmtCAD(CELI_PLAFOND)}/an</div>
+            <div class="hint">Plafond annuel 2024 (droits accumulés non simulés)</div>
+          </div>
+          <div>
+            <div class="lbl" style="margin-bottom:5px">REER</div>
+            <div style="font-size:18px;font-weight:700;color:${C.bleu}">${fmtCAD(reerPlafond(p.salary))}/an</div>
+            <div class="hint">18% × ${fmtCAD(p.salary)} (max ${fmtCAD(REER_PLAFOND)})</div>
+          </div>
+        </div>
+      </div>`);
+}
+
+/* ══════════════════════════════════════════
+   PAGE: MONTE CARLO
+══════════════════════════════════════════ */
 function pageMonte(){
   const last=S.sim.length?S.sim[S.sim.length-1]:{totalBalance:0};
   const mc=S.mc,sr=mc?mc.successRate:0;
-  const col=sr>=80?C.vert:sr>=65?C.orange:'#dc2626';
+  const col=sr>=80?C.vert:sr>=65?C.orange:C.rouge;
   const lbl=sr>=80?'Excellent':sr>=70?'Bon':sr>=60?'À améliorer':'Risqué';
   const arc=Math.min(1,sr/100)*157;
-  const lastMC=mc&&mc.chartData.length?mc.chartData[mc.chartData.length-1]:{};
+  const lastMC=mc?.chartData.length?mc.chartData[mc.chartData.length-1]:{};
 
-  return section('1','Résultat des simulations',`
-    <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start">
-      <div class="card card-pad" style="flex:0 0 210px;text-align:center">
-        <div class="field-lbl" style="margin-bottom:10px">Probabilité de succès</div>
+  return sec(1,'Résultat des simulations',`
+    <div style="display:flex;gap:11px;flex-wrap:wrap;align-items:flex-start">
+      <div class="card cp" style="flex:0 0 205px;text-align:center">
+        <div class="lbl" style="margin-bottom:9px">Probabilité de succès</div>
         <svg width="140" height="82" viewBox="0 0 140 82" style="display:block;margin:0 auto">
-          <path d="M18,70 A56,56,0,0,1,122,70" stroke="${C.grisClair}" stroke-width="12" fill="none" stroke-linecap="round"/>
+          <path d="M18,70 A56,56,0,0,1,122,70" stroke="${C.grisC}" stroke-width="12" fill="none" stroke-linecap="round"/>
           <path d="M18,70 A56,56,0,0,1,122,70" stroke="${col}" stroke-width="12" fill="none" stroke-linecap="round" stroke-dasharray="${arc} 210"/>
           <text x="70" y="68" text-anchor="middle" font-size="22" font-weight="700" fill="${col}" font-family="Arial">${sr}%</text>
           <text x="70" y="80" text-anchor="middle" font-size="11" fill="${C.gris}" font-family="Arial">${lbl}</text>
         </svg>
-        <div style="font-size:11px;color:${C.gris};margin-top:10px;line-height:1.6">
-          Positif à ${S.params.ageTo} ans dans <b>${sr}%</b> des ${mc?mc.N:200} simulations
+        <div style="font-size:11px;color:${C.gris};margin-top:9px;line-height:1.6">
+          Positif à ${S.params.ageTo} ans dans <b>${sr}%</b> des ${mc?.N||200} simulations
         </div>
+        ${S.params.rebalance?`<div style="margin-top:8px" class="ib ib-gr" style="font-size:10px">Rééquilibrage actif · σ −20%</div>`:''}
       </div>
-      <div class="card card-pad" style="flex:1;min-width:180px">
-        <div class="field-lbl" style="margin-bottom:10px">Valeur finale à ${S.params.ageTo} ans</div>
+      <div class="card cp" style="flex:1;min-width:175px">
+        <div class="lbl" style="margin-bottom:9px">Valeur finale à ${S.params.ageTo} ans</div>
         ${[{l:'P10 — Pessimiste',v:lastMC.p10,c:C.orange},{l:'P50 — Médiane',v:lastMC.p50,c:C.violet},{l:'P90 — Optimiste',v:lastMC.p90,c:C.vert},{l:'Base (taux fixes)',v:last.totalBalance,c:C.bleu}].map(r=>`
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid ${C.grisClair}">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid ${C.grisC}">
             <span style="font-size:12px;color:${r.c};font-weight:700">${r.l}</span>
-            <span style="font-weight:700;font-size:15px;color:${r.c}">${r.v!=null?fmtK(r.v):'…'}</span>
+            <span style="font-weight:700;font-size:14px;color:${r.c}">${r.v!=null?fmtK(r.v):'…'}</span>
           </div>`).join('')}
-        <p style="font-size:11px;color:${C.gris};margin-top:9px">N=${mc?mc.N:200} · Volatilité calibrée par niveau de risque</p>
+        <p style="font-size:10px;color:${C.gris};margin-top:8px">N=${mc?.N||200} · Volatilité par niveau de risque · FERR inclus</p>
       </div>
     </div>`)
-  +section('2','Éventail des scénarios',`
+  +sec(2,'Éventail des scénarios',`
     <div class="card">
-      <div class="card-head"><span>${S.params.ageFrom}→${S.params.ageTo} ans · N=${mc?mc.N:200}</span></div>
-      <div style="padding:8px 4px 2px"><canvas id="chartMC" style="height:280px"></canvas></div>
+      <div class="ch"><span>${S.params.ageFrom}→${S.params.ageTo} ans</span><span style="font-size:11px;color:${C.gris}">N=${mc?.N||200}</span></div>
+      <div style="padding:7px 3px 2px"><canvas id="chartMC" style="height:320px"></canvas></div>
       <div class="legend">
         <div class="li"><span class="ll" style="background:#1A1A1A"></span>Base</div>
         <div class="li"><span class="ll" style="background:${C.violet};opacity:.8"></span>Médiane P50</div>
         <div class="li"><span class="la" style="background:rgba(9,87,151,.2)"></span>Zone P25–P75</div>
-        <div class="li"><span class="ll" style="background:${C.orange};opacity:.7"></span>P10 (pessimiste)</div>
+        <div class="li"><span class="ll" style="background:${C.orange};opacity:.7"></span>P10</div>
       </div>
     </div>
-    <p style="color:${C.gris};font-size:11px;margin-top:8px;border-top:1px solid ${C.bordure};padding-top:10px;line-height:1.7">
-      Simulation à titre informatif. Consultez un planificateur financier agréé.
+    <p style="color:${C.gris};font-size:11px;margin-top:7px;border-top:1px solid ${C.bord};padding-top:9px;line-height:1.65">
+      Simulation à titre indicatif. Consultez un planificateur financier agréé.
     </p>`);
 }
 
-/* ── MODAL ────────────────────────────────────────────── */
+/* ══════════════════════════════════════════
+   MODAL PLACEMENTS
+══════════════════════════════════════════ */
 function openModal(acct){S.modalAcct=clone(acct);renderModal();$('overlay').classList.add('open');}
 function closeModal(){S.modalAcct=null;$('overlay').classList.remove('open');}
 
 function renderModal(){
   const a=S.modalAcct;if(!a)return;
   const def=ACCT[a.type]||ACCT.AUTRE;
+  const reerMax=reerPlafond(S.params.salary);
+  const ann=annualContrib(a);
+  const annWarn=a.type==='CELI'&&ann>CELI_PLAFOND
+    ?`<div class="ib ib-or" style="margin-top:6px">⚠ Dépasse le plafond CÉLI (${fmtCAD(CELI_PLAFOND)}/an)</div>`
+    :a.type==='REER'&&ann>reerMax
+    ?`<div class="ib ib-or" style="margin-top:6px">⚠ Dépasse votre plafond REER estimé (${fmtCAD(reerMax)}/an)</div>`:'';
+
   const otRows=(a.oneTime||[]).map((ot,i)=>`
-    <div class="ot-row">
-      <div style="flex:0 0 76px"><label class="field-lbl" style="margin-bottom:3px">Âge</label>
-        <input class="inp" type="number" value="${ot.age}" data-a="ot-age" data-i="${i}"></div>
-      <div style="flex:1"><label class="field-lbl" style="margin-bottom:3px">Montant ($)</label>
-        <input class="inp" type="number" value="${ot.amount}" data-a="ot-amount" data-i="${i}"></div>
-      <button class="btn btn-sm btn-danger" data-a="del-ot" data-i="${i}" style="align-self:flex-end">✕</button>
+    <div class="otrow">
+      <div style="flex:0 0 74px"><label class="lbl" style="margin-bottom:3px">Âge</label><input class="inp" type="number" value="${ot.age}" data-a="ot-age" data-i="${i}"></div>
+      <div style="flex:1"><label class="lbl" style="margin-bottom:3px">Montant ($)</label><input class="inp" type="number" value="${ot.amount}" data-a="ot-amount" data-i="${i}"></div>
+      <button class="btn bsm bdg" data-a="del-ot" data-i="${i}" style="align-self:flex-end">✕</button>
     </div>`).join('');
 
   $('modal').innerHTML=`
-    <div class="modal-top" style="background:${def.color}"></div>
-    <div class="modal-head"><span>${def.icon} Configurer le placement</span><button class="modal-x" data-a="close-modal">×</button></div>
-    <div class="modal-body">
+    <div style="height:4px;background:${def.color};border-radius:4px 4px 0 0"></div>
+    <div class="mh"><span>${def.icon} Configurer le placement</span><button class="mx" data-a="close-modal">×</button></div>
+    <div class="mb">
       <div class="g2">
-        <div><label class="field-lbl" style="margin-bottom:4px">Nom</label>
-          <input class="inp" type="text" value="${esc(a.name)}" data-a="ma-name"></div>
-        <div><label class="field-lbl" style="margin-bottom:4px">Type de compte</label>
+        <div><label class="lbl" style="margin-bottom:4px">Nom</label><input class="inp" type="text" value="${esc(a.name)}" data-a="ma-name"></div>
+        <div><label class="lbl" style="margin-bottom:4px">Type de compte</label>
           <select class="sel" data-a="ma-type">
             ${Object.entries(ACCT).map(([k,v])=>`<option value="${k}" ${a.type===k?'selected':''}>${v.icon} ${v.label}</option>`).join('')}
-          </select></div>
-      </div>
-      <div class="info-box" style="background:${def.color}14;color:${def.color};font-weight:700">${def.tax}</div>
-      <div class="g2">
-        <div><label class="field-lbl" style="margin-bottom:4px">Solde actuel</label>
-          <div class="irow"><span class="pfx">$</span><input type="number" value="${a.balance}" data-a="ma-balance"></div></div>
-        <div><label class="field-lbl" style="margin-bottom:4px">Rendement attendu</label>
-          <div class="irow"><input type="number" value="${a.rate}" step="0.5" min="0" max="20" data-a="ma-rate"><span class="sfx">%/an</span></div></div>
-      </div>
-      <div><label class="field-lbl" style="margin-bottom:6px">Niveau de risque (Monte Carlo)</label>
-        <div class="risk-btns">
-          ${Object.entries(RISK).map(([k,v])=>`
-            <button class="risk-btn" data-a="ma-risk" data-v="${k}"
-              style="border-color:${a.risk===k?v.color:C.bordure};background:${a.risk===k?v.color+'14':C.blanc};color:${a.risk===k?v.color:C.gris}">
-              ${v.label}<small>σ ${Math.round(v.vol*100)}%</small></button>`).join('')}
+          </select>
         </div>
       </div>
-      <hr class="div">
+      <div class="ib" style="background:${def.color}14;color:${def.color};font-weight:700">${def.tax}</div>
+      <div class="g2">
+        <div><label class="lbl" style="margin-bottom:4px">Solde actuel</label><div class="irow"><span class="px">$</span><input type="number" value="${a.balance}" data-a="ma-balance"></div></div>
+        <div></div>
+      </div>
       <div>
-        <label class="field-lbl" style="margin-bottom:6px">Contributions récurrentes</label>
+        <label class="lbl" style="margin-bottom:6px">Niveau de risque (Monte Carlo)</label>
+        <div class="rb">
+          ${Object.entries(RISK).map(([k,v])=>`
+            <button class="rbi" data-a="ma-risk" data-v="${k}"
+              style="border-color:${a.risk===k?v.color:C.bord};background:${a.risk===k?v.color+'14':'#fff'};color:${a.risk===k?v.color:C.gris}">
+              ${v.label}<small>σ ${Math.round(v.vol*100)}%</small>
+            </button>`).join('')}
+        </div>
+      </div>
+      <hr class="dv">
+      <div>
+        <label class="lbl" style="margin-bottom:6px">Taux de rendement par phase</label>
+        <div class="g2">
+          <div>
+            <div style="font-size:10px;color:${C.gris};margin-bottom:3px">Accumulation (avant ${S.params.ageRRQ} ans)</div>
+            <div class="irow"><input type="number" value="${a.rate}" step="0.5" min="0" max="20" data-a="ma-rate"><span class="sx">%/an</span></div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:${C.gris};margin-bottom:3px">Décumulation (après ${S.params.ageRRQ} ans)</div>
+            <div class="irow"><input type="number" value="${a.rateDecum??a.rate}" step="0.5" min="0" max="20" data-a="ma-ratedecum"><span class="sx">%/an</span></div>
+          </div>
+        </div>
+        <div class="ib ib-mu" style="margin-top:6px">Typiquement plus conservateur en décumulation (ex: 6% → 4%).</div>
+      </div>
+      <hr class="dv">
+      <div>
+        <label class="lbl" style="margin-bottom:6px">Contributions récurrentes</label>
         <div class="g4">
           <div><div style="font-size:10px;color:${C.gris};margin-bottom:3px">Montant</div><input class="inp" type="number" value="${a.contribAmt}" data-a="ma-camount"></div>
           <div><div style="font-size:10px;color:${C.gris};margin-bottom:3px">De (âge)</div><input class="inp" type="number" value="${a.contribStart}" data-a="ma-cstart"></div>
           <div><div style="font-size:10px;color:${C.gris};margin-bottom:3px">Fin contributions</div><input class="inp" type="number" value="${a.contribEnd}" data-a="ma-cend"></div>
           <div><div style="font-size:10px;color:${C.gris};margin-bottom:3px">Fréquence</div>
             <select class="sel" data-a="ma-cfreq">
-              <option value="annual"  ${a.contribFreq==='annual' ?'selected':''}>Annuelle</option>
-              <option value="monthly" ${a.contribFreq==='monthly'?'selected':''}>Mensuelle</option>
-            </select></div>
+              <option value="annual"  ${a.contribFreq==='annual' ?'selected':''}>Ann.</option>
+              <option value="monthly" ${a.contribFreq==='monthly'?'selected':''}>Mens.</option>
+            </select>
+          </div>
         </div>
-        <div style="font-size:11px;color:${C.gris};margin-top:6px;padding:5px 8px;background:${C.fond};border-radius:3px">
-          💡 Le solde continue de croître après la fin des contributions — l'arrêt des cotisations ne ferme pas le compte.
-        </div>
+        ${annWarn}
+        <div class="ib ib-mu" style="margin-top:6px;font-size:10px">💡 Le solde continue de croître après la fin des contributions.</div>
       </div>
-      <hr class="div">
+      <hr class="dv">
       <div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">
-          <label class="field-lbl">Contributions ponctuelles</label>
-          <button class="btn btn-sm" style="border:1px solid ${def.color};background:${def.color}10;color:${def.color}" data-a="add-ot">+ Ajouter</button>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <label class="lbl">Contributions ponctuelles</label>
+          <button class="btn bsm" style="border:1px solid ${def.color};background:${def.color}10;color:${def.color}" data-a="add-ot">+ Ajouter</button>
         </div>
-        ${!(a.oneTime&&a.oneTime.length)?`<p style="font-size:11px;color:${C.gris};font-style:italic">Ex : héritage, bonus, vente d'actif…</p>`:''}
+        ${!(a.oneTime?.length)?`<p style="font-size:11px;color:${C.gris};font-style:italic">Ex : héritage, bonus, vente d'actif…</p>`:''}
         ${otRows}
       </div>
     </div>
-    <div class="modal-foot">
-      <button class="btn btn-ghost" data-a="close-modal">Annuler</button>
-      <button class="btn btn-primary" data-a="save-modal">Enregistrer</button>
+    <div class="mf">
+      <button class="btn bgh" data-a="close-modal">Annuler</button>
+      <button class="btn bpr" data-a="save-modal">Enregistrer</button>
     </div>`;
 }
 
@@ -770,64 +1029,83 @@ function saveModal(){
   closeModal();compute();renderMain();
 }
 
-/* ── RENDER ───────────────────────────────────────────── */
+/* ══════════════════════════════════════════
+   RENDER
+══════════════════════════════════════════ */
 function updateNav(){
   $('nav').innerHTML=TABS.map(t=>`<button class="tab-btn ${S.tab===t.id?'on':''}" data-a="tab" data-v="${t.id}">${t.icon} ${t.label}</button>`).join('')
-    +`<div style="margin-left:auto;display:flex;align-items:center;padding:0 4px;font-size:11px;color:rgba(255,255,255,.55)">${S.mcRunning?`<span class="spin"></span>Simulation…`:`${S.accounts.length} compte${S.accounts.length!==1?'s':''}`}</div>`;
+    +`<div style="margin-left:auto;display:flex;align-items:center;font-size:11px;color:rgba(255,255,255,.52);padding:0 4px">${S.mcRunning?`<span class="spin"></span>Simulation…`:`${S.accounts.length} compte${S.accounts.length!==1?'s':''}`}</div>`;
 }
+
 function renderMain(){
   const pages={dashboard:pageDashboard,accounts:pageAccounts,withdrawals:pageWithdrawals,params:pageParams,monte:pageMonte};
   $('main').innerHTML=(pages[S.tab]||pageDashboard)();
-  requestAnimationFrame(refreshCharts);
+  requestAnimationFrame(refreshChart);
 }
+
 function render(){updateNav();renderMain();}
 
-/* ── EVENTS ───────────────────────────────────────────── */
+/* ══════════════════════════════════════════
+   EVENTS
+══════════════════════════════════════════ */
 document.addEventListener('click',e=>{
   const el=e.target.closest('[data-a]');if(!el)return;
   const a=el.dataset.a,v=el.dataset.v,i=el.dataset.i!==undefined?+el.dataset.i:null;
   if(a==='tab')        {S.tab=v;render();return;}
   if(a==='close-modal'){closeModal();return;}
   if(a==='save-modal') {saveModal();return;}
-  if(a==='add-acct')   {openModal({id:uid(),name:'Nouveau',type:'CELI',balance:0,contribAmt:5000,contribFreq:'annual',contribStart:S.params.ageFrom,contribEnd:S.params.ageFrom+40,oneTime:[],rate:5,risk:'medium',_new:true});return;}
+  if(a==='add-acct')   {openModal({id:uid(),name:'Nouveau',type:'CELI',balance:0,contribAmt:5000,contribFreq:'annual',contribStart:S.params.ageFrom,contribEnd:S.params.ageFrom+40,oneTime:[],rate:5,rateDecum:4,risk:'medium',_new:true});return;}
   if(a==='edit-acct')  {openModal(S.accounts[i]);return;}
   if(a==='del-acct')   {S.accounts.splice(i,1);compute();renderMain();return;}
-  if(a==='add-w')      {S.withdrawals.push({id:uid(),name:'Retrait',startAge:65,endAge:100,amount:30000,type:'fixed',freq:'annual'});renderMain();return;}
+  if(a==='add-w')      {S.withdrawals.push({id:uid(),name:'Retrait',startAge:65,endAge:100,amount:30000,type:'fixed',freq:'annual',indexed:true,adaptive:false,adaptiveThreshold:200000,adaptiveReduction:25});renderMain();return;}
   if(a==='del-w')      {S.withdrawals.splice(i,1);compute();renderMain();return;}
   if(a==='strategy')   {S.params.strategy=v;compute();renderMain();return;}
+  // Modal
   if(!S.modalAcct)return;
   const ma=S.modalAcct;
   if(a==='ma-risk'){ma.risk=v;renderModal();return;}
-  if(a==='add-ot') {ma.oneTime=ma.oneTime||[];ma.oneTime.push({id:uid(),age:35,amount:10000});renderModal();return;}
+  if(a==='add-ot') {(ma.oneTime=ma.oneTime||[]).push({id:uid(),age:35,amount:10000});renderModal();return;}
   if(a==='del-ot') {ma.oneTime.splice(i,1);renderModal();return;}
+});
+
+document.addEventListener('change',e=>{
+  const el=e.target,a=el.dataset.a;if(!a)return;
+  if(a==='w-indexed')   {S.withdrawals[+el.dataset.i].indexed=el.checked;compute();renderMain();return;}
+  if(a==='w-adaptive')  {S.withdrawals[+el.dataset.i].adaptive=el.checked;compute();renderMain();return;}
+  if(a==='param-check') {S.params[el.dataset.k]=el.checked;compute();renderMain();return;}
+  if(a==='w-type')      {S.withdrawals[+el.dataset.i].type=el.value;compute();renderMain();return;}
+  if(a==='w-freq')      {S.withdrawals[+el.dataset.i].freq=el.value;compute();renderMain();return;}
+  if(a==='ma-type')     {S.modalAcct.type=el.value;renderModal();return;}
+  if(a==='ma-cfreq')    {S.modalAcct.contribFreq=el.value;renderModal();return;}
 });
 
 document.addEventListener('input',e=>{
   const el=e.target,a=el.dataset.a;if(!a)return;
-  if(a==='param')       {S.params[el.dataset.k]=+el.value;compute();return;}
-  if(a==='param-range') {S.params[el.dataset.k]=+el.value;compute();renderMain();return;}
-  if(a==='w-field')     {S.withdrawals[+el.dataset.i][el.dataset.k]=+el.value;compute();return;}
-  if(a==='w-type')      {S.withdrawals[+el.dataset.i].type=el.value;compute();renderMain();return;}
-  if(a==='w-freq')      {S.withdrawals[+el.dataset.i].freq=el.value;compute();renderMain();return;}
-  if(a==='w-name')      {S.withdrawals[+el.dataset.i].name=el.value;return;}
+  if(a==='param')        {S.params[el.dataset.k]=+el.value;compute();return;}
+  if(a==='param-range')  {S.params[el.dataset.k]=+el.value;compute();renderMain();return;}
+  if(a==='w-field')      {S.withdrawals[+el.dataset.i][el.dataset.k]=+el.value;compute();return;}
+  if(a==='w-name')       {S.withdrawals[+el.dataset.i].name=el.value;return;}
+  if(a==='w-threshold')  {S.withdrawals[+el.dataset.i].adaptiveThreshold=+el.value;compute();return;}
+  if(a==='w-reduction')  {S.withdrawals[+el.dataset.i].adaptiveReduction=+el.value;compute();return;}
   if(!S.modalAcct)return;
   const ma=S.modalAcct;
-  if(a==='ma-name')   {ma.name=el.value;return;}
-  if(a==='ma-type')   {ma.type=el.value;renderModal();return;}
-  if(a==='ma-balance'){ma.balance=+el.value;return;}
-  if(a==='ma-rate')   {ma.rate=+el.value;return;}
-  if(a==='ma-camount'){ma.contribAmt=+el.value;return;}
-  if(a==='ma-cstart') {ma.contribStart=+el.value;return;}
-  if(a==='ma-cend')   {ma.contribEnd=+el.value;return;}
-  if(a==='ma-cfreq')  {ma.contribFreq=el.value;return;}
-  if(a==='ot-age')    {ma.oneTime[+el.dataset.i].age=+el.value;return;}
-  if(a==='ot-amount') {ma.oneTime[+el.dataset.i].amount=+el.value;return;}
+  if(a==='ma-name')    {ma.name=el.value;return;}
+  if(a==='ma-balance') {ma.balance=+el.value;return;}
+  if(a==='ma-rate')    {ma.rate=+el.value;return;}
+  if(a==='ma-ratedecum'){ma.rateDecum=+el.value;return;}
+  if(a==='ma-camount') {ma.contribAmt=+el.value;return;}
+  if(a==='ma-cstart')  {ma.contribStart=+el.value;return;}
+  if(a==='ma-cend')    {ma.contribEnd=+el.value;return;}
+  if(a==='ot-age')     {ma.oneTime[+el.dataset.i].age=+el.value;return;}
+  if(a==='ot-amount')  {ma.oneTime[+el.dataset.i].amount=+el.value;return;}
 });
 
 $('overlay').addEventListener('click',e=>{if(e.target===$('overlay'))closeModal();});
-window.addEventListener('resize',()=>requestAnimationFrame(refreshCharts));
+window.addEventListener('resize',()=>requestAnimationFrame(refreshChart));
 
-/* ── INIT ─────────────────────────────────────────────── */
+/* ══════════════════════════════════════════
+   INIT
+══════════════════════════════════════════ */
 compute();
 render();
 </script>
