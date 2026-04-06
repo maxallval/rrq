@@ -608,7 +608,11 @@ function pageWithdrawals(){
       </div></div>`;
   }).join('');
 
-  return sec(1,'Stratégie de décaissement',`
+  // Tri par âge de début
+  S.withdrawals.sort((a,b)=>a.startAge-b.startAge);
+
+  return `<div style="max-width:580px">`
+    +sec(1,'Stratégie de décaissement',`
       <div class="card cp" style="margin-bottom:10px">
         <div class="lbl" style="margin-bottom:8px">Ordre de priorité</div>
         <div class="seg" style="margin-bottom:10px">${Object.entries(STRAT).map(([k,v])=>`<button class="sb ${S.params.strategy===k?'on':''}" data-a="strategy" data-v="${k}">${v.label}</button>`).join('')}</div>
