@@ -403,6 +403,10 @@ function compute(){
   const{rows,acctBals}=runSim(S.accounts,S.withdrawals,S.params,null);
   S.sim=rows;S.acctBalsAtRetirement=acctBals;
   S.depletionAge=rows.find(r=>r.totalBalance<=0)?.age||null;
+  // Premier âge où un placement est actif (pour le début du graphique et du tableau)
+  S.firstActAge=S.accounts.length
+    ?Math.min(...S.accounts.map(a=>+(a.portfolioStart??S.params.ageFrom)))
+    :S.params.ageFrom;
   clearTimeout(mcTimer);S.mcRunning=true;updateNav();
   mcTimer=setTimeout(()=>{S.mc=runMC(S.accounts,S.withdrawals,S.params);S.mcRunning=false;updateNav();if(S.tab==='dashboard'||S.tab==='monte')renderMain();else refreshChart();},400);
 }
@@ -475,10 +479,14 @@ function pageDashboard(){
   const sr=S.mc?S.mc.successRate:null;
   const src=sr===null?C.gris:sr>=80?C.vert:sr>=65?C.orange:C.rouge;
   const tips=getSuggestions();
-  const eAges=new Set([S.params.ageFrom,S.params.ageRRQ,S.params.ageSV,S.params.ageTo,71,
+  // Âge de départ effectif = plus tôt parmi ageFrom et les portfolioStart
+  const firstAcctAge = S.accounts.length
+    ? Math.min(...S.accounts.map(a=>a.portfolioStart??S.params.ageFrom))
+    : S.params.ageFrom;
+  const eAges=new Set([S.params.ageFrom,firstAcctAge,S.params.ageRRQ,S.params.ageSV,S.params.ageTo,71,
     ...S.accounts.flatMap(a=>[a.portfolioStart??S.params.ageFrom,a.portfolioEnd??S.params.ageTo,a.contribStart,a.contribEnd,...(a.transfers||[]).map(t=>t.age)]),
     ...S.withdrawals.flatMap(w=>[w.startAge,w.endAge])]);
-  const tableRows=S.sim.filter(r=>r.age%5===0||eAges.has(r.age)).map(r=>{
+  const tableRows=S.sim.filter(r=>r.age>=firstAcctAge&&(r.age%5===0||eAges.has(r.age))).map(r=>{
     const isMs=eAges.has(r.age),isDep=S.depletionAge&&r.age>=S.depletionAge&&r.totalBalance<=0;
     return`<tr class="${isDep?'dep':isMs?'ms':''}">
       <td>${r.age} ans${r.age===S.params.ageRRQ?' ★':r.age===71?' 🔄':''}</td>
