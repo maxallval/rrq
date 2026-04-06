@@ -23,32 +23,31 @@ a{color:rgb(9,87,151)}
 .tab-btn.on{color:#fff;border-bottom-color:rgb(240,150,134)}
 .main{flex:1;overflow-y:auto;padding:16px 22px}
 
-/* Section */
 .sec{margin-bottom:18px}
 .sec-head{display:flex;align-items:center;gap:9px;margin-bottom:10px}
 .sec-num{background:rgb(9,87,151);color:#fff;border-radius:50%;width:23px;height:23px;min-width:23px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
 .sec-title{color:rgb(9,87,151);font-size:14px;font-weight:700}
 .sec-line{flex:1;height:1px;background:rgba(9,87,151,.25)}
 
-/* Cards */
 .card{background:#fff;border:1px solid #CCC;border-radius:4px}
 .cp{padding:14px}
 .ch{padding:8px 14px;border-bottom:1px solid #E0E0E0;font-size:12px;font-weight:700;display:flex;justify-content:space-between;align-items:center;gap:10px}
 hr.dv{border:none;border-top:1px solid #E0E0E0;margin:8px 0}
 
-/* KPI */
 .kpis{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
 .kpi{background:#fff;border:1px solid #CCC;border-radius:4px;border-top:3px solid rgb(9,87,151);flex:1 1 120px;padding:10px 13px}
 .kpi-l{font-size:10px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
 .kpi-v{font-size:18px;font-weight:700;color:rgb(9,87,151);margin-bottom:2px}
 .kpi-s{font-size:10px;color:#888}
 
-/* Forms */
 .lbl{font-size:11px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px;display:block}
 .hint{font-size:10px;color:#888;margin-top:2px}
 .inp{width:100%;padding:6px 9px;border:1px solid #CCC;border-radius:3px;font-size:13px;font-weight:700;color:#1A1A1A;outline:none;background:#fff}
 .inp:focus{border-color:rgb(9,87,151)}
+.inp-sm{padding:5px 7px;font-size:12px;font-weight:700;border:1px solid #CCC;border-radius:3px;outline:none;background:#fff;color:#1A1A1A}
+.inp-sm:focus{border-color:rgb(9,87,151)}
 .sel{width:100%;padding:6px 8px;border:1px solid #CCC;border-radius:3px;font-size:13px;font-weight:600;color:#1A1A1A;background:#fff;outline:none}
+.sel-sm{padding:5px 6px;font-size:12px;font-weight:600;border:1px solid #CCC;border-radius:3px;background:#fff;color:#1A1A1A;outline:none}
 .irow{display:flex;align-items:stretch;border:1px solid #CCC;border-radius:3px;overflow:hidden;background:#fff}
 .irow:focus-within{border-color:rgb(9,87,151)}
 .irow .px{padding:0 8px;background:#F0F4F8;border-right:1px solid #E0E0E0;font-size:12px;color:#555;display:flex;align-items:center;flex-shrink:0}
@@ -62,7 +61,6 @@ hr.dv{border:none;border-top:1px solid #E0E0E0;margin:8px 0}
 .chk{display:flex;align-items:center;gap:7px;font-size:13px;cursor:pointer}
 .chk input{width:15px;height:15px;cursor:pointer;accent-color:rgb(9,87,151)}
 
-/* Buttons */
 .btn{padding:6px 14px;border-radius:3px;border:none;font-size:13px;font-weight:600}
 .btn:hover{opacity:.87}
 .bsm{padding:4px 10px;font-size:12px;border-radius:3px}
@@ -71,17 +69,14 @@ hr.dv{border:none;border-top:1px solid #E0E0E0;margin:8px 0}
 .bdg{background:#fff;border:1px solid #fecaca;color:#991b1b}
 .bic{padding:4px 8px;font-size:12px;border-radius:3px;border:1px solid #E0E0E0;background:#fff}
 
-/* Segment */
 .seg{display:flex;gap:4px;flex-wrap:wrap}
 .sb{padding:5px 12px;border-radius:3px;font-size:12px;font-weight:600;border:1px solid #CCC;background:#fff;color:rgb(9,87,151)}
 .sb.on{background:rgb(9,87,151);color:#fff;border-color:rgb(9,87,151)}
 
-/* Risk */
 .rb{display:flex;gap:7px}
 .rbi{flex:1;padding:8px 5px;border-radius:3px;border:1px solid #CCC;background:#fff;font-size:12px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:2px}
 .rbi small{font-size:10px;font-weight:400;opacity:.72}
 
-/* Account cards */
 .agrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:9px}
 .acard{background:#fff;border:1px solid #CCC;border-radius:4px;overflow:hidden}
 .ast{height:4px}
@@ -95,14 +90,22 @@ hr.dv{border:none;border-top:1px solid #E0E0E0;margin:8px 0}
 .sval{font-size:12px;font-weight:700;color:#1A1A1A}
 .abadge{padding:3px 8px;border-radius:3px;font-size:10px;font-weight:700;display:inline-block;margin-right:3px;margin-bottom:3px}
 
-/* Withdrawal cards */
+/* Tranches display inline */
+.tranche-bar{display:flex;height:8px;border-radius:3px;overflow:hidden;margin:3px 0}
+
 .wcard{background:#fff;border:1px solid #CCC;border-radius:4px;overflow:hidden;margin-bottom:8px}
 .wst{height:3px;background:rgb(9,87,151)}
 .wbd{padding:11px}
 .wflds{display:flex;flex-wrap:wrap;gap:7px;align-items:flex-end;margin-top:9px}
 .wf{display:flex;flex-direction:column;gap:3px}
 
-/* Alerts */
+/* Rate segment row */
+.seg-row{display:flex;gap:6px;align-items:center;margin-bottom:5px;padding:6px 9px;background:#F7F9FB;border-radius:3px;border:1px solid #E8EEF4}
+.seg-row span{font-size:11px;color:#555;white-space:nowrap}
+/* Transfer row */
+.tr-row{display:flex;gap:6px;align-items:center;margin-bottom:5px;padding:6px 9px;background:#FFF8F0;border-radius:3px;border:1px solid #F0E0CC}
+.tr-row span{font-size:11px;color:#C45600;white-space:nowrap}
+
 .alert{padding:8px 11px;border-radius:3px;font-size:12px;line-height:1.6;display:flex;gap:7px;align-items:flex-start;margin-bottom:6px}
 .ai{font-size:15px;flex-shrink:0;margin-top:1px}
 .al-info  {background:#E6EFF7;border-left:3px solid rgb(9,87,151)}
@@ -110,21 +113,18 @@ hr.dv{border:none;border-top:1px solid #E0E0E0;margin:8px 0}
 .al-danger{background:#fff0f0;border-left:3px solid #dc2626}
 .al-ok    {background:#EDFAF1;border-left:3px solid #1E7E34}
 
-/* Info boxes */
 .ib{padding:8px 11px;border-radius:3px;font-size:11px;line-height:1.65}
 .ib-bl{background:#E6EFF7;color:#444}
 .ib-mu{background:#F0F4F8;color:#555}
 .ib-or{background:#FFF8F0;color:#C45600}
 .ib-gr{background:#EDFAF1;color:#1E7E34}
 
-/* Canvas */
 canvas{display:block;width:100%}
 .legend{display:flex;gap:13px;flex-wrap:wrap;padding:5px 13px 9px;font-size:12px;color:#555}
 .li{display:flex;align-items:center;gap:4px}
 .ll{width:20px;height:2px;border-radius:1px;flex-shrink:0;display:inline-block}
 .la{width:13px;height:9px;border-radius:2px;flex-shrink:0;display:inline-block}
 
-/* Portfolio table */
 .ptbl{width:100%;border-collapse:collapse;font-size:12px}
 .ptbl thead tr{background:rgb(9,87,151);color:#fff}
 .ptbl th{padding:7px 10px;text-align:right;font-size:11px;white-space:nowrap;font-weight:700}
@@ -135,24 +135,15 @@ canvas{display:block;width:100%}
 .ptbl tr.ms td{background:#E6EFF7!important;font-weight:700}
 .ptbl tr.dep td{background:#fff0f0!important;color:#dc2626}
 
-/* Modal */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;display:none;align-items:center;justify-content:center;padding:14px}
 .overlay.open{display:flex}
-.modal{background:#fff;border-radius:4px;width:100%;max-width:560px;max-height:93vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.22)}
+.modal{background:#fff;border-radius:4px;width:100%;max-width:580px;max-height:93vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.22)}
 .mh{padding:11px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #E0E0E0;font-size:14px;font-weight:700}
 .mb{padding:14px;display:flex;flex-direction:column;gap:11px}
 .mf{padding:11px 14px;border-top:1px solid #E0E0E0;display:flex;justify-content:flex-end;gap:7px}
 .mx{border:none;background:none;font-size:21px;color:#999;line-height:1}
 .otrow{display:flex;gap:7px;align-items:flex-end;margin-bottom:5px}
 
-/* Timeline Flux */
-.tl-wrap{overflow-x:auto;overflow-y:visible;-webkit-overflow-scrolling:touch}
-.tl-container{position:relative;display:flex}
-.tl-side{display:flex;flex-direction:column}
-.tl-axis{flex-shrink:0;position:relative}
-.tl-axis-line{position:absolute;left:50%;top:0;bottom:0;width:2px;background:#CCC;transform:translateX(-1px)}
-
-/* Spinner */
 @keyframes spin{to{transform:rotate(360deg)}}
 .spin{display:inline-block;width:9px;height:9px;border:2px solid rgba(255,255,255,.28);border-top-color:rgb(240,150,134);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:4px}
 </style>
@@ -161,7 +152,7 @@ canvas{display:block;width:100%}
 <div class="app">
   <header class="topbar">
     <h1>RetirePlan QC</h1>
-    <p>Placements · FERR · Inflation · Monte Carlo · Impôts Québec/Canada</p>
+    <p>Placements · Tranches de taux · Transferts · FERR · Monte Carlo · Impôts QC/CA</p>
     <div class="or-bar"></div>
   </header>
   <nav class="nav" id="nav"></nav>
@@ -172,15 +163,15 @@ canvas{display:block;width:100%}
 <script>
 'use strict';
 
-/* ══════════════════════════════
-   CONSTANTES
-══════════════════════════════ */
+/* ══ FERR table ═══════════════════════════════════════════════════════ */
 const FERR_RATES={71:.0528,72:.054,73:.0553,74:.0567,75:.0582,76:.0598,77:.0617,78:.0636,79:.0658,80:.0682,81:.0708,82:.0738,83:.0771,84:.0808,85:.0851,86:.0899,87:.0955,88:.1021,89:.1099,90:.1192,91:.1306,92:.1449,93:.1634,94:.1879};
 const ferrRate=age=>age<71?0:(FERR_RATES[Math.min(age,94)]??0.20);
-const CELI_PLAFOND=7000,REER_PLAFOND=31560,REER_PLAFOND_P=0.18;
+const CELI_MAX=7000, REER_MAX=31560, REER_PCT=0.18;
 
+/* ══ Palette ══════════════════════════════════════════════════════════ */
 const C={bleu:'rgb(9,87,151)',bleuPale:'#E6EFF7',or:'rgb(240,150,134)',vert:'#1E7E34',orange:'#C45600',violet:'#6F42C1',rouge:'#dc2626',gris:'#555',grisC:'#E0E0E0',bord:'#CCC',fond:'#F0F4F8',blanc:'#FFF'};
 
+/* ══ Config ═══════════════════════════════════════════════════════════ */
 const ACCT={
   REER:  {label:'REER',          icon:'🏦',color:C.bleu,  tax:"Déductible · Imposable au retrait"},
   CELI:  {label:'CÉLI',          icon:'🌱',color:C.vert,  tax:"Retraits libres d'impôt"},
@@ -190,14 +181,10 @@ const ACCT={
 };
 const RISK={low:{label:'Faible',vol:.05,color:C.vert},medium:{label:'Modéré',vol:.12,color:C.orange},high:{label:'Élevé',vol:.20,color:C.rouge}};
 const STRAT={
-  'smart':    {label:'REER + CÉLI optimal',order:null,
-    desc:"🎯 REER jusqu'au montant personnel de base (~15 705$) net des revenus gouvernementaux, puis CÉLI."},
-  'celi-first':{label:'CÉLI d\'abord',order:['CELI','NONREG','REER','IMMO','AUTRE'],
-    desc:"✅ CÉLI (libre d'impôt) → Non enregistré → REER (imposable)."},
-  'reer-first':{label:'REER d\'abord',order:['REER','NONREG','CELI','IMMO','AUTRE'],
-    desc:"📋 Vider le REER/FERR avant la conversion obligatoire à 71 ans."},
-  'balanced': {label:'Proportionnel',order:null,
-    desc:"⚖️ Retraits proportionnels selon la valeur de chaque compte."},
+  'smart':     {label:'REER+CÉLI optimal',order:null,desc:"🎯 REER jusqu'au montant personnel (~15 705$) net des revenus gouvernementaux, puis CÉLI libre d'impôt."},
+  'celi-first':{label:'CÉLI d\'abord',   order:['CELI','NONREG','REER','IMMO','AUTRE'],desc:"✅ CÉLI → Non enregistré → REER."},
+  'reer-first':{label:'REER d\'abord',   order:['REER','NONREG','CELI','IMMO','AUTRE'],desc:"📋 Vider le REER/FERR avant 71 ans."},
+  'balanced':  {label:'Proportionnel',   order:null,desc:"⚖️ Retraits proportionnels à chaque compte."},
 };
 const TABS=[
   {id:'dashboard',  icon:'📊',label:'Tableau de bord'},
@@ -208,6 +195,7 @@ const TABS=[
   {id:'monte',      icon:'🧠',label:'Monte Carlo'},
 ];
 
+/* ══ Utils ════════════════════════════════════════════════════════════ */
 let _uid=0;
 const uid=()=>'u'+(++_uid);
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -215,21 +203,40 @@ const $=id=>document.getElementById(id);
 const clone=o=>JSON.parse(JSON.stringify(o));
 const fmtK=v=>{if(!isFinite(v)||isNaN(v))return'—';const a=Math.abs(v);if(a>=1e6)return(v/1e6).toFixed(1)+'M$';if(a>=1e3)return(v/1e3).toFixed(0)+'k$';return Math.round(v)+'$';};
 const fmtCAD=v=>Math.round(v).toLocaleString('fr-CA')+'\u202f$';
+const annualContrib=a=>a.contribFreq==='monthly'?a.contribAmt*12:a.contribAmt;
+const reerPlafond=sal=>Math.min(REER_MAX,Math.round(sal*REER_PCT));
 
-/* ══════════════════════════════
-   STATE
-══════════════════════════════ */
+// Taux effectif d'un compte à un âge donné (tranches prioritaires sur taux unique)
+const getRateAtAge=(a,age)=>{
+  if(a.rates&&a.rates.length){
+    for(const s of a.rates) if(age>=s.from&&age<=s.to) return s.rate;
+  }
+  return a.rate;
+};
+
+// Couleur interpolée pour une tranche (bleu foncé = haut taux, bleu clair = bas taux)
+const rateColor=(rate,maxRate)=>{
+  const t=Math.min(1,rate/Math.max(maxRate,1));
+  const r=Math.round(9+(30-9)*(1-t));
+  const g=Math.round(87+(140-87)*(1-t));
+  const b=Math.round(151+(200-151)*(1-t));
+  return`rgb(${r},${g},${b})`;
+};
+
+/* ══ State ════════════════════════════════════════════════════════════ */
 const S={
   tab:'dashboard',
   accounts:[
     {id:uid(),name:'REER',type:'REER',balance:50000,
      portfolioStart:25,portfolioEnd:95,
+     rate:6,rates:[],risk:'medium',
      contribAmt:10000,contribFreq:'annual',contribStart:25,contribEnd:65,
-     oneTime:[],rate:6,risk:'medium'},
+     oneTime:[],transfers:[]},
     {id:uid(),name:'CÉLI',type:'CELI',balance:20000,
      portfolioStart:25,portfolioEnd:95,
+     rate:5,rates:[],risk:'low',
      contribAmt:6000,contribFreq:'annual',contribStart:25,contribEnd:65,
-     oneTime:[],rate:5,risk:'low'},
+     oneTime:[],transfers:[]},
   ],
   withdrawals:[
     {id:uid(),name:'Retraite',startAge:65,endAge:100,amount:45000,type:'fixed',freq:'annual',indexed:true,adaptive:false,adaptiveThreshold:200000,adaptiveReduction:25},
@@ -238,9 +245,7 @@ const S={
   sim:[],mc:null,mcRunning:false,acctBalsAtRetirement:{},depletionAge:null,modalAcct:null,
 };
 
-/* ══════════════════════════════
-   FINANCE
-══════════════════════════════ */
+/* ══ Tax ══════════════════════════════════════════════════════════════ */
 const randNorm=()=>{let u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);};
 const calcRRQ=(age,aR,sal)=>{if(age<aR)return 0;let b=Math.min(sal*.25,15888),d=aR-65;if(d<0)b*=(1+d*.054);else if(d>0)b*=(1+Math.min(d,7)*.042);return b;};
 const calcSV=(age,aS)=>age<aS?0:8000*(1+.072*Math.max(0,aS-65));
@@ -253,8 +258,6 @@ const calcTax=inc=>{
   p=0;for(let i=0;i<4;i++){const l=i<qb.length?qb[i]:inc+1;t+=Math.max(0,Math.min(inc,l)-p)*qr[i];p=l;if(inc<=l)break;}
   return Math.max(0,t-.30*15705);
 };
-const annualContrib=a=>a.contribFreq==='monthly'?a.contribAmt*12:a.contribAmt;
-const reerPlafond=salary=>Math.min(REER_PLAFOND,Math.round(salary*REER_PLAFOND_P));
 
 function buildOrder(strategy,accounts){
   const order=STRAT[strategy]?.order;
@@ -265,13 +268,10 @@ function buildOrder(strategy,accounts){
   return ids;
 }
 
-/* ══════════════════════════════
-   SIMULATION
-══════════════════════════════ */
+/* ══ Simulation ═══════════════════════════════════════════════════════ */
 function runSim(accounts,withdrawals,params,shocks){
   if(!accounts.length)return{rows:[],acctBals:{}};
   const{ageFrom,ageTo,salary,ageRRQ,ageSV,ageSRG,strategy,inflation,rebalance}=params;
-  // Tous les soldes commencent à 0 — injection au portfolioStart
   const bal={};accounts.forEach(a=>(bal[a.id]=0));
   const pids=buildOrder(strategy,accounts);
   const inflRate=(inflation||0)/100;
@@ -281,47 +281,55 @@ function runSim(accounts,withdrawals,params,shocks){
   for(let age=ageFrom;age<=ageTo;age++){
     const yr=age-ageFrom;
 
-    /* 1. Injection du capital initial + croissance dans l'horizon de placement */
+    /* 1. Injection du capital initial à portfolioStart */
     accounts.forEach(a=>{
-      const pS=a.portfolioStart??ageFrom;
-      const pE=a.portfolioEnd??ageTo;
-      if(age===pS) bal[a.id]+=a.balance; // injection du capital initial
-      if(age<pS||age>pE) return;          // hors horizon de placement
-      const vol=(RISK[a.risk]||RISK.medium).vol;
-      const rebalVol=rebalance?vol*0.80:vol;
-      const sh=shocks&&shocks[a.id]?(shocks[a.id][yr]||0):randNorm()*rebalVol*0;
-      const shFinal=shocks?sh:0;
-      bal[a.id]=Math.max(0,bal[a.id]*(1+a.rate/100+shFinal));
+      const pS=a.portfolioStart??ageFrom, pE=a.portfolioEnd??ageTo;
+      if(age===pS) bal[a.id]+=a.balance;
+      if(age<pS||age>pE) return;
+      const rate=getRateAtAge(a,age);
+      const vol=(RISK[a.risk]||RISK.medium).vol*(rebalance?.80:1);
+      const sh=shocks&&shocks[a.id]?shocks[a.id][yr]||0:0;
+      bal[a.id]=Math.max(0,bal[a.id]*(1+rate/100+sh));
     });
 
-    /* 2. Contributions récurrentes (dans l'horizon de placement ET de contribution) */
+    /* 2. Contributions récurrentes */
     accounts.forEach(a=>{
-      const pS=a.portfolioStart??ageFrom;
-      const pE=a.portfolioEnd??ageTo;
-      if(age<pS||age>pE) return;
-      if(age<a.contribStart||age>a.contribEnd) return;
+      const pS=a.portfolioStart??ageFrom, pE=a.portfolioEnd??ageTo;
+      if(age<pS||age>pE||age<a.contribStart||age>a.contribEnd)return;
       bal[a.id]+=(a.contribFreq==='monthly'?a.contribAmt*12:a.contribAmt);
     });
 
     /* 3. Contributions ponctuelles */
     accounts.forEach(a=>(a.oneTime||[]).forEach(ot=>{if(ot.age===age)bal[a.id]+=ot.amount;}));
 
-    if(age===ageRRQ) acctBals={...bal};
+    /* 4. Transferts entre comptes (atomiques : on collecte puis on applique) */
+    const pending=[];
+    accounts.forEach(a=>(a.transfers||[]).forEach(tr=>{
+      if(tr.age!==age)return;
+      const amt=(bal[a.id]||0)*(tr.percent/100);
+      if(amt>0)pending.push({from:a.id,to:tr.targetId,amt});
+    }));
+    pending.forEach(({from,to,amt})=>{
+      bal[from]=Math.max(0,(bal[from]||0)-amt);
+      if(bal[to]!==undefined)bal[to]=(bal[to]||0)+amt;
+    });
+
+    if(age===ageRRQ)acctBals={...bal};
     const totalBefore=Object.values(bal).reduce((s,v)=>s+v,0);
     const rrq=calcRRQ(age,ageRRQ,salary),sv=calcSV(age,ageSV),srg=calcSRG(age,ageSV,ageSRG,0,sv),gov=rrq+sv+srg;
 
-    /* 4. FERR minimum obligatoire (71+) */
+    /* 5. FERR minimum obligatoire (71+) */
     let ferrTotal=0;
     if(age>=71){
       const fRate=ferrRate(age);
       accounts.filter(a=>a.type==='REER').forEach(a=>{
-        const minW=bal[a.id]*fRate;
-        bal[a.id]=Math.max(0,bal[a.id]-minW);
+        const minW=(bal[a.id]||0)*fRate;
+        bal[a.id]=Math.max(0,(bal[a.id]||0)-minW);
         ferrTotal+=minW;
       });
     }
 
-    /* 5. Retraits planifiés (indexation + adaptatif) */
+    /* 6. Retraits planifiés */
     let needed=0;
     withdrawals.forEach(w=>{
       if(age<w.startAge||age>w.endAge)return;
@@ -336,11 +344,10 @@ function runSim(accounts,withdrawals,params,shocks){
       needed+=amt;
     });
 
-    /* 6. Décaissement */
-    const totalAvail=gov+ferrTotal;
-    let fp=Math.max(0,needed-totalAvail);
+    /* 7. Décaissement */
+    let fp=Math.max(0,needed-gov-ferrTotal);
     if(strategy==='smart'){
-      const BPA=15705,reerFree=Math.max(0,BPA-totalAvail);
+      const reerFree=Math.max(0,15705-gov-ferrTotal);
       let fromR=Math.min(fp,reerFree),rem=fp;
       accounts.filter(a=>a.type==='REER').forEach(a=>{if(fromR<=0)return;const t=Math.min(bal[a.id]||0,fromR);bal[a.id]-=t;fromR-=t;rem-=t;});
       accounts.filter(a=>a.type==='CELI').forEach(a=>{if(rem<=0)return;const t=Math.min(bal[a.id]||0,rem);bal[a.id]-=t;rem-=t;});
@@ -350,7 +357,7 @@ function runSim(accounts,withdrawals,params,shocks){
       pids.forEach(id=>{if(fp<=0)return;const t=Math.min(bal[id]||0,fp);bal[id]-=t;fp-=t;});
     } else {
       const tt=Object.values(bal).reduce((s,v)=>s+v,0)||1;
-      accounts.forEach(a=>{bal[a.id]=Math.max(0,bal[a.id]-(bal[a.id]/tt)*fp);});
+      accounts.forEach(a=>{bal[a.id]=Math.max(0,(bal[a.id]||0)-(bal[a.id]/tt)*fp);});
     }
 
     const totalBal=Math.round(Object.values(bal).reduce((s,v)=>s+v,0));
@@ -366,10 +373,7 @@ function runMC(accounts,withdrawals,params,N=200){
   const runs=[];let ok=0;
   for(let i=0;i<N;i++){
     const sh={};
-    accounts.forEach(a=>{
-      const vol=(RISK[a.risk]||RISK.medium).vol*(params.rebalance?0.80:1);
-      sh[a.id]={};for(let y=0;y<=params.ageTo-params.ageFrom+1;y++)sh[a.id][y]=randNorm()*vol;
-    });
+    accounts.forEach(a=>{const vol=(RISK[a.risk]||RISK.medium).vol*(params.rebalance?.80:1);sh[a.id]={};for(let y=0;y<=params.ageTo-params.ageFrom+1;y++)sh[a.id][y]=randNorm()*vol;});
     const{rows}=runSim(accounts,withdrawals,params,sh);runs.push(rows);
     if((rows[rows.length-1]?.totalBalance||0)>0)ok++;
   }
@@ -388,15 +392,12 @@ function getSuggestions(){
   if(sr<70)tips.push({cls:'al-danger',icon:'🚨',text:`Probabilité de succès à ${sr}%. Augmentez les contributions ou réduisez les retraits.`});
   else if(sr<85)tips.push({cls:'al-warn',icon:'⚠️',text:`Probabilité ${sr}%. Ajouter 5 000$/an dans le CÉLI améliorerait votre retraite.`});
   if(!S.accounts.some(a=>a.type==='CELI'))tips.push({cls:'al-info',icon:'🌱',text:"Aucun CÉLI. Les retraits y sont totalement libres d'impôt."});
-  if(S.params.ageRRQ<65)tips.push({cls:'al-info',icon:'🕐',text:`RRQ à ${S.params.ageRRQ} ans = pénalité de ${((65-S.params.ageRRQ)*5.4).toFixed(0)}%. Attendre 70 ans ajoute 42%.`});
-  if(S.accounts.length&&avgR<4)tips.push({cls:'al-info',icon:'📈',text:`Rendement moyen ${avgR.toFixed(1)}%/an. Des FNB diversifiés ciblent 6–8% sur 20+ ans.`});
+  if(S.params.ageRRQ<65)tips.push({cls:'al-info',icon:'🕐',text:`RRQ à ${S.params.ageRRQ} ans = pénalité de ${((65-S.params.ageRRQ)*5.4).toFixed(0)}%.`});
   if(S.depletionAge)tips.push({cls:'al-danger',icon:'💸',text:`Le portefeuille s'épuise à ${S.depletionAge} ans.`});
   return tips.slice(0,4);
 }
 
-/* ══════════════════════════════
-   COMPUTE
-══════════════════════════════ */
+/* ══ Compute ══════════════════════════════════════════════════════════ */
 let mcTimer=null;
 function compute(){
   const{rows,acctBals}=runSim(S.accounts,S.withdrawals,S.params,null);
@@ -406,11 +407,9 @@ function compute(){
   mcTimer=setTimeout(()=>{S.mc=runMC(S.accounts,S.withdrawals,S.params);S.mcRunning=false;updateNav();if(S.tab==='dashboard'||S.tab==='monte')renderMain();else refreshChart();},400);
 }
 
-/* ══════════════════════════════
-   CANVAS
-══════════════════════════════ */
+/* ══ Canvas ═══════════════════════════════════════════════════════════ */
 const niceMax=v=>{if(!v||v<=0)return 1;const m=Math.pow(10,Math.floor(Math.log10(v)));return Math.ceil(v/m)*m;};
-const CAP=5000000;
+const CAP=5e6;
 
 function setupCv(id){
   const cv=$(id);if(!cv)return null;
@@ -418,16 +417,13 @@ function setupCv(id){
   cv.width=W*dpr;cv.height=H*dpr;cv.style.width=W+'px';cv.style.height=H+'px';
   const ctx=cv.getContext('2d');ctx.scale(dpr,dpr);return{cv,ctx,W,H};
 }
-
 function drawMainChart(id){
   const s=setupCv(id);if(!s)return;
   const{ctx,W,H}=s,pad={t:12,r:14,b:22,l:56},iW=W-pad.l-pad.r,iH=H-pad.t-pad.b;
   if(iW<=0||iH<=0||!S.sim.length)return;
   const sim=S.sim,mc=S.mc,ages=sim.map(r=>r.age),n=sim.length;
-  let max=0;sim.forEach(r=>{if(r.totalBalance>max)max=r.totalBalance;});
-  if(mc)mc.chartData.forEach(r=>{if(r.p90>max)max=r.p90;});
-  max=Math.min(CAP,niceMax(max));
-  ctx.clearRect(0,0,W,H);
+  let max=0;sim.forEach(r=>{if(r.totalBalance>max)max=r.totalBalance;});if(mc)mc.chartData.forEach(r=>{if(r.p90>max)max=r.p90;});
+  max=Math.min(CAP,niceMax(max));ctx.clearRect(0,0,W,H);
   [0,.25,.5,.75,1].forEach(f=>{const y=pad.t+iH*(1-f);ctx.strokeStyle=C.grisC;ctx.lineWidth=1;ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+iW,y);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle=C.gris;ctx.font='9px Arial';ctx.textAlign='right';ctx.fillText(fmtK(max*f),pad.l-4,y+3);});
   const step=n>60?10:n>30?5:n>15?2:1;
   ctx.fillStyle=C.gris;ctx.font='9px Arial';ctx.textAlign='center';
@@ -450,17 +446,27 @@ function drawMainChart(id){
   ctx.beginPath();sim.forEach((r,i)=>{const p=px(i,r.totalBalance);i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y);});
   ctx.strokeStyle=C.bleu;ctx.lineWidth=2.5;ctx.stroke();
 }
-
 function refreshChart(){if(S.tab==='dashboard')drawMainChart('chartMain');if(S.tab==='monte')drawMainChart('chartMC');}
 
-/* ══════════════════════════════
-   HELPERS
-══════════════════════════════ */
+/* ══ HTML helpers ════════════════════════════════════════════════════ */
 const sec=(n,t,inner)=>`<div class="sec"><div class="sec-head"><div class="sec-num">${n}</div><div class="sec-title">${t}</div><div class="sec-line"></div></div>${inner}</div>`;
 
-/* ══════════════════════════════
-   PAGE: DASHBOARD
-══════════════════════════════ */
+// Mini visualisation des tranches de taux pour les cartes
+function trancheBadges(a){
+  if(!a.rates||!a.rates.length) return `<span style="font-size:11px;font-weight:700;color:#1A1A1A">${a.rate}%/an</span>`;
+  const maxR=Math.max(...a.rates.map(r=>r.rate));
+  return a.rates.map(r=>`<span class="abadge" style="background:${rateColor(r.rate,maxR)}22;color:${rateColor(r.rate,maxR)}">${r.from}–${r.to}a: ${r.rate}%</span>`).join('');
+}
+
+function transferBadges(a){
+  if(!a.transfers||!a.transfers.length)return'';
+  return a.transfers.map(tr=>{
+    const target=S.accounts.find(x=>x.id===tr.targetId);
+    return`<span class="abadge" style="background:${C.orange}15;color:${C.orange}">→ ${target?esc(target.name):'?'} à ${tr.age}a (${tr.percent}%)</span>`;
+  }).join('');
+}
+
+/* ══ Dashboard ═══════════════════════════════════════════════════════ */
 function pageDashboard(){
   const last=S.sim.length?S.sim[S.sim.length-1]:{totalBalance:0};
   const ri=S.sim.findIndex(r=>r.age>=S.params.ageRRQ);
@@ -469,13 +475,15 @@ function pageDashboard(){
   const sr=S.mc?S.mc.successRate:null;
   const src=sr===null?C.gris:sr>=80?C.vert:sr>=65?C.orange:C.rouge;
   const tips=getSuggestions();
-  const eAges=new Set([S.params.ageFrom,S.params.ageRRQ,S.params.ageSV,S.params.ageTo,71,...S.accounts.flatMap(a=>[a.portfolioStart??S.params.ageFrom,a.portfolioEnd??S.params.ageTo,a.contribStart,a.contribEnd]),...S.withdrawals.flatMap(w=>[w.startAge,w.endAge])]);
+  const eAges=new Set([S.params.ageFrom,S.params.ageRRQ,S.params.ageSV,S.params.ageTo,71,
+    ...S.accounts.flatMap(a=>[a.portfolioStart??S.params.ageFrom,a.portfolioEnd??S.params.ageTo,a.contribStart,a.contribEnd,...(a.transfers||[]).map(t=>t.age)]),
+    ...S.withdrawals.flatMap(w=>[w.startAge,w.endAge])]);
   const tableRows=S.sim.filter(r=>r.age%5===0||eAges.has(r.age)).map(r=>{
     const isMs=eAges.has(r.age),isDep=S.depletionAge&&r.age>=S.depletionAge&&r.totalBalance<=0;
     return`<tr class="${isDep?'dep':isMs?'ms':''}">
       <td>${r.age} ans${r.age===S.params.ageRRQ?' ★':r.age===71?' 🔄':''}</td>
       <td><b>${fmtK(r.totalBalance)}</b></td>
-      <td>${r.withdrawal>0?fmtK(r.withdrawal)+(r.ferr>0?'<span style="font-size:10px;color:'+C.orange+'"> +FERR</span>':''):'—'}</td>
+      <td>${r.withdrawal>0?fmtK(r.withdrawal)+(r.ferr>0?`<span style="font-size:10px;color:${C.orange}"> +FERR</span>`:''):'—'}</td>
       <td>${r.gov>0?fmtK(Math.round(r.gov)):'—'}</td>
       <td>${r.ferr>0?fmtK(r.ferr):'—'}</td>
       <td>${r.tax>0?fmtK(r.tax):'—'}</td>
@@ -489,7 +497,7 @@ function pageDashboard(){
       <div class="kpi"><div class="kpi-l">Probabilité de succès</div><div class="kpi-v" style="color:${src}">${sr!==null?`${sr}%`:'…'}</div><div class="kpi-s">${S.mc?S.mc.N:200} simulations Monte Carlo</div></div>
       <div class="kpi"><div class="kpi-l">Solde à ${S.params.ageRRQ} ans</div><div class="kpi-v">${fmtK(retR.totalBalance)}</div><div class="kpi-s">Avant décaissement</div></div>
       <div class="kpi"><div class="kpi-l">Revenu net / mois</div><div class="kpi-v">${mNet>0?fmtK(mNet):'—'}</div><div class="kpi-s">Retraits + RRQ + SV + FERR − impôts</div></div>
-      ${S.depletionAge?`<div class="kpi" style="border-top-color:${C.rouge}"><div class="kpi-l" style="color:${C.rouge}">⚠ Âge d'épuisement</div><div class="kpi-v" style="color:${C.rouge}">${S.depletionAge} ans</div><div class="kpi-s">Le portefeuille atteint zéro</div></div>`:''}
+      ${S.depletionAge?`<div class="kpi" style="border-top-color:${C.rouge}"><div class="kpi-l" style="color:${C.rouge}">⚠ Épuisement</div><div class="kpi-v" style="color:${C.rouge}">${S.depletionAge} ans</div><div class="kpi-s">Le portefeuille atteint zéro</div></div>`:''}
     </div>
     ${sec(1,'Évolution du portefeuille',`
       <div class="card">
@@ -507,22 +515,20 @@ function pageDashboard(){
           <thead><tr><th>Âge</th><th>Portefeuille</th><th>Retrait/an</th><th>RRQ+SV/an</th><th>FERR/an</th><th>Impôts/an</th><th>Net</th></tr></thead>
           <tbody>${tableRows}</tbody>
         </table>
-        <div style="padding:5px 12px 7px;font-size:10px;color:${C.gris}">★ = Retraite RRQ &nbsp;·&nbsp; 🔄 = Conversion REER→FERR &nbsp;·&nbsp; Lignes bleues = âges clés</div>
+        <div style="padding:5px 12px 7px;font-size:10px;color:${C.gris}">★ = Retraite RRQ · 🔄 = REER→FERR · Lignes bleues = âges clés</div>
       </div>`)}
     ${tips.length?sec(3,'Suggestions',`<div>${tips.map(t=>`<div class="alert ${t.cls}"><span class="ai">${t.icon}</span><span>${esc(t.text)}</span></div>`).join('')}</div>`):''}`;
 }
 
-/* ══════════════════════════════
-   PAGE: PLACEMENTS
-══════════════════════════════ */
+/* ══ Placements ═══════════════════════════════════════════════════════ */
 function pageAccounts(){
-  const reerMax=reerPlafond(S.params.salary);
+  const rMax=reerPlafond(S.params.salary);
   const cards=S.accounts.map((a,i)=>{
     const def=ACCT[a.type]||ACCT.AUTRE,risk=RISK[a.risk]||RISK.medium;
     const ann=annualContrib(a);
-    const projBal=S.acctBalsAtRetirement[a.id];
     const pS=a.portfolioStart??S.params.ageFrom,pE=a.portfolioEnd??S.params.ageTo;
-    const warnMsg=a.type==='CELI'&&ann>CELI_PLAFOND?`⚠ Dépasse le plafond CÉLI (${fmtCAD(CELI_PLAFOND)}/an)`:a.type==='REER'&&ann>reerMax?`⚠ Dépasse votre plafond REER (${fmtCAD(reerMax)}/an)`:'';
+    const projBal=S.acctBalsAtRetirement[a.id];
+    const warnMsg=a.type==='CELI'&&ann>CELI_MAX?`⚠ Dépasse le plafond CÉLI (${fmtCAD(CELI_MAX)}/an)`:a.type==='REER'&&ann>rMax?`⚠ Dépasse votre plafond REER (${fmtCAD(rMax)}/an)`:'';
     return`<div class="acard">
       <div class="ast" style="background:${def.color}"></div>
       <div class="abd">
@@ -538,15 +544,14 @@ function pageAccounts(){
         <div class="asts">
           <div class="astat"><div class="slbl">Solde initial</div><div class="sval">${fmtK(a.balance)}</div></div>
           <div class="astat"><div class="slbl">Contrib./an</div><div class="sval">${fmtK(ann)}</div></div>
-          <div class="astat"><div class="slbl">Rendement</div><div class="sval">${a.rate}%/an</div></div>
+          <div class="astat"><div class="slbl">Horizon portef.</div><div class="sval">${pS}→${pE}a</div></div>
+          <div class="astat"><div class="slbl">Contributions</div><div class="sval">${a.contribStart}→${a.contribEnd}a</div></div>
           <div class="astat"><div class="slbl">Risque MC</div><div class="sval">${risk.label}</div></div>
-          <div class="astat"><div class="slbl">Horizon portef.</div><div class="sval">${pS}→${pE} ans</div></div>
-          ${projBal!==undefined?`<div class="astat" style="background:#E6EFF7"><div class="slbl">Projeté à ${S.params.ageRRQ} ans</div><div class="sval" style="color:${C.bleu}">${fmtK(projBal)}</div></div>`:'<div></div>'}
+          ${projBal!==undefined?`<div class="astat" style="background:#E6EFF7"><div class="slbl">Projeté à ${S.params.ageRRQ}a</div><div class="sval" style="color:${C.bleu}">${fmtK(projBal)}</div></div>`:'<div></div>'}
         </div>
-        <div style="margin-bottom:7px;font-size:11px;color:${C.gris};padding:4px 7px;background:${C.fond};border-radius:3px">
-          📅 Contributions : <b>${a.contribStart}→${a.contribEnd} ans</b>
-        </div>
-        ${warnMsg?`<div class="alert al-warn" style="margin-bottom:7px;padding:5px 9px;font-size:11px">${warnMsg}</div>`:''}
+        <div style="margin-bottom:6px"><div class="slbl" style="margin-bottom:3px">Taux de rendement</div>${trancheBadges(a)}</div>
+        ${(a.transfers||[]).length?`<div style="margin-bottom:6px"><div class="slbl" style="margin-bottom:3px">Transferts planifiés</div>${transferBadges(a)}</div>`:''}
+        ${warnMsg?`<div class="alert al-warn" style="margin-bottom:6px;padding:5px 9px;font-size:11px">${warnMsg}</div>`:''}
         ${a.oneTime?.length?`<div style="font-size:11px;color:${C.gris};margin-bottom:6px">🎯 ${a.oneTime.length} contribution${a.oneTime.length>1?'s':''} ponctuelle${a.oneTime.length>1?'s':''}</div>`:''}
         <span class="abadge" style="background:${def.color}1A;color:${def.color}">${def.tax}</span>
         ${a.type==='REER'&&S.params.ageTo>71?`<span class="abadge" style="background:${C.orange}1A;color:${C.orange}">FERR à 71 ans</span>`:''}
@@ -561,9 +566,7 @@ function pageAccounts(){
     <div class="agrid">${cards||`<p style="color:${C.gris}">Aucun placement.</p>`}</div>`;
 }
 
-/* ══════════════════════════════
-   PAGE: RETRAITS
-══════════════════════════════ */
+/* ══ Retraits ════════════════════════════════════════════════════════ */
 function pageWithdrawals(){
   const inflStr=`${S.params.inflation}%/an`;
   const wCards=S.withdrawals.map((w,i)=>{
@@ -586,23 +589,21 @@ function pageWithdrawals(){
             <select class="sel" data-a="w-type" data-i="${i}">
               <option value="fixed"   ${w.type==='fixed'  ?'selected':''}>Montant fixe $</option>
               <option value="percent" ${w.type==='percent'?'selected':''}>% du portefeuille</option>
-            </select>
-          </div>
+            </select></div>
           <div class="wf" style="flex:0 0 100px"><label class="lbl">Fréquence</label>
             <select class="sel" data-a="w-freq" data-i="${i}" ${w.type==='percent'?'disabled':''}>
               <option value="annual"  ${w.freq==='annual' ?'selected':''}>Annuel</option>
               <option value="monthly" ${w.freq==='monthly'?'selected':''}>Mensuel</option>
-            </select>
-          </div>
+            </select></div>
         </div>
         <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:9px;padding-top:9px;border-top:1px solid ${C.grisC}">
           <label class="chk"><input type="checkbox" ${w.indexed?'checked':''} data-a="w-indexed" data-i="${i}"><span>Indexé à l'inflation (${inflStr})</span></label>
           <label class="chk"><input type="checkbox" ${w.adaptive?'checked':''} data-a="w-adaptive" data-i="${i}"><span>Retrait adaptatif</span></label>
         </div>
         ${w.adaptive?`<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;align-items:flex-end">
-          <div class="wf" style="flex:1;min-width:140px"><label class="lbl">Seuil ($)</label><input class="inp" type="number" value="${w.adaptiveThreshold||200000}" data-a="w-threshold" data-i="${i}"></div>
-          <div class="wf" style="flex:0 0 120px"><label class="lbl">Réduction</label><div class="irow"><input type="number" value="${w.adaptiveReduction||25}" min="1" max="90" data-a="w-reduction" data-i="${i}"><span class="sx">%</span></div></div>
-          <div class="ib ib-or" style="flex:1;font-size:11px">Si le portef. descend sous le seuil, le retrait est réduit de ${w.adaptiveReduction||25}%.</div>
+          <div class="wf" style="flex:1;min-width:130px"><label class="lbl">Seuil ($)</label><input class="inp" type="number" value="${w.adaptiveThreshold||200000}" data-a="w-threshold" data-i="${i}"></div>
+          <div class="wf" style="flex:0 0 110px"><label class="lbl">Réduction</label><div class="irow"><input type="number" value="${w.adaptiveReduction||25}" min="1" max="90" data-a="w-reduction" data-i="${i}"><span class="sx">%</span></div></div>
+          <div class="ib ib-or" style="flex:1;font-size:11px">Si portef. &lt; seuil, retrait réduit de ${w.adaptiveReduction||25}%.</div>
         </div>`:''}
       </div></div>`;
   }).join('');
@@ -628,19 +629,16 @@ function pageWithdrawals(){
       </div></div>`);
 }
 
-/* ══════════════════════════════
-   PAGE: FLUX (Timeline)
-══════════════════════════════ */
+/* ══ Flux (Timeline verticale) ═══════════════════════════════════════ */
 function pageFlux(){
   const{ageFrom,ageTo,ageRRQ,ageSV}=S.params;
   const totalYears=ageTo-ageFrom;
   const PX=Math.max(9,Math.min(15,620/Math.max(totalYears,1)));
   const H=totalYears*PX;
-  const ITEM_W=160,GAP=5,AXIS_W=70;
+  const ITEM_W=162,GAP=5,AXIS_W=72;
   const toY=age=>(Math.max(ageFrom,Math.min(ageTo,age))-ageFrom)*PX;
   const toH=(s,e)=>Math.max(2,(Math.min(ageTo,e)-Math.max(ageFrom,s))*PX);
 
-  /* Assignation de lanes (pas d'overlap dans la même lane) */
   function assignLanes(items){
     const ends=[];
     return items.sort((a,b)=>a.s-b.s).map(it=>{
@@ -649,21 +647,20 @@ function pageFlux(){
     });
   }
 
-  /* ── Éléments gauche : placements ── */
+  // ── Éléments gauche (placements) ──────────────────────
   const leftRaw=[];
   S.accounts.forEach(a=>{
     const def=ACCT[a.type]||ACCT.AUTRE;
-    const pS=Math.max(a.portfolioStart??ageFrom,ageFrom);
-    const pE=Math.min(a.portfolioEnd??ageTo,ageTo);
+    const pS=Math.max(a.portfolioStart??ageFrom,ageFrom),pE=Math.min(a.portfolioEnd??ageTo,ageTo);
     if(pS>ageTo||pE<ageFrom)return;
-    const cS=Math.max(a.contribStart,ageFrom),cE=Math.min(a.contribEnd,ageTo);
-    const ann=annualContrib(a);
-    leftRaw.push({
-      s:pS,e:pE,lbl:a.name,col:def.color,icon:def.icon,
-      // Sous-barre de contribution (relative à la barre principale)
-      cS:cS>=pS&&cE<=pE?cS:null,cE:cS>=pS&&cE<=pE?cE:null,
-      cSub:ann>0?(a.contribFreq==='monthly'?fmtK(a.contribAmt)+'/mois':fmtK(ann)+'/an'):'',
+    const maxR=a.rates&&a.rates.length?Math.max(...a.rates.map(r=>r.rate)):a.rate;
+    leftRaw.push({s:pS,e:pE,lbl:a.name,col:def.color,icon:def.icon,
+      cS:Math.max(a.contribStart,ageFrom),cE:Math.min(a.contribEnd,ageTo),
+      cAnn:annualContrib(a),cFreq:a.contribFreq,
+      rates:a.rates&&a.rates.length?a.rates:[{from:pS,to:pE,rate:a.rate}],
+      maxRate:maxR,
       projBal:S.acctBalsAtRetirement[a.id],
+      transfers:a.transfers||[],
     });
     (a.oneTime||[]).forEach(ot=>{
       if(ot.age>=ageFrom&&ot.age<=ageTo)
@@ -671,7 +668,7 @@ function pageFlux(){
     });
   });
 
-  /* ── Éléments droite : retraits ── */
+  // ── Éléments droite (retraits) ────────────────────────
   const rightRaw=[];
   S.withdrawals.forEach(w=>{
     if(w.startAge>ageTo||w.endAge<ageFrom)return;
@@ -687,44 +684,72 @@ function pageFlux(){
   const right=assignLanes(rightRaw);
   const maxL=left.length?Math.max(...left.map(i=>i.l))+1:1;
   const maxR=right.length?Math.max(...right.map(i=>i.l))+1:1;
+  const LEFT_W=maxL*(ITEM_W+GAP),RIGHT_W=maxR*(ITEM_W+GAP);
 
-  /* ── Rendu d'un élément gauche (placement avec sous-barre contribution) ── */
+  // Nuance de couleur selon le taux (+ foncé = + élevé)
+  function toneForRate(rate,maxRate){
+    const t=Math.max(0,Math.min(1,rate/Math.max(maxRate,1)));
+    // 100% taux -> 30% opacité fond, 0% -> 6%
+    return{bg:`rgba(9,87,151,${0.06+t*0.24})`,border:`rgba(9,87,151,${0.3+t*0.5})`};
+  }
+
   function leftItemEl(it){
     const y=toY(it.s);
     if(it.pt){
-      // Point (unique)
       return`<div style="position:absolute;right:${it.l*(ITEM_W+GAP)+ITEM_W/2-6}px;top:${y-6}px;
-        width:12px;height:12px;border-radius:50%;background:${it.col};border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.2);z-index:5"
-        title="${esc(it.lbl)}: ${esc(it.sub)}"></div>`;
+        width:12px;height:12px;border-radius:50%;background:${it.col};border:2px solid #fff;
+        box-shadow:0 1px 4px rgba(0,0,0,.2);z-index:6" title="${esc(it.lbl)}: ${esc(it.sub)}"></div>`;
     }
-    const h=toH(it.s,it.e);
-    const offset=it.l*(ITEM_W+GAP);
-    // Barre principale (horizon de placement)
-    let inner='';
-    if(it.cS!==null&&it.cE!==null){
-      const cy=toY(it.cS)-toY(it.s); // offset relatif dans la barre
-      const ch=toH(it.cS,it.cE);
-      inner=`<div style="position:absolute;left:0;right:0;top:${cy}px;height:${ch}px;background:${it.col}44;border-radius:2px;border-left:3px solid ${it.col};padding:2px 6px;overflow:hidden">
-        <div style="font-size:10px;color:${it.col};font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${it.cSub}</div>
+    const h=toH(it.s,it.e),offset=it.l*(ITEM_W+GAP);
+
+    // Sous-barres par tranches de taux
+    const trancheDivs=(it.rates||[]).map(seg=>{
+      const segS=Math.max(seg.from,it.s,ageFrom),segE=Math.min(seg.to,it.e,ageTo);
+      if(segS>segE)return'';
+      const sy=toY(segS)-toY(it.s);
+      const sh=toH(segS,segE);
+      const tone=toneForRate(seg.rate,it.maxRate||seg.rate);
+      return`<div style="position:absolute;left:0;right:0;top:${sy}px;height:${sh}px;background:${tone.bg};border-left:3px solid ${tone.border};border-radius:2px 0 0 2px;padding:1px 5px;overflow:hidden;pointer-events:none">
+        ${sh>14?`<div style="font-size:9px;font-weight:700;color:${C.bleu};white-space:nowrap">${seg.rate}%/an</div>`:''}
       </div>`;
+    }).join('');
+
+    // Zone de contribution
+    let contribDiv='';
+    if(it.cS&&it.cE&&it.cAnn>0){
+      const cRelY=toY(it.cS)-toY(it.s);
+      const cH=toH(it.cS,it.cE);
+      const cStr=it.cFreq==='monthly'?fmtK(it.cAnn/12)+'/mois':fmtK(it.cAnn)+'/an';
+      contribDiv=`<div style="position:absolute;right:0;top:${cRelY}px;width:8px;height:${cH}px;background:${C.vert};opacity:.7;border-radius:0 2px 2px 0;pointer-events:none" title="Contributions: ${cStr}"></div>`;
     }
-    const projStr=it.projBal!=null?`<div style="font-size:9px;color:${C.bleu};margin-top:1px">${fmtK(it.projBal)} à ${S.params.ageRRQ}a</div>`:'';
+
+    // Transferts (flèche vers l'axe)
+    const trTransfers=(it.transfers||[]).filter(tr=>tr.age>=ageFrom&&tr.age<=ageTo).map(tr=>{
+      const target=S.accounts.find(x=>x.id===tr.targetId);
+      const ty=toY(tr.age)-toY(it.s);
+      return`<div style="position:absolute;left:0;top:${ty-9}px;right:-16px;height:18px;display:flex;align-items:center;z-index:7;pointer-events:none">
+        <div style="flex:1;height:2px;background:${C.orange};border-radius:1px"></div>
+        <div style="background:${C.orange};color:#fff;font-size:9px;font-weight:700;padding:1px 4px;border-radius:2px;white-space:nowrap">→${target?esc(target.name):'?'} ${tr.percent}%</div>
+      </div>`;
+    }).join('');
+
     return`<div style="position:absolute;right:${offset}px;top:${y}px;width:${ITEM_W}px;height:${h}px;
-      background:${it.col}0E;border:1px solid ${it.col}44;border-right:3px solid ${it.col};
-      border-radius:3px;overflow:hidden;z-index:2;position:absolute">
-      <div style="padding:3px 7px;position:relative;z-index:1">
-        <div style="font-weight:700;font-size:11px;color:${it.col};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${it.icon||''}${esc(it.lbl)}</div>
-        ${projStr}
+      background:rgba(9,87,151,.04);border:1px solid rgba(9,87,151,.25);border-right:3px solid ${it.col};
+      border-radius:3px;overflow:visible;z-index:2">
+      <div style="position:absolute;inset:0;border-radius:3px;overflow:hidden">
+        ${trancheDivs}
+        ${contribDiv}
       </div>
-      ${inner}
+      <div style="position:relative;z-index:3;padding:3px 7px">
+        <div style="font-weight:700;font-size:11px;color:${it.col};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${it.icon||''}${esc(it.lbl)}</div>
+        ${h>24&&it.projBal!=null?`<div style="font-size:9px;color:${C.bleu}">${fmtK(it.projBal)} à ${S.params.ageRRQ}a</div>`:''}
+      </div>
+      ${trTransfers}
     </div>`;
   }
 
-  /* ── Rendu d'un élément droit (retrait) ── */
   function rightItemEl(it){
-    const y=toY(it.s);
-    const h=toH(it.s,it.e);
-    const offset=it.l*(ITEM_W+GAP);
+    const y=toY(it.s),h=toH(it.s,it.e),offset=it.l*(ITEM_W+GAP);
     return`<div style="position:absolute;left:${offset}px;top:${y}px;width:${ITEM_W}px;height:${h}px;
       background:${it.col}0E;border:1px solid ${it.col}44;border-left:3px solid ${it.col};
       border-radius:3px;padding:3px 8px;overflow:hidden;z-index:2">
@@ -733,23 +758,20 @@ function pageFlux(){
     </div>`;
   }
 
-  /* ── Marqueurs d'âge sur l'axe ── */
+  // Marqueurs d'âge
   const keyAges=new Set([ageFrom,ageTo,ageRRQ,ageSV,71]);
   S.accounts.forEach(a=>{
-    const pS=a.portfolioStart??ageFrom,pE=a.portfolioEnd??ageTo;
-    keyAges.add(pS);keyAges.add(pE);keyAges.add(a.contribStart);keyAges.add(a.contribEnd);
+    [a.portfolioStart??ageFrom,a.portfolioEnd??ageTo,a.contribStart,a.contribEnd,...(a.rates||[]).flatMap(r=>[r.from,r.to]),...(a.transfers||[]).map(t=>t.age)].forEach(v=>keyAges.add(v));
   });
   S.withdrawals.forEach(w=>{keyAges.add(w.startAge);keyAges.add(w.endAge);});
-
   const marks=[];
   for(let age=ageFrom;age<=ageTo;age++){if(age%5===0||keyAges.has(age))marks.push(age);}
 
   const axisHTML=marks.map(age=>{
-    const y=toY(age);
-    const key=keyAges.has(age);
+    const y=toY(age),key=keyAges.has(age);
     const icon=age===ageRRQ?' ★':age===71?' 🔄':age===ageSV&&ageSV!==ageRRQ?' 🌿':'';
     return`
-      ${key?`<div style="position:absolute;top:${y}px;left:-500px;right:-500px;height:1px;background:#EBEBEB;z-index:0"></div>`:''}
+      ${key?`<div style="position:absolute;top:${y}px;left:-600px;right:-600px;height:1px;background:#EBEBEB;z-index:0"></div>`:''}
       <div style="position:absolute;left:50%;top:${y-9}px;transform:translateX(-50%);
         font-size:${key?11:9}px;font-weight:${key?700:400};color:${key?C.bleu:C.gris};
         background:#fff;padding:1px 6px;white-space:nowrap;z-index:5;border-radius:2px;
@@ -758,51 +780,33 @@ function pageFlux(){
       </div>`;
   }).join('');
 
-  const LEFT_W=maxL*(ITEM_W+GAP);
-  const RIGHT_W=maxR*(ITEM_W+GAP);
-  const minW=LEFT_W+AXIS_W+RIGHT_W+20;
-
   return`
-    <div class="sec-head">
-      <div class="sec-num">1</div>
-      <div class="sec-title">Flux financiers — Timeline</div>
-      <div class="sec-line"></div>
-    </div>
-    <!-- En-têtes colonnes -->
+    <div class="sec-head"><div class="sec-num">1</div><div class="sec-title">Flux financiers — Timeline</div><div class="sec-line"></div></div>
     <div style="display:flex;margin-bottom:10px;font-size:12px;font-weight:700">
       <div style="flex:1;text-align:right;padding-right:${AXIS_W/2+8}px;color:${C.bleu}">DÉPÔTS ⟶</div>
       <div style="flex:1;padding-left:${AXIS_W/2+8}px;color:${C.rouge}">⟵ RETRAITS</div>
     </div>
-    <!-- Timeline scrollable -->
     <div style="overflow-x:auto;overflow-y:visible">
-      <div style="position:relative;height:${H+24}px;min-width:${minW}px">
-        <!-- Axe central vertical -->
+      <div style="position:relative;height:${H+24}px;min-width:${LEFT_W+AXIS_W+RIGHT_W+20}px">
         <div style="position:absolute;left:50%;top:0;height:${H+24}px;width:2px;background:${C.grisC};transform:translateX(-1px);z-index:3"></div>
-        <!-- Marqueurs d'âge (centrés sur l'axe) -->
-        <div style="position:absolute;left:50%;top:0;width:${AXIS_W}px;height:${H+24}px;transform:translateX(-50%);overflow:visible;z-index:4">
-          ${axisHTML}
-        </div>
-        <!-- Dépôts (gauche, s'étendent vers la gauche depuis l'axe) -->
-        <div style="position:absolute;right:calc(50% + ${AXIS_W/2}px);top:0;height:${H+24}px;width:${LEFT_W+10}px;overflow:visible">
+        <div style="position:absolute;left:50%;top:0;width:${AXIS_W}px;height:${H+24}px;transform:translateX(-50%);overflow:visible;z-index:4">${axisHTML}</div>
+        <div style="position:absolute;right:calc(50% + ${AXIS_W/2}px);top:0;height:${H+24}px;width:${LEFT_W+30}px;overflow:visible">
           ${left.map(leftItemEl).join('')}
         </div>
-        <!-- Retraits (droite, s'étendent vers la droite depuis l'axe) -->
         <div style="position:absolute;left:calc(50% + ${AXIS_W/2}px);top:0;height:${H+24}px;width:${RIGHT_W+10}px;overflow:visible">
           ${right.map(rightItemEl).join('')}
         </div>
       </div>
     </div>
-    <!-- Légende -->
-    <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:14px;font-size:11px;color:${C.gris};border-top:1px solid ${C.grisC};padding-top:9px">
-      <span><b>Barre extérieure</b> = Horizon de placement (durée de vie du compte)</span>
-      <span><b>Barre intérieure colorée</b> = Horizon de contribution récurrente</span>
-      <span>★ Début RRQ &nbsp;·&nbsp; 🔄 REER→FERR (71a) &nbsp;·&nbsp; 🌿 Début SV/SRG</span>
+    <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:14px;font-size:11px;color:${C.gris};border-top:1px solid ${C.grisC};padding-top:9px;line-height:1.6">
+      <span><b style="color:${C.bleu}">Bandes bleues</b> = Horizon du placement · Intensité = taux de rendement</span>
+      <span><b style="color:${C.vert}">Bande verte (droite)</b> = Horizon de contribution récurrente</span>
+      <span><b style="color:${C.orange}">Flèche orange</b> = Transfert vers un autre compte</span>
+      <span>★ RRQ · 🔄 FERR (71a) · 🌿 SV/SRG</span>
     </div>`;
 }
 
-/* ══════════════════════════════
-   PAGE: PARAMÈTRES
-══════════════════════════════ */
+/* ══ Paramètres ══════════════════════════════════════════════════════ */
 function pageParams(){
   const p=S.params;
   return sec(1,'Horizon de simulation',`
@@ -837,14 +841,12 @@ function pageParams(){
     </div>`)
   +sec(4,'Plafonds de cotisation 2024',`
     <div class="card cp" style="max-width:580px"><div class="g2">
-      <div><div class="lbl" style="margin-bottom:5px">CÉLI</div><div style="font-size:18px;font-weight:700;color:${C.vert}">${fmtCAD(CELI_PLAFOND)}/an</div><div class="hint">Plafond annuel 2024</div></div>
-      <div><div class="lbl" style="margin-bottom:5px">REER</div><div style="font-size:18px;font-weight:700;color:${C.bleu}">${fmtCAD(reerPlafond(p.salary))}/an</div><div class="hint">18% × ${fmtCAD(p.salary)} (max ${fmtCAD(REER_PLAFOND)})</div></div>
+      <div><div class="lbl" style="margin-bottom:5px">CÉLI</div><div style="font-size:18px;font-weight:700;color:${C.vert}">${fmtCAD(CELI_MAX)}/an</div><div class="hint">Plafond annuel 2024</div></div>
+      <div><div class="lbl" style="margin-bottom:5px">REER</div><div style="font-size:18px;font-weight:700;color:${C.bleu}">${fmtCAD(reerPlafond(p.salary))}/an</div><div class="hint">18% × ${fmtCAD(p.salary)} (max ${fmtCAD(REER_MAX)})</div></div>
     </div></div>`);
 }
 
-/* ══════════════════════════════
-   PAGE: MONTE CARLO
-══════════════════════════════ */
+/* ══ Monte Carlo ═════════════════════════════════════════════════════ */
 function pageMonte(){
   const last=S.sim.length?S.sim[S.sim.length-1]:{totalBalance:0};
   const mc=S.mc,sr=mc?mc.successRate:0;
@@ -889,19 +891,50 @@ function pageMonte(){
     <p style="color:${C.gris};font-size:11px;margin-top:7px;border-top:1px solid ${C.bord};padding-top:9px;line-height:1.65">Simulation à titre indicatif. Consultez un planificateur financier agréé.</p>`);
 }
 
-/* ══════════════════════════════
-   MODAL PLACEMENT
-══════════════════════════════ */
+/* ══ Modal placement ══════════════════════════════════════════════════ */
 function openModal(acct){S.modalAcct=clone(acct);renderModal();$('overlay').classList.add('open');}
 function closeModal(){S.modalAcct=null;$('overlay').classList.remove('open');}
 
 function renderModal(){
   const a=S.modalAcct;if(!a)return;
   const def=ACCT[a.type]||ACCT.AUTRE;
-  const reerMax=reerPlafond(S.params.salary);
+  const rMax=reerPlafond(S.params.salary);
   const ann=annualContrib(a);
-  const annWarn=a.type==='CELI'&&ann>CELI_PLAFOND?`<div class="ib ib-or" style="margin-top:5px">⚠ Dépasse le plafond CÉLI (${fmtCAD(CELI_PLAFOND)}/an)</div>`:a.type==='REER'&&ann>reerMax?`<div class="ib ib-or" style="margin-top:5px">⚠ Dépasse votre plafond REER (${fmtCAD(reerMax)}/an)</div>`:'';
   const pS=a.portfolioStart??S.params.ageFrom,pE=a.portfolioEnd??S.params.ageTo;
+  const warnMsg=a.type==='CELI'&&ann>CELI_MAX?`⚠ Dépasse le plafond CÉLI (${fmtCAD(CELI_MAX)}/an)`:a.type==='REER'&&ann>rMax?`⚠ Dépasse votre plafond REER (${fmtCAD(rMax)}/an)`:'';
+
+  // ── Rangs de tranches de taux ──────────────────────────
+  const rateRows=(a.rates||[]).map((seg,i)=>{
+    const tone=seg.rate>0?rateColor(seg.rate,Math.max(...(a.rates||[{rate:a.rate}]).map(r=>r.rate))):'#999';
+    return`<div class="seg-row">
+      <span>De</span>
+      <input class="inp-sm" type="number" value="${seg.from}" style="width:52px" data-a="rs-from" data-i="${i}">
+      <span>à</span>
+      <input class="inp-sm" type="number" value="${seg.to}" style="width:52px" data-a="rs-to" data-i="${i}">
+      <span>ans →</span>
+      <input class="inp-sm" type="number" value="${seg.rate}" step="0.5" min="0" max="50" style="width:52px;color:${tone};font-weight:800" data-a="rs-rate" data-i="${i}">
+      <span style="color:${tone};font-weight:700">%/an</span>
+      <button class="btn bsm bdg" style="margin-left:auto" data-a="del-rs" data-i="${i}">✕</button>
+    </div>`;
+  }).join('');
+
+  // ── Rangs de transferts ────────────────────────────────
+  const otherAccounts=S.accounts.filter(x=>x.id!==a.id);
+  const trRows=(a.transfers||[]).map((tr,i)=>{
+    return`<div class="tr-row">
+      <span>À</span>
+      <input class="inp-sm" type="number" value="${tr.age}" min="${pS}" max="${pE}" style="width:52px" data-a="tr-age" data-i="${i}">
+      <span>ans, transférer</span>
+      <input class="inp-sm" type="number" value="${tr.percent}" min="1" max="100" style="width:48px" data-a="tr-pct" data-i="${i}">
+      <span>% vers</span>
+      <select class="sel-sm" style="width:110px" data-a="tr-target" data-i="${i}">
+        ${otherAccounts.length?otherAccounts.map(x=>`<option value="${x.id}" ${tr.targetId===x.id?'selected':''}>${esc(x.name)}</option>`).join(''):'<option>— aucun —</option>'}
+      </select>
+      <button class="btn bsm bdg" style="margin-left:auto" data-a="del-tr" data-i="${i}">✕</button>
+    </div>`;
+  }).join('');
+
+  // ── Contributions ponctuelles ──────────────────────────
   const otRows=(a.oneTime||[]).map((ot,i)=>`
     <div class="otrow">
       <div style="flex:0 0 74px"><label class="lbl" style="margin-bottom:3px">Âge</label><input class="inp" type="number" value="${ot.age}" data-a="ot-age" data-i="${i}"></div>
@@ -914,6 +947,7 @@ function renderModal(){
     <div class="mh"><span>${def.icon} Configurer le placement</span><button class="mx" data-a="close-modal">×</button></div>
     <div class="mb">
 
+      <!-- Nom + Type -->
       <div class="g2">
         <div><label class="lbl" style="margin-bottom:4px">Nom</label><input class="inp" type="text" value="${esc(a.name)}" data-a="ma-name"></div>
         <div><label class="lbl" style="margin-bottom:4px">Type de compte</label>
@@ -922,13 +956,15 @@ function renderModal(){
       </div>
       <div class="ib" style="background:${def.color}14;color:${def.color};font-weight:700">${def.tax}</div>
 
+      <!-- Solde + Taux de base + Risque -->
       <div class="g2">
         <div><label class="lbl" style="margin-bottom:4px">Solde initial ($)</label>
           <div class="irow"><span class="px">$</span><input type="number" value="${a.balance}" data-a="ma-balance"></div></div>
-        <div><label class="lbl" style="margin-bottom:4px">Rendement annuel</label>
-          <div class="irow"><input type="number" value="${a.rate}" step="0.5" min="0" max="20" data-a="ma-rate"><span class="sx">%/an</span></div></div>
+        <div><label class="lbl" style="margin-bottom:4px">Taux de base (%/an)</label>
+          <div class="irow"><input type="number" value="${a.rate}" step="0.5" min="0" max="50" data-a="ma-rate"><span class="sx">%</span></div>
+          <div class="hint">Utilisé aux âges non couverts par les tranches ci-dessous.</div>
+        </div>
       </div>
-
       <div><label class="lbl" style="margin-bottom:6px">Niveau de risque (Monte Carlo)</label>
         <div class="rb">${Object.entries(RISK).map(([k,v])=>`
           <button class="rbi" data-a="ma-risk" data-v="${k}"
@@ -936,28 +972,45 @@ function renderModal(){
             ${v.label}<small>σ ${Math.round(v.vol*100)}%</small></button>`).join('')}
         </div>
       </div>
+      <hr class="dv">
 
+      <!-- ◆ TRANCHES DE TAUX ────────────────────────────── -->
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <label class="lbl">Taux par tranches d'âge</label>
+          <button class="btn bsm" style="border:1px solid ${def.color};background:${def.color}10;color:${def.color}" data-a="add-rs">+ Ajouter une tranche</button>
+        </div>
+        ${!(a.rates&&a.rates.length)?`<div class="ib ib-mu" style="font-size:11px">Aucune tranche — le taux de base (${a.rate}%/an) s'applique sur tout l'horizon.</div>`:rateRows}
+        ${a.rates&&a.rates.length?`<div class="ib ib-bl" style="margin-top:6px;font-size:11px">Les tranches remplacent le taux de base pour les âges couverts. La bande colorée sur la timeline reflète l'intensité du taux.</div>`:''}
+      </div>
       <hr class="dv">
 
       <!-- Horizon de placement -->
       <div>
         <label class="lbl" style="margin-bottom:6px">Horizon de placement</label>
         <div class="g2">
-          <div>
-            <div style="font-size:10px;color:${C.gris};margin-bottom:3px">Début (âge)</div>
-            <input class="inp" type="number" value="${pS}" min="${S.params.ageFrom}" max="${S.params.ageTo}" data-a="ma-pstart">
-          </div>
-          <div>
-            <div style="font-size:10px;color:${C.gris};margin-bottom:3px">Fin (âge)</div>
-            <input class="inp" type="number" value="${pE}" min="${S.params.ageFrom}" max="${S.params.ageTo}" data-a="ma-pend">
-          </div>
+          <div><div style="font-size:10px;color:${C.gris};margin-bottom:3px">Début (âge)</div>
+            <input class="inp" type="number" value="${pS}" data-a="ma-pstart"></div>
+          <div><div style="font-size:10px;color:${C.gris};margin-bottom:3px">Fin (âge)</div>
+            <input class="inp" type="number" value="${pE}" data-a="ma-pend"></div>
         </div>
-        <div class="ib ib-mu" style="margin-top:5px">Le solde initial est injecté à l'âge de début. La croissance s'arrête à l'âge de fin, mais le solde reste disponible au décaissement.</div>
+        <div class="ib ib-mu" style="margin-top:5px;font-size:11px">Le solde initial est injecté à l'âge de début. La croissance s'arrête à l'âge de fin, mais le solde reste disponible au décaissement.</div>
       </div>
-
       <hr class="dv">
 
-      <!-- Horizon de contribution récurrente -->
+      <!-- ◆ TRANSFERTS VERS UN AUTRE COMPTE ─────────────── -->
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <label class="lbl">Transferts vers un autre compte</label>
+          <button class="btn bsm" style="border:1px solid ${C.orange};background:${C.orange}10;color:${C.orange}" data-a="add-tr" ${!otherAccounts.length?'disabled':''}>+ Ajouter un transfert</button>
+        </div>
+        ${!otherAccounts.length?`<div class="ib ib-mu" style="font-size:11px">Ajoutez d'abord un second compte pour configurer un transfert.</div>`:
+          !(a.transfers&&a.transfers.length)?`<div class="ib ib-mu" style="font-size:11px">Ex : transférer 100% du REER vers le CÉLI à 60 ans pour baisser l'imposition.</div>`:trRows}
+        ${a.transfers&&a.transfers.length?`<div class="ib ib-or" style="margin-top:6px;font-size:11px">⚠ Le transfert utilise le solde disponible au moment de l'exécution. Un transfert de 100% vide le compte source.</div>`:''}
+      </div>
+      <hr class="dv">
+
+      <!-- Contributions récurrentes -->
       <div>
         <label class="lbl" style="margin-bottom:6px">Horizon de contribution récurrente</label>
         <div class="g5">
@@ -970,10 +1023,8 @@ function renderModal(){
               <option value="monthly" ${a.contribFreq==='monthly'?'selected':''}>Mens.</option>
             </select></div>
         </div>
-        ${annWarn}
-        <div class="ib ib-mu" style="margin-top:5px;font-size:10px">💡 Doit être compris dans l'horizon de placement.</div>
+        ${warnMsg?`<div class="ib ib-or" style="margin-top:5px">${warnMsg}</div>`:''}
       </div>
-
       <hr class="dv">
 
       <!-- Contributions ponctuelles -->
@@ -985,6 +1036,7 @@ function renderModal(){
         ${!(a.oneTime?.length)?`<p style="font-size:11px;color:${C.gris};font-style:italic">Ex : héritage, bonus, vente d'actif…</p>`:''}
         ${otRows}
       </div>
+
     </div>
     <div class="mf">
       <button class="btn bgh" data-a="close-modal">Annuler</button>
@@ -999,9 +1051,7 @@ function saveModal(){
   closeModal();compute();renderMain();
 }
 
-/* ══════════════════════════════
-   RENDER
-══════════════════════════════ */
+/* ══ Render ═══════════════════════════════════════════════════════════ */
 function updateNav(){
   $('nav').innerHTML=TABS.map(t=>`<button class="tab-btn ${S.tab===t.id?'on':''}" data-a="tab" data-v="${t.id}">${t.icon} ${t.label}</button>`).join('')
     +`<div style="margin-left:auto;display:flex;align-items:center;font-size:11px;color:rgba(255,255,255,.52);padding:0 4px">${S.mcRunning?`<span class="spin"></span>Simulation…`:`${S.accounts.length} compte${S.accounts.length!==1?'s':''}`}</div>`;
@@ -1013,26 +1063,51 @@ function renderMain(){
 }
 function render(){updateNav();renderMain();}
 
-/* ══════════════════════════════
-   EVENTS
-══════════════════════════════ */
+/* ══ Events ═══════════════════════════════════════════════════════════ */
 document.addEventListener('click',e=>{
   const el=e.target.closest('[data-a]');if(!el)return;
   const a=el.dataset.a,v=el.dataset.v,i=el.dataset.i!==undefined?+el.dataset.i:null;
+
+  // Nav
   if(a==='tab')        {S.tab=v;render();return;}
+  // Modal frame
   if(a==='close-modal'){closeModal();return;}
   if(a==='save-modal') {saveModal();return;}
-  if(a==='add-acct')   {openModal({id:uid(),name:'Nouveau',type:'CELI',balance:0,portfolioStart:S.params.ageFrom,portfolioEnd:S.params.ageTo,contribAmt:5000,contribFreq:'annual',contribStart:S.params.ageFrom,contribEnd:S.params.ageFrom+40,oneTime:[],rate:5,risk:'medium',_new:true});return;}
+  // Accounts
+  if(a==='add-acct')   {openModal({id:uid(),name:'Nouveau',type:'CELI',balance:0,portfolioStart:S.params.ageFrom,portfolioEnd:S.params.ageTo,rate:5,rates:[],risk:'medium',contribAmt:5000,contribFreq:'annual',contribStart:S.params.ageFrom,contribEnd:S.params.ageFrom+40,oneTime:[],transfers:[],_new:true});return;}
   if(a==='edit-acct')  {openModal(S.accounts[i]);return;}
   if(a==='del-acct')   {S.accounts.splice(i,1);compute();renderMain();return;}
+  // Withdrawals
   if(a==='add-w')      {S.withdrawals.push({id:uid(),name:'Retrait',startAge:65,endAge:100,amount:30000,type:'fixed',freq:'annual',indexed:true,adaptive:false,adaptiveThreshold:200000,adaptiveReduction:25});renderMain();return;}
   if(a==='del-w')      {S.withdrawals.splice(i,1);compute();renderMain();return;}
   if(a==='strategy')   {S.params.strategy=v;compute();renderMain();return;}
+
+  // Modal — nécessite modalAcct
   if(!S.modalAcct)return;
   const ma=S.modalAcct;
-  if(a==='ma-risk'){ma.risk=v;renderModal();return;}
-  if(a==='add-ot') {(ma.oneTime=ma.oneTime||[]).push({id:uid(),age:35,amount:10000});renderModal();return;}
-  if(a==='del-ot') {ma.oneTime.splice(i,1);renderModal();return;}
+
+  if(a==='ma-risk')  {ma.risk=v;renderModal();return;}
+  // One-time
+  if(a==='add-ot')   {(ma.oneTime=ma.oneTime||[]).push({id:uid(),age:35,amount:10000});renderModal();return;}
+  if(a==='del-ot')   {ma.oneTime.splice(i,1);renderModal();return;}
+  // Rate segments
+  if(a==='add-rs'){
+    const pS=ma.portfolioStart??S.params.ageFrom, pE=ma.portfolioEnd??S.params.ageTo;
+    const existing=ma.rates||[];
+    const lastEnd=existing.length?existing[existing.length-1].to:pS;
+    const newFrom=Math.min(lastEnd,pE), newTo=pE;
+    (ma.rates=existing).push({from:newFrom,to:newTo,rate:ma.rate});
+    renderModal();return;
+  }
+  if(a==='del-rs'){ma.rates.splice(i,1);renderModal();return;}
+  // Transfers
+  if(a==='add-tr'){
+    const others=S.accounts.filter(x=>x.id!==ma.id);if(!others.length)return;
+    const pS=ma.portfolioStart??S.params.ageFrom, pE=ma.portfolioEnd??S.params.ageTo;
+    (ma.transfers=ma.transfers||[]).push({age:Math.round((pS+pE)/2),targetId:others[0].id,percent:100});
+    renderModal();return;
+  }
+  if(a==='del-tr'){ma.transfers.splice(i,1);renderModal();return;}
 });
 
 document.addEventListener('change',e=>{
@@ -1042,8 +1117,11 @@ document.addEventListener('change',e=>{
   if(a==='param-check'){S.params[el.dataset.k]=el.checked;compute();renderMain();return;}
   if(a==='w-type')     {S.withdrawals[+el.dataset.i].type=el.value;compute();renderMain();return;}
   if(a==='w-freq')     {S.withdrawals[+el.dataset.i].freq=el.value;compute();renderMain();return;}
-  if(a==='ma-type')    {S.modalAcct.type=el.value;renderModal();return;}
-  if(a==='ma-cfreq')   {S.modalAcct.contribFreq=el.value;renderModal();return;}
+  if(!S.modalAcct)return;
+  const ma=S.modalAcct;
+  if(a==='ma-type')   {ma.type=el.value;renderModal();return;}
+  if(a==='ma-cfreq')  {ma.contribFreq=el.value;renderModal();return;}
+  if(a==='tr-target') {ma.transfers[+el.dataset.i].targetId=el.value;return;}
 });
 
 document.addEventListener('input',e=>{
@@ -1055,7 +1133,7 @@ document.addEventListener('input',e=>{
   if(a==='w-threshold') {S.withdrawals[+el.dataset.i].adaptiveThreshold=+el.value;compute();return;}
   if(a==='w-reduction') {S.withdrawals[+el.dataset.i].adaptiveReduction=+el.value;compute();return;}
   if(!S.modalAcct)return;
-  const ma=S.modalAcct;
+  const ma=S.modalAcct,i=el.dataset.i!==undefined?+el.dataset.i:null;
   if(a==='ma-name')    {ma.name=el.value;return;}
   if(a==='ma-balance') {ma.balance=+el.value;return;}
   if(a==='ma-rate')    {ma.rate=+el.value;return;}
@@ -1064,16 +1142,21 @@ document.addEventListener('input',e=>{
   if(a==='ma-cend')    {ma.contribEnd=+el.value;return;}
   if(a==='ma-pstart')  {ma.portfolioStart=+el.value;return;}
   if(a==='ma-pend')    {ma.portfolioEnd=+el.value;return;}
-  if(a==='ot-age')     {ma.oneTime[+el.dataset.i].age=+el.value;return;}
-  if(a==='ot-amount')  {ma.oneTime[+el.dataset.i].amount=+el.value;return;}
+  if(a==='ot-age')     {ma.oneTime[i].age=+el.value;return;}
+  if(a==='ot-amount')  {ma.oneTime[i].amount=+el.value;return;}
+  // Tranches de taux
+  if(a==='rs-from')    {ma.rates[i].from=+el.value;return;}
+  if(a==='rs-to')      {ma.rates[i].to=+el.value;return;}
+  if(a==='rs-rate')    {ma.rates[i].rate=+el.value;renderModal();return;} // re-render pour màj couleurs
+  // Transferts
+  if(a==='tr-age')     {ma.transfers[i].age=+el.value;return;}
+  if(a==='tr-pct')     {ma.transfers[i].percent=+el.value;return;}
 });
 
 $('overlay').addEventListener('click',e=>{if(e.target===$('overlay'))closeModal();});
 window.addEventListener('resize',()=>requestAnimationFrame(refreshChart));
 
-/* ══════════════════════════════
-   INIT
-══════════════════════════════ */
+/* ══ Init ═════════════════════════════════════════════════════════════ */
 compute();
 render();
 </script>
